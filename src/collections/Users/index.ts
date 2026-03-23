@@ -20,7 +20,6 @@ export const Users: CollectionConfig = {
     {
       name: 'role',
       type: 'select',
-      required: true,
       defaultValue: 'visitor',
       label: 'Rôle',
       options: [
