@@ -1,3 +1,4 @@
+// NRJKA Digital - config mise à jour avec collections personnalisées
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 import sharp from 'sharp'
 import path from 'path'
