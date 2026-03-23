@@ -18,6 +18,38 @@ export const Users: CollectionConfig = {
   auth: true,
   fields: [
     {
+      name: 'role',
+      type: 'select',
+      required: true,
+      defaultValue: 'visitor',
+      label: 'Rôle',
+      options: [
+        { label: 'Super Admin', value: 'admin' },
+        { label: 'Éditeur', value: 'editor' },
+        { label: 'Contributeur', value: 'contributor' },
+        { label: 'Visiteur', value: 'visitor' },
+      ],
+      access: {
+        update: ({ req: { user } }) => Boolean(user?.role === 'admin'),
+      },
+      admin: { position: 'sidebar' },
+    },
+    {
+      name: 'firstName',
+      type: 'text',
+      label: 'Prénom',
+    },
+    {
+      name: 'lastName',
+      type: 'text',
+      label: 'Nom',
+    },
+    {
+      name: 'phone',
+      type: 'text',
+      label: 'Téléphone',
+    },
+    {
       name: 'name',
       type: 'text',
     },

@@ -72,6 +72,17 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    services: Service;
+    'case-studies': CaseStudy;
+    products: Product;
+    'contact-messages': ContactMessage;
+    reviews: Review;
+    testimonials: Testimonial;
+    'job-offers': JobOffer;
+    'job-applications': JobApplication;
+    appointments: Appointment;
+    'blog-comments': BlogComment;
+    resources: Resource;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -94,6 +105,17 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
+    reviews: ReviewsSelect<false> | ReviewsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    'job-offers': JobOffersSelect<false> | JobOffersSelect<true>;
+    'job-applications': JobApplicationsSelect<false> | JobApplicationsSelect<true>;
+    appointments: AppointmentsSelect<false> | AppointmentsSelect<true>;
+    'blog-comments': BlogCommentsSelect<false> | BlogCommentsSelect<true>;
+    resources: ResourcesSelect<false> | ResourcesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -419,6 +441,10 @@ export interface Category {
  */
 export interface User {
   id: number;
+  role: 'admin' | 'editor' | 'contributor' | 'visitor';
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
   name?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -783,6 +809,546 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  title: string;
+  title_en?: string | null;
+  slug: string;
+  description: string;
+  description_en?: string | null;
+  long_description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  long_description_en?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  category: 'web-mobile' | 'ecommerce' | 'seo' | 'automation' | 'maintenance' | 'training' | 'hosting';
+  image?: (number | null) | Media;
+  /**
+   * Ex: Globe, Code, Search...
+   */
+  icon?: string | null;
+  pricing_start?: number | null;
+  features?:
+    | {
+        feature: string;
+        feature_en?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  benefits?:
+    | {
+        benefit: string;
+        benefit_en?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  technologies?:
+    | {
+        name: string;
+        logo?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  process_steps?:
+    | {
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        question_en?: string | null;
+        answer_en?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  related_services?: (number | Service)[] | null;
+  case_studies?: (number | CaseStudy)[] | null;
+  published?: boolean | null;
+  order?: number | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-studies".
+ */
+export interface CaseStudy {
+  id: number;
+  client_name: string;
+  slug: string;
+  excerpt?: string | null;
+  excerpt_en?: string | null;
+  industry?:
+    | ('ecommerce' | 'services' | 'industry' | 'health' | 'education' | 'real-estate' | 'restaurant' | 'other')
+    | null;
+  category?: ('showcase' | 'ecommerce' | 'webapp' | 'seo' | 'automation') | null;
+  image?: (number | null) | Media;
+  logo?: (number | null) | Media;
+  challenge?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  challenge_en?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  solution?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  solution_en?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  results?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  results_en?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  metrics?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  technologies?:
+    | {
+        name: string;
+        id?: string | null;
+      }[]
+    | null;
+  services_used?: (number | Service)[] | null;
+  duration?: string | null;
+  team_size?: number | null;
+  testimonial?: string | null;
+  testimonial_en?: string | null;
+  testimonial_author?: string | null;
+  is_featured?: boolean | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  title: string;
+  slug: string;
+  description: string;
+  longDescription?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  price: number;
+  image?: (number | null) | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  category?: ('templates' | 'formations' | 'tools' | 'packs') | null;
+  features?:
+    | {
+        feature: string;
+        id?: string | null;
+      }[]
+    | null;
+  includes?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  benefits?:
+    | {
+        benefit: string;
+        id?: string | null;
+      }[]
+    | null;
+  rating?: number | null;
+  reviews?: number | null;
+  bestseller?: boolean | null;
+  stripeProductId?: string | null;
+  stripePriceId?: string | null;
+  published?: boolean | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages".
+ */
+export interface ContactMessage {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  company?: string | null;
+  message: string;
+  type?: ('general' | 'quote' | 'support' | 'partnership') | null;
+  context?: string | null;
+  /**
+   * quiz, contact, newsletter...
+   */
+  source_tool?: string | null;
+  service_type?: string | null;
+  services_needed?:
+    | {
+        service?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  budget?: string | null;
+  priorities?:
+    | {
+        priority?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  status?: ('new' | 'reading' | 'in-progress' | 'answered' | 'archived') | null;
+  has_appointment?: boolean | null;
+  appointment_id?: string | null;
+  notion_id?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews".
+ */
+export interface Review {
+  id: number;
+  author_name: string;
+  author_role?: string | null;
+  company?: string | null;
+  avatar?: (number | null) | Media;
+  /**
+   * Si pas d'upload, URL directe
+   */
+  avatar_url?: string | null;
+  rating: number;
+  content: string;
+  service_category?: ('web' | 'seo' | 'automation' | 'ecommerce' | 'maintenance' | 'training' | 'general') | null;
+  is_featured?: boolean | null;
+  approved?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  author_name: string;
+  author_role?: string | null;
+  company?: string | null;
+  avatar?: (number | null) | Media;
+  avatar_url?: string | null;
+  content: string;
+  content_en?: string | null;
+  rating?: number | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-offers".
+ */
+export interface JobOffer {
+  id: number;
+  title: string;
+  title_en?: string | null;
+  slug: string;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  description_en?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  contract_type: 'cdi' | 'cdd' | 'freelance' | 'internship' | 'apprenticeship';
+  location?: string | null;
+  salary_range?: string | null;
+  responsibilities?:
+    | {
+        item: string;
+        item_en?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  requirements?:
+    | {
+        item: string;
+        item_en?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  benefits?:
+    | {
+        item: string;
+        item_en?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  published?: boolean | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-applications".
+ */
+export interface JobApplication {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string | null;
+  linkedin_url?: string | null;
+  portfolio_url?: string | null;
+  cover_letter?: string | null;
+  resume?: (number | null) | Media;
+  job_offer?: (number | null) | JobOffer;
+  status?: ('new' | 'reviewing' | 'interview' | 'accepted' | 'rejected') | null;
+  internal_notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appointments".
+ */
+export interface Appointment {
+  id: number;
+  client_name: string;
+  client_email: string;
+  client_phone?: string | null;
+  company?: string | null;
+  appointment_date: string;
+  /**
+   * quiz, contact, page service...
+   */
+  source_tool?: string | null;
+  priorities?:
+    | {
+        priority?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  project_summary?: string | null;
+  notes?: string | null;
+  status?: ('scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'rescheduled') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-comments".
+ */
+export interface BlogComment {
+  id: number;
+  author_name: string;
+  author_email: string;
+  content: string;
+  blog_post: number | Post;
+  status?: ('pending' | 'approved' | 'rejected') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resources".
+ */
+export interface Resource {
+  id: number;
+  title: string;
+  title_en?: string | null;
+  slug: string;
+  description: string;
+  description_en?: string | null;
+  category?: ('guide' | 'template' | 'checklist' | 'ebook' | 'tool') | null;
+  format?: ('pdf' | 'docx' | 'xlsx' | 'notion' | 'figma' | 'other') | null;
+  file?: (number | null) | Media;
+  file_url?: string | null;
+  thumbnail?: (number | null) | Media;
+  preview_url?: string | null;
+  features?:
+    | {
+        feature: string;
+        feature_en?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  tags?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  is_free?: boolean | null;
+  requires_contact?: boolean | null;
+  downloads?: number | null;
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -990,6 +1556,50 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'case-studies';
+        value: number | CaseStudy;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'contact-messages';
+        value: number | ContactMessage;
+      } | null)
+    | ({
+        relationTo: 'reviews';
+        value: number | Review;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'job-offers';
+        value: number | JobOffer;
+      } | null)
+    | ({
+        relationTo: 'job-applications';
+        value: number | JobApplication;
+      } | null)
+    | ({
+        relationTo: 'appointments';
+        value: number | Appointment;
+      } | null)
+    | ({
+        relationTo: 'blog-comments';
+        value: number | BlogComment;
+      } | null)
+    | ({
+        relationTo: 'resources';
+        value: number | Resource;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1338,6 +1948,10 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
+  firstName?: T;
+  lastName?: T;
+  phone?: T;
   name?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1355,6 +1969,375 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  title?: T;
+  title_en?: T;
+  slug?: T;
+  description?: T;
+  description_en?: T;
+  long_description?: T;
+  long_description_en?: T;
+  category?: T;
+  image?: T;
+  icon?: T;
+  pricing_start?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        feature_en?: T;
+        id?: T;
+      };
+  benefits?:
+    | T
+    | {
+        benefit?: T;
+        benefit_en?: T;
+        id?: T;
+      };
+  technologies?:
+    | T
+    | {
+        name?: T;
+        logo?: T;
+        id?: T;
+      };
+  process_steps?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        question_en?: T;
+        answer_en?: T;
+        id?: T;
+      };
+  related_services?: T;
+  case_studies?: T;
+  published?: T;
+  order?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-studies_select".
+ */
+export interface CaseStudiesSelect<T extends boolean = true> {
+  client_name?: T;
+  slug?: T;
+  excerpt?: T;
+  excerpt_en?: T;
+  industry?: T;
+  category?: T;
+  image?: T;
+  logo?: T;
+  challenge?: T;
+  challenge_en?: T;
+  solution?: T;
+  solution_en?: T;
+  results?: T;
+  results_en?: T;
+  metrics?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
+  technologies?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  services_used?: T;
+  duration?: T;
+  team_size?: T;
+  testimonial?: T;
+  testimonial_en?: T;
+  testimonial_author?: T;
+  is_featured?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  longDescription?: T;
+  price?: T;
+  image?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  category?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  includes?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  benefits?:
+    | T
+    | {
+        benefit?: T;
+        id?: T;
+      };
+  rating?: T;
+  reviews?: T;
+  bestseller?: T;
+  stripeProductId?: T;
+  stripePriceId?: T;
+  published?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages_select".
+ */
+export interface ContactMessagesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  company?: T;
+  message?: T;
+  type?: T;
+  context?: T;
+  source_tool?: T;
+  service_type?: T;
+  services_needed?:
+    | T
+    | {
+        service?: T;
+        id?: T;
+      };
+  budget?: T;
+  priorities?:
+    | T
+    | {
+        priority?: T;
+        id?: T;
+      };
+  status?: T;
+  has_appointment?: T;
+  appointment_id?: T;
+  notion_id?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews_select".
+ */
+export interface ReviewsSelect<T extends boolean = true> {
+  author_name?: T;
+  author_role?: T;
+  company?: T;
+  avatar?: T;
+  avatar_url?: T;
+  rating?: T;
+  content?: T;
+  service_category?: T;
+  is_featured?: T;
+  approved?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  author_name?: T;
+  author_role?: T;
+  company?: T;
+  avatar?: T;
+  avatar_url?: T;
+  content?: T;
+  content_en?: T;
+  rating?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-offers_select".
+ */
+export interface JobOffersSelect<T extends boolean = true> {
+  title?: T;
+  title_en?: T;
+  slug?: T;
+  description?: T;
+  description_en?: T;
+  contract_type?: T;
+  location?: T;
+  salary_range?: T;
+  responsibilities?:
+    | T
+    | {
+        item?: T;
+        item_en?: T;
+        id?: T;
+      };
+  requirements?:
+    | T
+    | {
+        item?: T;
+        item_en?: T;
+        id?: T;
+      };
+  benefits?:
+    | T
+    | {
+        item?: T;
+        item_en?: T;
+        id?: T;
+      };
+  published?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-applications_select".
+ */
+export interface JobApplicationsSelect<T extends boolean = true> {
+  first_name?: T;
+  last_name?: T;
+  email?: T;
+  phone?: T;
+  linkedin_url?: T;
+  portfolio_url?: T;
+  cover_letter?: T;
+  resume?: T;
+  job_offer?: T;
+  status?: T;
+  internal_notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appointments_select".
+ */
+export interface AppointmentsSelect<T extends boolean = true> {
+  client_name?: T;
+  client_email?: T;
+  client_phone?: T;
+  company?: T;
+  appointment_date?: T;
+  source_tool?: T;
+  priorities?:
+    | T
+    | {
+        priority?: T;
+        id?: T;
+      };
+  project_summary?: T;
+  notes?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-comments_select".
+ */
+export interface BlogCommentsSelect<T extends boolean = true> {
+  author_name?: T;
+  author_email?: T;
+  content?: T;
+  blog_post?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resources_select".
+ */
+export interface ResourcesSelect<T extends boolean = true> {
+  title?: T;
+  title_en?: T;
+  slug?: T;
+  description?: T;
+  description_en?: T;
+  category?: T;
+  format?: T;
+  file?: T;
+  file_url?: T;
+  thumbnail?: T;
+  preview_url?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        feature_en?: T;
+        id?: T;
+      };
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  is_free?: T;
+  requires_contact?: T;
+  downloads?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

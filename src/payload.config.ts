@@ -16,6 +16,18 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
+import { Services } from './collections/Services'
+import { CaseStudies } from './collections/CaseStudies'
+import { Products } from './collections/Products'
+import { ContactMessages } from './collections/ContactMessages'
+import { Reviews } from './collections/Reviews'
+import { Testimonials } from './collections/Testimonials'
+import { JobOffers } from './collections/JobOffers'
+import { JobApplications } from './collections/JobApplications'
+import { Appointments } from './collections/Appointments'
+import { BlogComments } from './collections/BlogComments'
+import { Resources } from './collections/Resources'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -63,7 +75,24 @@ export default buildConfig({
       connectionString: process.env.POSTGRES_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [
+    Pages,
+    Posts,
+    Media,
+    Categories,
+    Users,
+    Services,
+    CaseStudies,
+    Products,
+    ContactMessages,
+    Reviews,
+    Testimonials,
+    JobOffers,
+    JobApplications,
+    Appointments,
+    BlogComments,
+    Resources,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
     ...plugins,
