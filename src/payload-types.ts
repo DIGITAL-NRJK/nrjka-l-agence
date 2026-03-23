@@ -441,7 +441,7 @@ export interface Category {
  */
 export interface User {
   id: number;
-  role: 'admin' | 'editor' | 'contributor' | 'visitor';
+  role?: ('admin' | 'editor' | 'contributor' | 'visitor') | null;
   firstName?: string | null;
   lastName?: string | null;
   phone?: string | null;
