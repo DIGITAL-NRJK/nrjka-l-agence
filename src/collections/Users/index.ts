@@ -29,7 +29,7 @@ export const Users: CollectionConfig = {
         { label: 'Visiteur', value: 'visitor' },
       ],
       access: {
-        update: ({ req: { user } }) => Boolean(user?.role === 'admin'),
+        update: ({ req: { user } }) => Boolean((user?.role as string) === 'admin'),
       },
       admin: { position: 'sidebar' },
     },

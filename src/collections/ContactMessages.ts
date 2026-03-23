@@ -107,7 +107,9 @@ export const ContactMessages: CollectionConfig = {
                   Type: { select: { name: doc.type || 'general' } },
                   Statut: { select: { name: doc.status || 'new' } },
                   Message: {
-                    rich_text: [{ text: { content: (doc.message || '').substring(0, 2000) } }],
+                    rich_text: [
+                      { text: { content: String(doc.message || '').substring(0, 2000) } },
+                    ],
                   },
                   Source: { select: { name: doc.source_tool || 'contact' } },
                 },
