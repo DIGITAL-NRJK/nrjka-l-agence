@@ -1,21 +1,52 @@
-build
-dist / media
-node_modules
-.DS_Store
+# Dependencies
+
+node_modules/
+
+# Build outputs
+
+build/
+dist/
+.next/
+
+# Local environment variables
+
 .env
-.next
-next-env.d.ts
-.vercel
+.env.*
+!.env.example
+
+# System files
+
+.DS_Store
+
+# Vercel local config
+
+.vercel/
+
+# VS Code local/editor config
+
+.vscode/
+
+# Cursor local config
+
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+
+# Claude local config
+
+.claude/
 
 # Payload default media upload directory
+
 public/media/
+
+# Generated SEO files
 
 public/robots.txt
 public/sitemap*.xml
 
-
 # Playwright
-node_modules/
+
 /test-results/
 /playwright-report/
 /blob-report/
