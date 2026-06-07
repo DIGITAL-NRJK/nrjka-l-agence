@@ -56,38 +56,4 @@ export const Appointments: CollectionConfig = {
       ],
     },
   ],
-  hooks: {
-    afterChange: [
-      async ({ doc, operation }) => {
-        if (
-          operation === 'create' &&
-          process.env.NOTION_TOKEN &&
-          process.env.NOTION_APPOINTMENTS_DB_ID
-        ) {
-          try {
-            await fetch('https://api.notion.com/v1/pages', {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
-                'Content-Type': 'application/json',
-                'Notion-Version': '2022-06-28',
-              },
-              body: JSON.stringify({
-                parent: { database_id: process.env.NOTION_APPOINTMENTS_DB_ID },
-                properties: {
-                  Nom: { title: [{ text: { content: doc.client_name } }] },
-                  Email: { email: doc.client_email },
-                  Date: { date: { start: doc.appointment_date } },
-                  Statut: { select: { name: doc.status || 'scheduled' } },
-                  Notes: { rich_text: [{ text: { content: doc.project_summary || '' } }] },
-                },
-              }),
-            })
-          } catch (error) {
-            console.error('Notion appointment sync error:', error)
-          }
-        }
-      },
-    ],
-  },
 }
