@@ -30,13 +30,13 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
   const statList = stats || []
 
   return (
-    <section className="relative flex min-h-[92vh] items-center overflow-hidden bg-background">
+    <section className="relative flex min-h-[80vh] items-center overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -right-32 top-0 h-[34rem] w-[34rem] rounded-full bg-terracotta/5 blur-3xl" />
         <div className="absolute -left-40 bottom-0 h-[30rem] w-[30rem] rounded-full bg-brand/5 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 px-6 py-24 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:px-16">
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 px-6 py-12 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:px-16 lg:py-16">
         {/* Colonne gauche */}
         <div>
           {badge && (
