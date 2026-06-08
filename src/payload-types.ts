@@ -181,7 +181,7 @@ export interface Page {
   id: number;
   title: string;
   hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'homeNRJKA';
     richText?: {
       root: {
         type: string;
@@ -222,6 +222,30 @@ export interface Page {
         }[]
       | null;
     media?: (number | null) | Media;
+    badge?: string | null;
+    headline?: string | null;
+    /**
+     * Segment affiché en dégradé, à la suite du titre.
+     */
+    headlineAccent?: string | null;
+    subtitle?: string | null;
+    primaryCtaLabel?: string | null;
+    primaryCtaHref?: string | null;
+    secondaryCtaLabel?: string | null;
+    secondaryCtaHref?: string | null;
+    trustBadges?:
+      | {
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    stats?:
+      | {
+          value?: string | null;
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
   meta?: {
@@ -1690,6 +1714,27 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        badge?: T;
+        headline?: T;
+        headlineAccent?: T;
+        subtitle?: T;
+        primaryCtaLabel?: T;
+        primaryCtaHref?: T;
+        secondaryCtaLabel?: T;
+        secondaryCtaHref?: T;
+        trustBadges?:
+          | T
+          | {
+              label?: T;
+              id?: T;
+            };
+        stats?:
+          | T
+          | {
+              value?: T;
+              label?: T;
+              id?: T;
+            };
       };
   layout?:
     | T
