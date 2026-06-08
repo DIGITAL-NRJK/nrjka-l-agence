@@ -123,6 +123,18 @@
   --success: oklch(78% 0.08 200deg);
   --warning: oklch(89% 0.1 75deg);
   --error: oklch(75% 0.15 25deg);
+  --error: oklch(75% 0.15 25deg);
+
+  /* NRJKA — identité de marque */
+  --brand: #1f2a44;
+  --brand-2: #2d3e5f;
+  --brand-foreground: #ffffff;
+  --terracotta: #f4a261;
+  --terracotta-dark: #e89251;
+  --terracotta-foreground: #1f2a44;
+  --ink: #1a1f2e;
+  --slate: #64748b;
+  --surface-soft: #f4f6f8;
 }
 
 [data-theme='dark'] {
@@ -203,6 +215,17 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+
+  /* NRJKA — couleurs de marque (utilisables via bg-brand, text-terracotta, text-slate, bg-surface-soft, ...) */
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-terracotta: var(--terracotta);
+  --color-terracotta-dark: var(--terracotta-dark);
+  --color-terracotta-foreground: var(--terracotta-foreground);
+  --color-ink: var(--ink);
+  --color-slate: var(--slate);
+  --color-surface-soft: var(--surface-soft);
 }
 
 @layer base {
@@ -221,4 +244,24 @@ html {
 html[data-theme='dark'],
 html[data-theme='light'] {
   opacity: initial;
+}
+@layer utilities {
+  /* Dégradé signature bleu→violet (pour un mot-clé de titre) */
+  .text-gradient-brand {
+    background-image: linear-gradient(to right, #2563eb, #7c3aed);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Carte premium en verre dépoli */
+  .glass-card {
+    background-color: color-mix(in oklab, white 72%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in oklab, white 45%, transparent);
+  }
+  /* Ombre douce teintée navy */
+  .shadow-soft {
+    box-shadow: 0 18px 40px -16px color-mix(in oklab, #1f2a44 35%, transparent);
+  }
 }
