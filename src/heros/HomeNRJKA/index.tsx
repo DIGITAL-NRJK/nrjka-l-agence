@@ -6,7 +6,7 @@ import type { Page } from '@/payload-types'
 
 type HeroProps = Page['hero']
 
-const dimensions = [
+const defaultDimensions = [
   { title: 'Diagnostic', tag: 'Comprendre la complexité' },
   { title: 'Design', tag: 'Dessiner la clarté' },
   { title: 'Développement', tag: "Construire l'excellence" },
@@ -25,9 +25,13 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
     secondaryCtaHref,
     trustBadges,
     stats,
+    panelEyebrow,
+    panelTitle,
+    panelDimensions,
+    panelAvailability,
   } = props || {}
-
   const statList = stats || []
+  const dims = panelDimensions && panelDimensions.length > 0 ? panelDimensions : defaultDimensions
 
   return (
     <section className="relative flex min-h-[80vh] items-center overflow-hidden bg-background">
@@ -127,19 +131,19 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
 
             <div className="relative">
               <div className="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-white/50">
-                Architecture D4™
+                {panelEyebrow || 'Architecture D4™'}
               </div>
               <div className="mb-7 text-lg font-semibold text-white">
-                De la complexité à la clarté
+                {panelTitle || 'De la complexité à la clarté'}
               </div>
 
-              <ul className="space-y-1">
-                {dimensions.map((dim, i) => (
+              <ul className="grid grid-cols-2 gap-2">
+                {dims.map((dim, i) => (
                   <li
                     key={i}
-                    className="flex items-start gap-4 rounded-xl px-3 py-3 transition-colors hover:bg-white/5"
+                    className="flex items-start gap-3 rounded-xl px-2.5 py-3 transition-colors hover:bg-white/5"
                   >
-                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-xs font-semibold text-terracotta">
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-xs font-semibold text-terracotta">
                       {`0${i + 1}`}
                     </span>
                     <div>
@@ -152,7 +156,7 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
 
               <div className="mt-6 flex items-center gap-2 text-xs text-white/70">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-                Disponible pour de nouveaux projets
+                {panelAvailability || 'Disponible pour de nouveaux projets'}
               </div>
             </div>
           </div>

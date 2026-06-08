@@ -35,7 +35,7 @@ export const hero: Field = {
           label: 'Low Impact',
           value: 'lowImpact',
         },
- {
+        {
           label: 'Accueil NRJKA',
           value: 'homeNRJKA',
         },
@@ -136,6 +136,42 @@ export const hero: Field = {
         { name: 'value', type: 'text' },
         { name: 'label', type: 'text' },
       ],
+    },
+    {
+      name: 'panelEyebrow',
+      type: 'text',
+      localized: true,
+      admin: {
+        condition: (_, { type } = {}) => type === 'homeNRJKA',
+        description: 'Petit texte en haut du panneau de droite (ex. Architecture D4™).',
+      },
+    },
+    {
+      name: 'panelTitle',
+      type: 'text',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    {
+      name: 'panelDimensions',
+      type: 'array',
+      localized: true,
+      maxRows: 4,
+      admin: {
+        condition: (_, { type } = {}) => type === 'homeNRJKA',
+        description:
+          'Les 4 dimensions (titre + accroche). Laisser vide = valeurs par défaut conservées.',
+      },
+      fields: [
+        { name: 'title', type: 'text' },
+        { name: 'tag', type: 'text' },
+      ],
+    },
+    {
+      name: 'panelAvailability',
+      type: 'text',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
     },
   ],
   label: false,
