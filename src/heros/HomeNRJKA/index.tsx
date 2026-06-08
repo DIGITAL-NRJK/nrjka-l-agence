@@ -1,10 +1,17 @@
 import React from 'react'
 import Link from 'next/link'
-import { ArrowRight, CheckCircle, Sparkles } from 'lucide-react'
+import { ArrowRight, CheckCircle } from 'lucide-react'
 
 import type { Page } from '@/payload-types'
 
 type HeroProps = Page['hero']
+
+const dimensions = [
+  { title: 'Diagnostic', tag: 'Comprendre la complexité' },
+  { title: 'Design', tag: 'Dessiner la clarté' },
+  { title: 'Développement', tag: "Construire l'excellence" },
+  { title: 'Durabilité', tag: 'Faire durer la croissance' },
+]
 
 export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
   const {
@@ -23,107 +30,145 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
   const statList = stats || []
 
   return (
-    <section className="relative flex min-h-[90vh] items-center overflow-hidden bg-background">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl" />
-        <div className="absolute top-1/2 -left-40 h-80 w-80 rounded-full bg-violet-400/20 blur-3xl" />
-        <div className="absolute -bottom-40 right-1/3 h-80 w-80 rounded-full bg-blue-300/10 blur-3xl" />
+    <section className="relative flex min-h-[92vh] items-center overflow-hidden bg-background">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -right-32 top-0 h-[34rem] w-[34rem] rounded-full bg-terracotta/5 blur-3xl" />
+        <div className="absolute -left-40 bottom-0 h-[30rem] w-[30rem] rounded-full bg-brand/5 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 py-28 sm:px-10 lg:px-16">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            {badge && (
-              <span className="mb-6 inline-block animate-in fade-in slide-in-from-bottom-3 rounded-full bg-terracotta/15 px-4 py-1.5 text-sm font-medium text-terracotta-dark duration-700">
-                {badge}
-              </span>
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 px-6 py-24 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:px-16">
+        {/* Colonne gauche */}
+        <div>
+          {badge && (
+            <span className="mb-7 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-slate animate-in fade-in slide-in-from-bottom-2 duration-700">
+              <span className="h-px w-8 bg-terracotta" />
+              {badge}
+            </span>
+          )}
+
+          <h1 className="text-5xl font-bold leading-[1.04] tracking-tight text-ink animate-in fade-in slide-in-from-bottom-4 duration-700 sm:text-6xl lg:text-7xl">
+            {headline}
+            {headlineAccent && (
+              <>
+                <br />
+                <span className="relative inline-block whitespace-nowrap text-terracotta-dark">
+                  {headlineAccent}
+                  <svg
+                    className="absolute -bottom-1 left-0 h-2 w-full text-terracotta/60"
+                    viewBox="0 0 200 8"
+                    preserveAspectRatio="none"
+                    fill="none"
+                  >
+                    <path
+                      d="M1 5.5 C 50 1, 150 1, 199 5.5"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </span>
+              </>
             )}
+          </h1>
 
-            <h1 className="mb-6 animate-in fade-in slide-in-from-bottom-4 text-5xl font-bold leading-[1.05] tracking-tight text-ink duration-700 sm:text-6xl lg:text-7xl">
-              {headline}
-              {headlineAccent && (
-                <>
-                  <br />
-                  <span className="text-gradient-brand">{headlineAccent}</span>
-                </>
-              )}
-            </h1>
+          {subtitle && (
+            <p className="mt-7 max-w-lg text-lg leading-relaxed text-slate animate-in fade-in duration-1000">
+              {subtitle}
+            </p>
+          )}
 
-            {subtitle && (
-              <p className="mb-8 max-w-xl animate-in fade-in text-lg leading-relaxed text-slate duration-1000">
-                {subtitle}
-              </p>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            {primaryCtaLabel && (
+              <Link
+                href={primaryCtaHref || '#'}
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-terracotta px-7 py-3.5 font-medium text-terracotta-foreground shadow-lg shadow-terracotta/25 transition-all hover:bg-terracotta-dark"
+              >
+                {primaryCtaLabel}
+                <ArrowRight
+                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                  strokeWidth={2.4}
+                />
+              </Link>
             )}
+            {secondaryCtaLabel && (
+              <Link
+                href={secondaryCtaHref || '#'}
+                className="inline-flex items-center justify-center rounded-full border border-border px-7 py-3.5 font-medium text-ink transition-colors hover:border-brand/30 hover:bg-card"
+              >
+                {secondaryCtaLabel}
+              </Link>
+            )}
+          </div>
 
-            <div className="mb-12 flex flex-col gap-4 sm:flex-row">
-              {primaryCtaLabel && (
-                <Link
-                  href={primaryCtaHref || '#'}
-                  className="group inline-flex items-center justify-center gap-2 rounded-xl bg-terracotta px-8 py-4 font-medium text-terracotta-foreground shadow-lg shadow-terracotta/25 transition-colors hover:bg-terracotta-dark"
-                >
-                  {primaryCtaLabel}
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" strokeWidth={2.2} />
-                </Link>
-              )}
-              {secondaryCtaLabel && (
-                <Link
-                  href={secondaryCtaHref || '#'}
-                  className="inline-flex items-center justify-center rounded-xl border border-border px-8 py-4 font-medium text-ink transition-colors hover:bg-card"
-                >
-                  {secondaryCtaLabel}
-                </Link>
-              )}
+          {trustBadges && trustBadges.length > 0 && (
+            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate">
+              {trustBadges.map((item, i) => (
+                <span key={i} className="flex items-center gap-1.5">
+                  <CheckCircle className="h-4 w-4 text-terracotta" strokeWidth={2.4} />
+                  {item.label}
+                </span>
+              ))}
             </div>
+          )}
+        </div>
 
-            {trustBadges && trustBadges.length > 0 && (
-              <div className="flex flex-wrap gap-4 text-sm text-slate">
-                {trustBadges.map((item, i) => (
-                  <span key={i} className="flex items-center gap-1.5">
-                    <CheckCircle className="h-4 w-4 text-terracotta" strokeWidth={2.2} />
-                    {item.label}
-                  </span>
+        {/* Colonne droite : panneau Architecture D4™ */}
+        <div className="relative animate-in fade-in slide-in-from-right-6 duration-1000">
+          <div className="relative overflow-hidden rounded-[2rem] bg-brand p-8 shadow-soft">
+            <div
+              className="absolute inset-0 opacity-[0.12]"
+              style={{
+                backgroundImage:
+                  'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
+                backgroundSize: '32px 32px',
+              }}
+            />
+            <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-terracotta/20 blur-3xl" />
+
+            <div className="relative">
+              <div className="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-white/50">
+                Architecture D4™
+              </div>
+              <div className="mb-7 text-lg font-semibold text-white">
+                De la complexité à la clarté
+              </div>
+
+              <ul className="space-y-1">
+                {dimensions.map((dim, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-4 rounded-xl px-3 py-3 transition-colors hover:bg-white/5"
+                  >
+                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-xs font-semibold text-terracotta">
+                      {`0${i + 1}`}
+                    </span>
+                    <div>
+                      <div className="font-semibold text-white">{dim.title}</div>
+                      <div className="text-sm text-white/55">{dim.tag}</div>
+                    </div>
+                  </li>
                 ))}
-              </div>
-            )}
-          </div>
+              </ul>
 
-          <div className="grid h-[600px] grid-cols-6 grid-rows-6 gap-4 animate-in fade-in slide-in-from-right-6 duration-1000">
-            <div className="relative col-span-4 row-span-3 overflow-hidden rounded-3xl bg-brand p-6 text-brand-foreground shadow-soft">
-              <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
-              <div className="relative flex h-full flex-col">
-                <div className="mb-6 flex items-start justify-between">
-                  <div>
-                    <div className="text-5xl font-bold">{statList[0]?.value}</div>
-                    <div className="text-white/70">{statList[0]?.label}</div>
-                  </div>
-                  <Sparkles className="h-6 w-6 text-white/60" />
-                </div>
-                <div className="mt-auto flex items-center gap-2 text-xs text-white/70">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-                  Disponible pour de nouveaux projets
-                </div>
+              <div className="mt-6 flex items-center gap-2 text-xs text-white/70">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+                Disponible pour de nouveaux projets
               </div>
             </div>
-
-            <div className="col-span-2 row-span-2 flex flex-col items-center justify-center rounded-3xl border border-border bg-card p-6 text-center shadow-sm">
-              <div className="text-4xl font-bold text-ink">{statList[1]?.value}</div>
-              <div className="text-sm text-slate">{statList[1]?.label}</div>
-            </div>
-
-            <div className="col-span-3 row-span-3 flex flex-col justify-end rounded-3xl bg-brand-2 p-8 text-brand-foreground shadow-soft">
-              <Sparkles className="mb-3 h-6 w-6 text-terracotta" />
-              <p className="text-sm text-white/80">Performance technique + intelligence humaine</p>
-            </div>
-
-            <div className="col-span-3 row-span-1 flex items-center justify-center rounded-3xl bg-surface-soft text-sm font-medium text-ink">
-              ✨ Open Source
-            </div>
-
-            <div className="col-span-2 row-span-4 flex flex-col items-center justify-center rounded-3xl border border-brand/10 bg-card p-6 text-center shadow-sm">
-              <div className="mb-2 text-5xl font-bold text-ink">{statList[2]?.value}</div>
-              <div className="text-sm text-slate">{statList[2]?.label}</div>
-            </div>
           </div>
+
+          {statList[0] && (
+            <div className="glass-card absolute -left-5 top-12 rounded-2xl px-5 py-4 shadow-soft">
+              <div className="text-2xl font-bold text-ink">{statList[0]?.value}</div>
+              <div className="text-xs text-slate">{statList[0]?.label}</div>
+            </div>
+          )}
+          {statList[1] && (
+            <div className="glass-card absolute -right-4 bottom-10 rounded-2xl px-5 py-4 shadow-soft">
+              <div className="text-2xl font-bold text-ink">{statList[1]?.value}</div>
+              <div className="text-xs text-slate">{statList[1]?.label}</div>
+            </div>
+          )}
         </div>
       </div>
     </section>
