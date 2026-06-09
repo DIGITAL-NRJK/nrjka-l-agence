@@ -40,7 +40,7 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
         <div className="absolute -left-40 bottom-0 h-[30rem] w-[30rem] rounded-full bg-brand/5 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 px-6 py-12 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:px-16 lg:py-16">
+      <div className="relative mx-auto grid w-full max-w-7xl items-start gap-16 px-6 py-12 sm:px-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-16 lg:py-16">
         {/* Colonne gauche */}
         <div>
           {badge && (
@@ -50,7 +50,7 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
             </span>
           )}
 
-          <h1 className="text-5xl font-bold leading-[1.04] tracking-tight text-ink animate-in fade-in slide-in-from-bottom-4 duration-700 sm:text-6xl lg:text-7xl">
+          <h1 className="text-4xl font-bold leading-[1.05] tracking-tight text-ink animate-in fade-in slide-in-from-bottom-4 duration-700 sm:text-5xl lg:text-6xl">
             {headline}
             {headlineAccent && (
               <>
@@ -103,17 +103,6 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
               </Link>
             )}
           </div>
-
-          {trustBadges && trustBadges.length > 0 && (
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate">
-              {trustBadges.map((item, i) => (
-                <span key={i} className="flex items-center gap-1.5">
-                  <CheckCircle className="h-4 w-4 text-terracotta" strokeWidth={2.4} />
-                  {item.label}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Colonne droite : panneau Architecture D4™ */}
@@ -160,7 +149,16 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
               </div>
             </div>
           </div>
-
+          {trustBadges && trustBadges.length > 0 && (
+            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate">
+              {trustBadges.map((item, i) => (
+                <span key={i} className="flex items-center gap-1.5">
+                  <CheckCircle className="h-4 w-4 text-terracotta" strokeWidth={2.4} />
+                  {item.label}
+                </span>
+              ))}
+            </div>
+          )}
           {statList[0] && (
             <div className="glass-card absolute -left-5 top-12 rounded-2xl px-5 py-4 shadow-soft">
               <div className="text-2xl font-bold text-ink">{statList[0]?.value}</div>
