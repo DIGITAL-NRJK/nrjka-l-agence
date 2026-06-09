@@ -22,53 +22,67 @@ export const PromiseBlock: React.FC<PromiseBlockProps> = ({
 }) => {
   return (
     <section className="container">
-      <div className="mx-auto max-w-3xl text-center">
-        {eyebrow && (
-          <span className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-slate">
-            <span className="h-px w-8 bg-terracotta" />
-            {eyebrow}
-            <span className="h-px w-8 bg-terracotta" />
-          </span>
-        )}
-        {title && (
-          <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-5xl">
-            {title}
-          </h2>
-        )}
-        {subtitle && <p className="mt-4 text-lg font-medium text-terracotta-dark">{subtitle}</p>}
-        {description && <p className="mt-4 text-lg leading-relaxed text-slate">{description}</p>}
+      <div className="relative overflow-hidden rounded-3xl bg-brand px-6 py-14 shadow-soft sm:px-12 sm:py-16 lg:px-16">
+        {/* trame + halo — écho de la carte D4 du Hero */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+          }}
+        />
+        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-terracotta/20 blur-3xl" />
+
+        <div className="relative">
+          {/* En-tête */}
+          <div className="max-w-2xl">
+            {eyebrow && (
+              <span className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
+                <span className="h-px w-8 bg-terracotta" />
+                {eyebrow}
+              </span>
+            )}
+            {title && (
+              <h2 className="text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl">
+                {title}
+              </h2>
+            )}
+            {subtitle && <p className="mt-4 text-lg font-medium text-terracotta">{subtitle}</p>}
+            {description && (
+              <p className="mt-4 text-lg leading-relaxed text-white/70">{description}</p>
+            )}
+          </div>
+
+          {/* 4 valeurs */}
+          {features && features.length > 0 && (
+            <div className="mt-12 grid gap-x-10 gap-y-9 border-t border-white/10 pt-10 sm:grid-cols-2">
+              {features.map((feature, i) => {
+                const Icon = iconMap[feature.icon || 'userCheck'] || UserCheck
+                return (
+                  <div key={i} className="flex gap-4">
+                    <Icon className="h-6 w-6 shrink-0 text-terracotta" strokeWidth={2} />
+                    <div>
+                      <h3 className="font-semibold text-white">{feature.title}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-white/60">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {/* Engagement */}
+          {commitment && (
+            <div className="mt-10 flex items-center gap-3 border-t border-white/10 pt-7">
+              <Heart className="h-5 w-5 shrink-0 text-terracotta" strokeWidth={2.2} />
+              <p className="font-semibold text-white">{commitment}</p>
+            </div>
+          )}
+        </div>
       </div>
-
-      {features && features.length > 0 && (
-        <div className="mx-auto mt-14 grid max-w-5xl gap-5 sm:grid-cols-2">
-          {features.map((feature, i) => {
-            const Icon = iconMap[feature.icon || 'userCheck'] || UserCheck
-            return (
-              <div
-                key={i}
-                className="rounded-2xl border border-border bg-card p-7 shadow-soft transition-transform hover:-translate-y-1"
-              >
-                <div className="flex gap-5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-terracotta/10 text-terracotta">
-                    <Icon className="h-6 w-6" strokeWidth={2} />
-                  </div>
-                  <div>
-                    <h3 className="mb-1.5 text-lg font-semibold text-ink">{feature.title}</h3>
-                    <p className="leading-relaxed text-slate">{feature.description}</p>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
-
-      {commitment && (
-        <div className="mx-auto mt-12 flex max-w-3xl items-center justify-center gap-3 rounded-2xl bg-brand px-8 py-6 text-center shadow-soft">
-          <Heart className="h-5 w-5 shrink-0 text-terracotta" strokeWidth={2.2} />
-          <p className="text-lg font-semibold text-white">{commitment}</p>
-        </div>
-      )}
     </section>
   )
 }
