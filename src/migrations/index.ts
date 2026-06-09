@@ -4,6 +4,11 @@ import * as migration_20260608_122534_localization from './20260608_122534_local
 import * as migration_20260608_135223_hero_home from './20260608_135223_hero_home';
 import * as migration_20260608_205600_hero_panel_d4 from './20260608_205600_hero_panel_d4';
 import * as migration_20260609_090859_promise_block from './20260609_090859_promise_block';
+import * as migration_20260609_095221_pillars_block from './20260609_095221_pillars_block';
+import * as migration_20260609_105343_method_block from './20260609_105343_method_block';
+import * as migration_20260609_122602_lab_block from './20260609_122602_lab_block';
+import * as migration_20260609_130934_lab_demos from './20260609_130934_lab_demos';
+import * as migration_20260609_141705_lab_sandbox from './20260609_141705_lab_sandbox';
 
 export const migrations = [
   {
@@ -34,6 +39,31 @@ export const migrations = [
   {
     up: migration_20260609_090859_promise_block.up,
     down: migration_20260609_090859_promise_block.down,
-    name: '20260609_090859_promise_block'
+    name: '20260609_090859_promise_block',
+  },
+  {
+    up: migration_20260609_095221_pillars_block.up,
+    down: migration_20260609_095221_pillars_block.down,
+    name: '20260609_095221_pillars_block',
+  },
+  {
+    up: migration_20260609_105343_method_block.up,
+    down: migration_20260609_105343_method_block.down,
+    name: '20260609_105343_method_block',
+  },
+  {
+    up: migration_20260609_122602_lab_block.up,
+    down: migration_20260609_122602_lab_block.down,
+    name: '20260609_122602_lab_block',
+  },
+  {
+    up: migration_20260609_130934_lab_demos.up,
+    down: migration_20260609_130934_lab_demos.down,
+    name: '20260609_130934_lab_demos',
+  },
+  {
+    up: migration_20260609_141705_lab_sandbox.up,
+    down: migration_20260609_141705_lab_sandbox.down,
+    name: '20260609_141705_lab_sandbox'
   },
 ];
