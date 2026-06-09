@@ -10,6 +10,7 @@ import * as migration_20260609_122602_lab_block from './20260609_122602_lab_bloc
 import * as migration_20260609_130934_lab_demos from './20260609_130934_lab_demos';
 import * as migration_20260609_141705_lab_sandbox from './20260609_141705_lab_sandbox';
 import * as migration_20260609_173235_lab_security_preview from './20260609_173235_lab_security_preview';
+import * as migration_20260609_182656_commitments_block from './20260609_182656_commitments_block';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20260609_173235_lab_security_preview.up,
     down: migration_20260609_173235_lab_security_preview.down,
-    name: '20260609_173235_lab_security_preview'
+    name: '20260609_173235_lab_security_preview',
+  },
+  {
+    up: migration_20260609_182656_commitments_block.up,
+    down: migration_20260609_182656_commitments_block.down,
+    name: '20260609_182656_commitments_block'
   },
 ];

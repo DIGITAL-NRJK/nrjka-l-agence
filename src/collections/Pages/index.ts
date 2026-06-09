@@ -11,6 +11,7 @@ import { Promise } from '../../blocks/Promise/config'
 import { Pillars } from '../../blocks/Pillars/config'
 import { Method } from '../../blocks/Method/config'
 import { Lab } from '../../blocks/Lab/config'
+import { Commitments } from '../../blocks/Commitments/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -86,6 +87,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 Pillars,
                 Method,
                 Lab,
+                Commitments,
               ],
               admin: {
                 initCollapsed: true,

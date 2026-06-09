@@ -274,6 +274,7 @@ export interface Page {
         | PillarsBlock
         | MethodBlock
         | LabBlock
+        | CommitmentsBlock
       )[]
     | null;
   meta?: {
@@ -970,6 +971,25 @@ export interface LabBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'lab';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CommitmentsBlock".
+ */
+export interface CommitmentsBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  commitments?:
+    | {
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'commitments';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1898,6 +1918,7 @@ export interface PagesSelect<T extends boolean = true> {
         pillars?: T | PillarsBlockSelect<T>;
         method?: T | MethodBlockSelect<T>;
         lab?: T | LabBlockSelect<T>;
+        commitments?: T | CommitmentsBlockSelect<T>;
       };
   meta?:
     | T
@@ -2096,6 +2117,24 @@ export interface LabBlockSelect<T extends boolean = true> {
       };
   ctaLabel?: T;
   ctaHref?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CommitmentsBlock_select".
+ */
+export interface CommitmentsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  commitments?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
