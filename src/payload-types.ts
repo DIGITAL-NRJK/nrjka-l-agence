@@ -246,8 +246,36 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
+    /**
+     * Petit texte en haut du panneau de droite (ex. Architecture D4™).
+     */
+    panelEyebrow?: string | null;
+    panelTitle?: string | null;
+    /**
+     * Les 4 dimensions (titre + accroche). Laisser vide = valeurs par défaut conservées.
+     */
+    panelDimensions?:
+      | {
+          title?: string | null;
+          tag?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    panelAvailability?: string | null;
   };
-  layout?: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[] | null;
+  layout?:
+    | (
+        | CallToActionBlock
+        | ContentBlock
+        | MediaBlock
+        | ArchiveBlock
+        | FormBlock
+        | PromiseBlock
+        | PillarsBlock
+        | MethodBlock
+        | LabBlock
+      )[]
+    | null;
   meta?: {
     title?: string | null;
     /**
@@ -830,6 +858,118 @@ export interface Form {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PromiseBlock".
+ */
+export interface PromiseBlock {
+  eyebrow?: string | null;
+  title: string;
+  subtitle?: string | null;
+  description?: string | null;
+  features?:
+    | {
+        icon?: ('userCheck' | 'layers' | 'shield' | 'zap' | 'heart' | 'target') | null;
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  commitment?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'promise';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PillarsBlock".
+ */
+export interface PillarsBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  pillars?:
+    | {
+        title?: string | null;
+        subtitle?: string | null;
+        description?: string | null;
+        services?:
+          | {
+              label?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pillars';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MethodBlock".
+ */
+export interface MethodBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  steps?:
+    | {
+        title?: string | null;
+        tagline?: string | null;
+        activities?:
+          | {
+              label?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'method';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LabBlock".
+ */
+export interface LabBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  demos?:
+    | {
+        sector?: string | null;
+        stack?:
+          | {
+              label?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        title?: string | null;
+        description?: string | null;
+        status?: ('live' | 'soon') | null;
+        /**
+         * Animation d'aperçu (utilisée si aucune capture n'est uploadée).
+         */
+        previewType?: ('sync' | 'dashboard' | 'calendar' | 'chat' | 'form' | 'content' | 'security') | null;
+        /**
+         * Optionnel : vraie capture animée (GIF/MP4) ou image — remplace l'animation.
+         */
+        media?: (number | null) | Media;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  ctaLabel?: string | null;
+  ctaHref?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'lab';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1735,6 +1875,16 @@ export interface PagesSelect<T extends boolean = true> {
               label?: T;
               id?: T;
             };
+        panelEyebrow?: T;
+        panelTitle?: T;
+        panelDimensions?:
+          | T
+          | {
+              title?: T;
+              tag?: T;
+              id?: T;
+            };
+        panelAvailability?: T;
       };
   layout?:
     | T
@@ -1744,6 +1894,10 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        promise?: T | PromiseBlockSelect<T>;
+        pillars?: T | PillarsBlockSelect<T>;
+        method?: T | MethodBlockSelect<T>;
+        lab?: T | LabBlockSelect<T>;
       };
   meta?:
     | T
@@ -1840,6 +1994,108 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PromiseBlock_select".
+ */
+export interface PromiseBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  subtitle?: T;
+  description?: T;
+  features?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  commitment?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PillarsBlock_select".
+ */
+export interface PillarsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  pillars?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        description?: T;
+        services?:
+          | T
+          | {
+              label?: T;
+              id?: T;
+            };
+        link?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MethodBlock_select".
+ */
+export interface MethodBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  steps?:
+    | T
+    | {
+        title?: T;
+        tagline?: T;
+        activities?:
+          | T
+          | {
+              label?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LabBlock_select".
+ */
+export interface LabBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  demos?:
+    | T
+    | {
+        sector?: T;
+        stack?:
+          | T
+          | {
+              label?: T;
+              id?: T;
+            };
+        title?: T;
+        description?: T;
+        status?: T;
+        previewType?: T;
+        media?: T;
+        url?: T;
+        id?: T;
+      };
+  ctaLabel?: T;
+  ctaHref?: T;
   id?: T;
   blockName?: T;
 }

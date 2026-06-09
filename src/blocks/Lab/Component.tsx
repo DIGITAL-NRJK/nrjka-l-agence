@@ -1,5 +1,5 @@
 import React from 'react'
-import { ArrowUpRight, ShoppingCart, FileText } from 'lucide-react'
+import { ArrowUpRight, ShoppingCart, FileText, ShieldCheck } from 'lucide-react'
 
 import type { LabBlock as LabBlockProps, Media } from '@/payload-types'
 
@@ -27,7 +27,11 @@ function Scene({ type }: { type?: string | null }) {
           <span
             key={k}
             className="sb-grow w-[11px] rounded-t bg-terracotta"
-            style={{ height: 54, animationDelay: `${d}s`, background: k % 2 ? '#6B7A99' : undefined }}
+            style={{
+              height: 54,
+              animationDelay: `${d}s`,
+              background: k % 2 ? '#6B7A99' : undefined,
+            }}
           />
         ))}
       </div>
@@ -48,9 +52,15 @@ function Scene({ type }: { type?: string | null }) {
   if (type === 'chat') {
     return (
       <div className="flex w-[150px] flex-col gap-1.5">
-        <span className="self-start rounded-lg bg-white/15 px-2.5 py-1.5 text-[10px] text-white">Vous livrez en IDF ?</span>
-        <span className="sb-blink self-start rounded-lg bg-white/15 px-3 py-2 text-[10px] tracking-widest text-white">...</span>
-        <span className="sb-pop self-end rounded-lg bg-terracotta px-2.5 py-1.5 text-[10px] font-medium text-brand">Oui, je vous oriente</span>
+        <span className="self-start rounded-lg bg-white/15 px-2.5 py-1.5 text-[10px] text-white">
+          Vous livrez en IDF ?
+        </span>
+        <span className="sb-blink self-start rounded-lg bg-white/15 px-3 py-2 text-[10px] tracking-widest text-white">
+          ...
+        </span>
+        <span className="sb-pop self-end rounded-lg bg-terracotta px-2.5 py-1.5 text-[10px] font-medium text-brand">
+          Oui, je vous oriente
+        </span>
       </div>
     )
   }
@@ -70,6 +80,16 @@ function Scene({ type }: { type?: string | null }) {
         <span className="block h-2 w-full rounded bg-white/15" />
         <span className="sb-fill block h-2 w-5/6 rounded bg-white/15" />
         <span className="block h-2 w-2/3 rounded bg-white/15" />
+      </div>
+    )
+  }
+  if (type === 'security') {
+    return (
+      <div className="relative flex items-center justify-center">
+        <span className="sb-ping absolute h-12 w-12 rounded-full border border-terracotta/30" />
+        <span className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-terracotta">
+          <ShieldCheck className="h-5 w-5" strokeWidth={2} />
+        </span>
       </div>
     )
   }
@@ -123,7 +143,8 @@ export const LabBlock: React.FC<LabBlockProps> = ({
             const stack = (demo.stack || []).map((s) => s.label).filter(Boolean)
             const isLive = demo.status === 'live'
             const clickable = Boolean(isLive && demo.url)
-            const media = demo.media && typeof demo.media === 'object' ? (demo.media as Media) : null
+            const media =
+              demo.media && typeof demo.media === 'object' ? (demo.media as Media) : null
             const isVideo = Boolean(media?.mimeType?.startsWith('video'))
             const cardClass = [
               'group flex h-full flex-col overflow-hidden rounded-2xl border transition-all',

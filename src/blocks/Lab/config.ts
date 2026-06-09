@@ -50,6 +50,7 @@ export const Lab: Block = {
             { label: 'Chat / messagerie', value: 'chat' },
             { label: 'Formulaire', value: 'form' },
             { label: 'Contenu / IA', value: 'content' },
+            { label: 'Sécurité', value: 'security' },
           ],
         },
         {

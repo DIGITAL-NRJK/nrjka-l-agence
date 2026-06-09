@@ -9,6 +9,7 @@ import * as migration_20260609_105343_method_block from './20260609_105343_metho
 import * as migration_20260609_122602_lab_block from './20260609_122602_lab_block';
 import * as migration_20260609_130934_lab_demos from './20260609_130934_lab_demos';
 import * as migration_20260609_141705_lab_sandbox from './20260609_141705_lab_sandbox';
+import * as migration_20260609_173235_lab_security_preview from './20260609_173235_lab_security_preview';
 
 export const migrations = [
   {
@@ -64,6 +65,11 @@ export const migrations = [
   {
     up: migration_20260609_141705_lab_sandbox.up,
     down: migration_20260609_141705_lab_sandbox.down,
-    name: '20260609_141705_lab_sandbox'
+    name: '20260609_141705_lab_sandbox',
+  },
+  {
+    up: migration_20260609_173235_lab_security_preview.up,
+    down: migration_20260609_173235_lab_security_preview.down,
+    name: '20260609_173235_lab_security_preview'
   },
 ];

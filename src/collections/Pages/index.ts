@@ -8,6 +8,9 @@ import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { Promise } from '../../blocks/Promise/config'
+import { Pillars } from '../../blocks/Pillars/config'
+import { Method } from '../../blocks/Method/config'
+import { Lab } from '../../blocks/Lab/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -73,7 +76,17 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, Promise],
+              blocks: [
+                CallToAction,
+                Content,
+                MediaBlock,
+                Archive,
+                FormBlock,
+                Promise,
+                Pillars,
+                Method,
+                Lab,
+              ],
               admin: {
                 initCollapsed: true,
               },

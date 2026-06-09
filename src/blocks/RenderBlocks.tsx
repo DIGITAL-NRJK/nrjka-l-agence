@@ -8,6 +8,9 @@ import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { PromiseBlock } from '@/blocks/Promise/Component'
+import { PillarsBlock } from '@/blocks/Pillars/Component'
+import { MethodBlock } from '@/blocks/Method/Component'
+import { LabBlock } from '@/blocks/Lab/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -16,6 +19,9 @@ const blockComponents = {
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
   promise: PromiseBlock,
+  pillars: PillarsBlock,
+  method: MethodBlock,
+  lab: LabBlock,
 }
 
 export const RenderBlocks: React.FC<{
