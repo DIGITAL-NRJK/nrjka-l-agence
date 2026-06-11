@@ -12,6 +12,8 @@ import { Pillars } from '../../blocks/Pillars/config'
 import { Method } from '../../blocks/Method/config'
 import { Lab } from '../../blocks/Lab/config'
 import { Commitments } from '../../blocks/Commitments/config'
+import { Partners } from '../../blocks/Partners/config'
+import { Testimonials } from '../../blocks/Testimonials/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -88,6 +90,8 @@ export const Pages: CollectionConfig<'pages'> = {
                 Method,
                 Lab,
                 Commitments,
+                Partners,
+                Testimonials,
               ],
               admin: {
                 initCollapsed: true,

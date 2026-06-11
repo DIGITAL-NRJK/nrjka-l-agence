@@ -19,6 +19,8 @@ import { s3Storage } from '@payloadcms/storage-s3'
 
 import { Services } from './collections/Services'
 import { CaseStudies } from './collections/CaseStudies'
+import { CaseStudySectors } from './collections/CaseStudySectors'
+import { CaseStudyTypes } from './collections/CaseStudyTypes'
 import { Products } from './collections/Products'
 import { ContactMessages } from './collections/ContactMessages'
 import { Reviews } from './collections/Reviews'
@@ -83,7 +85,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
-    push: false,
+    push: true,
   }),
   collections: [
     Pages,
@@ -93,6 +95,8 @@ export default buildConfig({
     Users,
     Services,
     CaseStudies,
+    CaseStudySectors,
+    CaseStudyTypes,
     Products,
     ContactMessages,
     Reviews,

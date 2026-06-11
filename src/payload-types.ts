@@ -74,6 +74,8 @@ export interface Config {
     users: User;
     services: Service;
     'case-studies': CaseStudy;
+    'case-study-sectors': CaseStudySector;
+    'case-study-types': CaseStudyType;
     products: Product;
     'contact-messages': ContactMessage;
     reviews: Review;
@@ -107,6 +109,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
+    'case-study-sectors': CaseStudySectorsSelect<false> | CaseStudySectorsSelect<true>;
+    'case-study-types': CaseStudyTypesSelect<false> | CaseStudyTypesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
@@ -275,6 +279,8 @@ export interface Page {
         | MethodBlock
         | LabBlock
         | CommitmentsBlock
+        | PartnersBlock
+        | TestimonialsBlock
       )[]
     | null;
   meta?: {
@@ -993,6 +999,53 @@ export interface CommitmentsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnersBlock".
+ */
+export interface PartnersBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Nombre de projets « Mis en avant » à afficher (cochés dans Études de cas).
+   */
+  projectsLimit?: number | null;
+  /**
+   * Petit titre au-dessus des technologies (ex. « Les technologies derrière nos projets »).
+   */
+  techLabel?: string | null;
+  technologies?:
+    | {
+        name?: string | null;
+        category?: ('web' | 'data' | 'automation' | 'ai' | 'security' | 'other') | null;
+        logo?: (number | null) | Media;
+        openSource?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  ctaLabel?: string | null;
+  ctaHref?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'partners';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock".
+ */
+export interface TestimonialsBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Nombre de témoignages à afficher (triés par « Ordre d'affichage »).
+   */
+  limit?: number | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonialsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
 export interface Service {
@@ -1097,10 +1150,8 @@ export interface CaseStudy {
   slug: string;
   excerpt?: string | null;
   excerpt_en?: string | null;
-  industry?:
-    | ('ecommerce' | 'services' | 'industry' | 'health' | 'education' | 'real-estate' | 'restaurant' | 'other')
-    | null;
-  category?: ('showcase' | 'ecommerce' | 'webapp' | 'seo' | 'automation') | null;
+  industry?: (number | null) | CaseStudySector;
+  category?: (number | null) | CaseStudyType;
   image?: (number | null) | Media;
   logo?: (number | null) | Media;
   challenge?: {
@@ -1209,14 +1260,43 @@ export interface CaseStudy {
   services_used?: (number | Service)[] | null;
   duration?: string | null;
   team_size?: number | null;
-  testimonial?: string | null;
-  testimonial_en?: string | null;
-  testimonial_author?: string | null;
+  /**
+   * Un ou plusieurs témoignages (différentes personnes / équipes du même projet).
+   */
+  testimonials?:
+    | {
+        quote?: string | null;
+        quote_en?: string | null;
+        author?: string | null;
+        author_role?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   is_featured?: boolean | null;
   seo?: {
     metaTitle?: string | null;
     metaDescription?: string | null;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-study-sectors".
+ */
+export interface CaseStudySector {
+  id: number;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-study-types".
+ */
+export interface CaseStudyType {
+  id: number;
+  name: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1750,6 +1830,14 @@ export interface PayloadLockedDocument {
         value: number | CaseStudy;
       } | null)
     | ({
+        relationTo: 'case-study-sectors';
+        value: number | CaseStudySector;
+      } | null)
+    | ({
+        relationTo: 'case-study-types';
+        value: number | CaseStudyType;
+      } | null)
+    | ({
         relationTo: 'products';
         value: number | Product;
       } | null)
@@ -1919,6 +2007,8 @@ export interface PagesSelect<T extends boolean = true> {
         method?: T | MethodBlockSelect<T>;
         lab?: T | LabBlockSelect<T>;
         commitments?: T | CommitmentsBlockSelect<T>;
+        partners?: T | PartnersBlockSelect<T>;
+        testimonialsBlock?: T | TestimonialsBlockSelect<T>;
       };
   meta?:
     | T
@@ -2135,6 +2225,42 @@ export interface CommitmentsBlockSelect<T extends boolean = true> {
         description?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnersBlock_select".
+ */
+export interface PartnersBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  projectsLimit?: T;
+  techLabel?: T;
+  technologies?:
+    | T
+    | {
+        name?: T;
+        category?: T;
+        logo?: T;
+        openSource?: T;
+        id?: T;
+      };
+  ctaLabel?: T;
+  ctaHref?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock_select".
+ */
+export interface TestimonialsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  limit?: T;
   id?: T;
   blockName?: T;
 }
@@ -2411,9 +2537,15 @@ export interface CaseStudiesSelect<T extends boolean = true> {
   services_used?: T;
   duration?: T;
   team_size?: T;
-  testimonial?: T;
-  testimonial_en?: T;
-  testimonial_author?: T;
+  testimonials?:
+    | T
+    | {
+        quote?: T;
+        quote_en?: T;
+        author?: T;
+        author_role?: T;
+        id?: T;
+      };
   is_featured?: T;
   seo?:
     | T
@@ -2421,6 +2553,24 @@ export interface CaseStudiesSelect<T extends boolean = true> {
         metaTitle?: T;
         metaDescription?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-study-sectors_select".
+ */
+export interface CaseStudySectorsSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-study-types_select".
+ */
+export interface CaseStudyTypesSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }

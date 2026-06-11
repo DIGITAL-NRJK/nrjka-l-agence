@@ -12,6 +12,8 @@ import { PillarsBlock } from '@/blocks/Pillars/Component'
 import { MethodBlock } from '@/blocks/Method/Component'
 import { LabBlock } from '@/blocks/Lab/Component'
 import { CommitmentsBlock } from '@/blocks/Commitments/Component'
+import { PartnersBlock } from '@/blocks/Partners/Component'
+import { TestimonialsBlock } from '@/blocks/Testimonials/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -24,6 +26,8 @@ const blockComponents = {
   method: MethodBlock,
   lab: LabBlock,
   commitments: CommitmentsBlock,
+  partners: PartnersBlock,
+  testimonialsBlock: TestimonialsBlock,
 }
 
 export const RenderBlocks: React.FC<{

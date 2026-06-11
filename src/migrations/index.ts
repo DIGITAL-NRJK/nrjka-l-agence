@@ -11,6 +11,8 @@ import * as migration_20260609_130934_lab_demos from './20260609_130934_lab_demo
 import * as migration_20260609_141705_lab_sandbox from './20260609_141705_lab_sandbox';
 import * as migration_20260609_173235_lab_security_preview from './20260609_173235_lab_security_preview';
 import * as migration_20260609_182656_commitments_block from './20260609_182656_commitments_block';
+import * as migration_20260609_184612_partners_block from './20260609_184612_partners_block';
+import * as migration_20260611_103627_partners_projects from './20260611_103627_partners_projects';
 
 export const migrations = [
   {
@@ -76,6 +78,16 @@ export const migrations = [
   {
     up: migration_20260609_182656_commitments_block.up,
     down: migration_20260609_182656_commitments_block.down,
-    name: '20260609_182656_commitments_block'
+    name: '20260609_182656_commitments_block',
+  },
+  {
+    up: migration_20260609_184612_partners_block.up,
+    down: migration_20260609_184612_partners_block.down,
+    name: '20260609_184612_partners_block',
+  },
+  {
+    up: migration_20260611_103627_partners_projects.up,
+    down: migration_20260611_103627_partners_projects.down,
+    name: '20260611_103627_partners_projects'
   },
 ];
