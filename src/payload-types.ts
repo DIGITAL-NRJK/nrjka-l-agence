@@ -282,6 +282,7 @@ export interface Page {
         | PartnersBlock
         | TestimonialsBlock
         | ResourcesBlock
+        | CtaFinalBlock
       )[]
     | null;
   meta?: {
@@ -1057,6 +1058,23 @@ export interface ResourcesBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'resourcesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaFinalBlock".
+ */
+export interface CtaFinalBlock {
+  eyebrow?: string | null;
+  title: string;
+  body?: string | null;
+  note?: string | null;
+  primaryCtaLabel?: string | null;
+  primaryCtaHref?: string | null;
+  secondaryCtaLabel?: string | null;
+  secondaryCtaHref?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ctaFinal';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2024,6 +2042,7 @@ export interface PagesSelect<T extends boolean = true> {
         partners?: T | PartnersBlockSelect<T>;
         testimonialsBlock?: T | TestimonialsBlockSelect<T>;
         resourcesBlock?: T | ResourcesBlockSelect<T>;
+        ctaFinal?: T | CtaFinalBlockSelect<T>;
       };
   meta?:
     | T
@@ -2288,6 +2307,22 @@ export interface ResourcesBlockSelect<T extends boolean = true> {
   title?: T;
   intro?: T;
   limit?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaFinalBlock_select".
+ */
+export interface CtaFinalBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  body?: T;
+  note?: T;
+  primaryCtaLabel?: T;
+  primaryCtaHref?: T;
+  secondaryCtaLabel?: T;
+  secondaryCtaHref?: T;
   id?: T;
   blockName?: T;
 }

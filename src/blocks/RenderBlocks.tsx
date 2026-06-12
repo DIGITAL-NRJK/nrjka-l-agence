@@ -15,6 +15,7 @@ import { CommitmentsBlock } from '@/blocks/Commitments/Component'
 import { PartnersBlock } from '@/blocks/Partners/Component'
 import { TestimonialsBlock } from '@/blocks/Testimonials/Component'
 import { ResourcesBlock } from '@/blocks/Resources/Component'
+import { CtaFinalBlock } from '@/blocks/CtaFinal/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -30,6 +31,7 @@ const blockComponents = {
   partners: PartnersBlock,
   testimonialsBlock: TestimonialsBlock,
   resourcesBlock: ResourcesBlock,
+  ctaFinal: CtaFinalBlock,
 }
 
 export const RenderBlocks: React.FC<{
