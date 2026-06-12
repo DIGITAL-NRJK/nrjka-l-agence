@@ -63,8 +63,11 @@ export const PromiseBlock: React.FC<PromiseBlockProps> = ({
               {features.map((feature, i) => {
                 const Icon = iconMap[feature.icon || 'userCheck'] || UserCheck
                 return (
-                  <div key={i} className="flex gap-4">
-                    <Icon className="h-6 w-6 shrink-0 text-terracotta" strokeWidth={2} />
+                  <div key={i} className="group flex gap-4">
+                    <Icon
+                      className="h-6 w-6 shrink-0 text-terracotta transition-transform duration-300 group-hover:scale-110"
+                      strokeWidth={2}
+                    />
                     <div>
                       <h3 className="font-semibold text-white">{feature.title}</h3>
                       <p className="mt-1 text-sm leading-relaxed text-white/60">

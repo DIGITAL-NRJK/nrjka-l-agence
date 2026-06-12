@@ -28,7 +28,8 @@ export const PillarsBlock: React.FC<PillarsBlockProps> = ({ eyebrow, title, intr
           <div className="border-t border-border">
             {pillars.map((pillar, i) => {
               const services = (pillar.services || []).map((s) => s.label).filter(Boolean)
-              const rowClass = 'group flex gap-6 border-b border-border py-8 sm:gap-8'
+              const rowClass =
+                'group flex gap-6 border-b border-border py-8 transition-all duration-300 hover:border-terracotta/50 hover:pl-2 sm:gap-8'
               const inner = (
                 <>
                   <span className="font-display text-4xl font-bold leading-none tabular-nums text-ink/15 transition-colors group-hover:text-terracotta sm:text-5xl">

@@ -66,7 +66,7 @@ export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
               </span>
             )}
             {title && (
-              <h2 className="text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
+              <h2 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
                 {title}
               </h2>
             )}
@@ -118,7 +118,7 @@ export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
                 return (
                   <figure
                     key={t.id}
-                    className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/5 p-6"
+                    className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/5 p-6 transition-colors hover:border-white/25 hover:bg-white/10"
                   >
                     {t.rating ? (
                       <div className="mb-4 flex gap-0.5">

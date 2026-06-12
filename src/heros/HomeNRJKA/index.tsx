@@ -82,7 +82,7 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
             {primaryCtaLabel && (
               <Link
                 href={primaryCtaHref || '#'}
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-terracotta px-7 py-3.5 font-medium text-terracotta-foreground shadow-lg shadow-terracotta/25 transition-all hover:bg-terracotta-dark"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-terracotta px-7 py-3.5 font-medium text-terracotta-foreground shadow-lg shadow-terracotta/25 transition-all hover:-translate-y-0.5 hover:bg-terracotta-dark hover:shadow-xl hover:shadow-terracotta/30"
               >
                 {primaryCtaLabel}
                 <ArrowRight
