@@ -53,8 +53,13 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
       </div>
 
       {projects.length > 0 && (
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          className={
+            projects.length === 1 ? 'mt-12' : 'mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3'
+          }
+        >
           {projects.map((p) => {
+            const single = projects.length === 1
             const img = p.image && typeof p.image === 'object' ? (p.image as Media) : null
             const industryName =
               p.industry && typeof p.industry === 'object' && 'name' in p.industry
@@ -68,9 +73,17 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
             return (
               <div
                 key={p.id}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-terracotta/40"
+                className={[
+                  'group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-terracotta/40',
+                  single ? 'lg:grid lg:grid-cols-[1.05fr_0.95fr]' : 'flex flex-col',
+                ].join(' ')}
               >
-                <div className="relative aspect-16/10 overflow-hidden bg-brand">
+                <div
+                  className={[
+                    'relative overflow-hidden bg-brand',
+                    single ? 'aspect-16/10 lg:aspect-auto lg:min-h-88' : 'aspect-16/10',
+                  ].join(' ')}
+                >
                   {img ? (
                     <img
                       src={img.url || ''}
@@ -88,21 +101,53 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
                     </span>
                   )}
                 </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-semibold text-ink">{p.client_name}</h3>
+                <div
+                  className={
+                    single
+                      ? 'flex flex-col justify-center p-6 sm:p-8 lg:p-12'
+                      : 'flex flex-1 flex-col p-5'
+                  }
+                >
+                  <h3
+                    className={
+                      single ? 'text-2xl font-semibold text-ink' : 'font-semibold text-ink'
+                    }
+                  >
+                    {p.client_name}
+                  </h3>
                   {p.excerpt && (
-                    <p className="mt-1.5 line-clamp-3 text-sm leading-relaxed text-slate">
+                    <p
+                      className={
+                        single
+                          ? 'mt-3 leading-relaxed text-slate'
+                          : 'mt-1.5 line-clamp-3 text-sm leading-relaxed text-slate'
+                      }
+                    >
                       {p.excerpt}
                     </p>
                   )}
                   {metric && (
-                    <p className="mt-3 text-sm">
-                      <span className="font-semibold text-terracotta-dark">{metric.value}</span>{' '}
+                    <p className={single ? 'mt-5' : 'mt-3 text-sm'}>
+                      <span
+                        className={
+                          single
+                            ? 'font-display text-3xl font-bold text-terracotta-dark'
+                            : 'font-semibold text-terracotta-dark'
+                        }
+                      >
+                        {metric.value}
+                      </span>{' '}
                       <span className="text-slate">{metric.label}</span>
                     </p>
                   )}
                   {techList.length > 0 && (
-                    <p className="mt-auto pt-4 font-mono text-xs text-slate">
+                    <p
+                      className={
+                        single
+                          ? 'mt-6 font-mono text-xs text-slate'
+                          : 'mt-auto pt-4 font-mono text-xs text-slate'
+                      }
+                    >
                       {techList.join(' · ')}
                     </p>
                   )}
