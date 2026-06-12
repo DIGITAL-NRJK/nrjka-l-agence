@@ -35,11 +35,6 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
 
   return (
     <section className="relative flex min-h-[80vh] items-center overflow-hidden bg-background">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-32 top-0 h-[34rem] w-[34rem] rounded-full bg-terracotta/5 blur-3xl" />
-        <div className="absolute -left-40 bottom-0 h-[30rem] w-[30rem] rounded-full bg-brand/5 blur-3xl" />
-      </div>
-
       <div className="relative mx-auto grid w-full max-w-7xl items-start gap-16 px-6 py-12 sm:px-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-16 lg:py-16">
         {/* Colonne gauche */}
         <div>

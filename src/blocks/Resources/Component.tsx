@@ -65,7 +65,7 @@ export const ResourcesBlock = async (props: ResourcesBlockProps) => {
               <div className="flex-1">
                 <div className="mb-2 flex items-center gap-2.5 text-xs">
                   {cat && (
-                    <span className="rounded-full bg-terracotta/10 px-2.5 py-0.5 font-medium text-[#bf5e1f]">
+                    <span className="rounded-full bg-terracotta/10 px-2.5 py-0.5 font-medium text-terracotta-dark">
                       {cat}
                     </span>
                   )}

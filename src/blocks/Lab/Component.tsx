@@ -197,13 +197,13 @@ export const LabBlock: React.FC<LabBlockProps> = ({
                       </span>
                     )}
                     {demo.sector && (
-                      <span className="rounded-full bg-terracotta/15 px-2.5 py-0.5 text-[0.7rem] font-medium text-[#bf5e1f]">
+                      <span className="rounded-full bg-terracotta/15 px-2.5 py-0.5 text-[0.7rem] font-medium text-terracotta-dark">
                         {demo.sector}
                       </span>
                     )}
                   </div>
                   {stack.length > 0 && (
-                    <p className="font-mono text-sm text-[#bf5e1f]">{stack.join(' × ')}</p>
+                    <p className="font-mono text-sm text-terracotta-dark">{stack.join(' × ')}</p>
                   )}
                   <h3 className="mt-1.5 font-semibold text-ink">{demo.title}</h3>
                   {demo.description && (
