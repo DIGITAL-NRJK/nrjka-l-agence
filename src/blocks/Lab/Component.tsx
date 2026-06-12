@@ -130,7 +130,7 @@ export const LabBlock: React.FC<LabBlockProps> = ({
           </span>
         )}
         {title && (
-          <h2 className="text-3xl font-bold leading-tight tracking-tight text-ink sm:text-4xl">
+          <h2 className="text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
             {title}
           </h2>
         )}
