@@ -281,6 +281,7 @@ export interface Page {
         | CommitmentsBlock
         | PartnersBlock
         | TestimonialsBlock
+        | ResourcesBlock
       )[]
     | null;
   meta?: {
@@ -1043,6 +1044,19 @@ export interface TestimonialsBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'testimonialsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourcesBlock".
+ */
+export interface ResourcesBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  limit?: number | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'resourcesBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2009,6 +2023,7 @@ export interface PagesSelect<T extends boolean = true> {
         commitments?: T | CommitmentsBlockSelect<T>;
         partners?: T | PartnersBlockSelect<T>;
         testimonialsBlock?: T | TestimonialsBlockSelect<T>;
+        resourcesBlock?: T | ResourcesBlockSelect<T>;
       };
   meta?:
     | T
@@ -2257,6 +2272,18 @@ export interface PartnersBlockSelect<T extends boolean = true> {
  * via the `definition` "TestimonialsBlock_select".
  */
 export interface TestimonialsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  limit?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourcesBlock_select".
+ */
+export interface ResourcesBlockSelect<T extends boolean = true> {
   eyebrow?: T;
   title?: T;
   intro?: T;
