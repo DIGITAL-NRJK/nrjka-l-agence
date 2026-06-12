@@ -14,12 +14,18 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
   secondaryCtaHref,
 }) => {
   return (
-    <section className="container">
-      <div className="relative overflow-hidden rounded-3xl bg-brand px-6 py-16 text-center shadow-soft sm:px-12 sm:py-20 lg:px-16">
-        <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-terracotta/15 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-terracotta/10 blur-3xl" />
+    <section className="relative overflow-hidden bg-brand py-24 text-center sm:py-28">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+        }}
+      />
 
-        <div className="relative mx-auto max-w-2xl">
+      <div className="container">
+        <div className="relative mx-auto max-w-3xl">
           {eyebrow && (
             <span className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
               <span className="h-px w-8 bg-terracotta" />
@@ -28,7 +34,7 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
             </span>
           )}
           {title && (
-            <h2 className="text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl">
+            <h2 className="text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
               {title}
             </h2>
           )}
