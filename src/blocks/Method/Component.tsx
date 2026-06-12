@@ -32,13 +32,20 @@ export const MethodBlock: React.FC<MethodBlockProps> = ({ eyebrow, title, intro,
               <li key={i} className="relative">
                 {/* fil de liaison (desktop, sauf le dernier) */}
                 {i < list.length - 1 && (
-                  <span className="absolute left-12 -right-8 top-6 hidden h-px -translate-y-1/2 bg-gradient-to-r from-terracotta/50 to-border lg:block" />
+                  <span className="absolute left-14 -right-8 top-7 hidden h-px -translate-y-1/2 bg-gradient-to-r from-terracotta via-terracotta/40 to-border lg:block" />
                 )}
                 {/* nœud numéroté */}
-                <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-terracotta/40 bg-background font-display text-base font-bold text-terracotta">
+                <span className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 border-terracotta/50 bg-background font-display text-lg font-bold text-terracotta">
                   {`0${i + 1}`}
                 </span>
-                <h3 className="mt-6 text-xl font-semibold text-ink">{step.title}</h3>
+                <h3 className="mt-6 text-2xl font-semibold text-ink">
+                  {step.title ? (
+                    <>
+                      <span className="text-terracotta-dark">{step.title.charAt(0)}</span>
+                      {step.title.slice(1)}
+                    </>
+                  ) : null}
+                </h3>
                 {step.tagline && (
                   <p className="mt-1 text-sm font-medium uppercase tracking-[0.08em] text-terracotta">
                     {step.tagline}
