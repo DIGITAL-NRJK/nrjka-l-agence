@@ -13,7 +13,7 @@ export async function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="mt-auto bg-brand text-white">
+    <footer className="mt-auto border-t border-white/10 bg-brand text-white">
       <div className="container py-14">
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           <div className="max-w-xs">
