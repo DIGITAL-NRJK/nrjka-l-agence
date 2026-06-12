@@ -33,7 +33,20 @@ const blockComponents = {
   resourcesBlock: ResourcesBlock,
   ctaFinal: CtaFinalBlock,
 }
-
+// Rythme vertical de la home : les sections liées sont rapprochées,
+// chaque nouveau « mouvement » respire davantage.
+// Les blocs absents de cette liste (pages standard) gardent my-16.
+const blockSpacing: Record<string, string> = {
+  promise: 'mt-16 lg:mt-20',
+  pillars: 'mt-28 lg:mt-40',
+  method: 'mt-20 lg:mt-24',
+  lab: 'mt-28 lg:mt-40',
+  commitments: 'mt-28 lg:mt-40',
+  partners: 'mt-28 lg:mt-40',
+  testimonialsBlock: 'mt-28 lg:mt-40',
+  resourcesBlock: 'mt-28 lg:mt-40',
+  ctaFinal: 'mt-28 lg:mt-40',
+}
 export const RenderBlocks: React.FC<{
   blocks: Page['layout']
 }> = (props) => {
@@ -50,7 +63,7 @@ export const RenderBlocks: React.FC<{
 
             if (Block) {
               return (
-                <div className="my-16" key={index}>
+                <div className={blockSpacing[blockType] || 'my-16'} key={index}>
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
                   <Block {...block} disableInnerContainer />
                 </div>
