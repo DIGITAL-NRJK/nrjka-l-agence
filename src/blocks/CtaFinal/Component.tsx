@@ -14,7 +14,7 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
   secondaryCtaHref,
 }) => {
   return (
-    <section className="relative overflow-hidden bg-brand py-24 text-center sm:py-28">
+    <section className="relative overflow-hidden bg-brand py-16 text-center sm:py-20">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
         style={{
