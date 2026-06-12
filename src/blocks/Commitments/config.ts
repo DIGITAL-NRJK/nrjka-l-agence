@@ -1,5 +1,7 @@
 import type { Block } from 'payload'
 
+import { appearance } from '@/fields/appearance'
+
 export const Commitments: Block = {
   slug: 'commitments',
   interfaceName: 'CommitmentsBlock',
@@ -22,5 +24,6 @@ export const Commitments: Block = {
         { name: 'description', type: 'textarea' },
       ],
     },
+    appearance,
   ],
 }

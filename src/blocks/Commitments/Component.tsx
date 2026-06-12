@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { CommitmentsBlock as CommitmentsBlockProps } from '@/payload-types'
+import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
 const commitmentsCss = `
 @keyframes cm-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
@@ -21,8 +22,10 @@ export const CommitmentsBlock: React.FC<CommitmentsBlockProps> = ({
   title,
   intro,
   commitments,
+  appearance,
 }) => {
   const list = commitments || []
+  const a = appearance || {}
 
   return (
     <section className="container">
@@ -35,11 +38,21 @@ export const CommitmentsBlock: React.FC<CommitmentsBlockProps> = ({
           </span>
         )}
         {title && (
-          <h2 className="text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
+          <h2
+            className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-bold leading-tight tracking-tight text-ink`}
+            style={colorStyle(a.titleColor)}
+          >
             {title}
           </h2>
         )}
-        {intro && <p className="mt-5 text-lg leading-relaxed text-slate">{intro}</p>}
+        {intro && (
+          <p
+            className={`${textClass(a, 'text-lg')} mt-5 leading-relaxed text-slate`}
+            style={colorStyle(a.textColor)}
+          >
+            {intro}
+          </p>
+        )}
       </div>
 
       {list.length > 0 && (

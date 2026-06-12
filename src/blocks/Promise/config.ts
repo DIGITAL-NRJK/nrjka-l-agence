@@ -1,5 +1,8 @@
 import type { Block } from 'payload'
 
+import { appearance } from '@/fields/appearance'
+import { iconOptions } from '@/utilities/icons'
+
 export const Promise: Block = {
   slug: 'promise',
   interfaceName: 'PromiseBlock',
@@ -42,14 +45,7 @@ export const Promise: Block = {
           name: 'icon',
           type: 'select',
           defaultValue: 'userCheck',
-          options: [
-            { label: 'Interlocuteur', value: 'userCheck' },
-            { label: 'Vision 360°', value: 'layers' },
-            { label: 'Bouclier / confiance', value: 'shield' },
-            { label: 'Éclair / réactivité', value: 'zap' },
-            { label: 'Cœur', value: 'heart' },
-            { label: 'Cible', value: 'target' },
-          ],
+          options: iconOptions,
         },
         {
           name: 'title',
@@ -66,5 +62,6 @@ export const Promise: Block = {
       type: 'text',
       localized: true,
     },
+    appearance,
   ],
 }
