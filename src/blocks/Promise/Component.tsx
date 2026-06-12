@@ -21,19 +21,18 @@ export const PromiseBlock: React.FC<PromiseBlockProps> = ({
   commitment,
 }) => {
   return (
-    <section className="container">
-      <div className="relative overflow-hidden rounded-3xl bg-brand px-6 py-14 shadow-soft sm:px-12 sm:py-16 lg:px-16">
-        {/* trame + halo — écho de la carte D4 du Hero */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
-            backgroundSize: '32px 32px',
-          }}
-        />
-        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-terracotta/20 blur-3xl" />
+    <section className="relative overflow-hidden bg-brand py-16 sm:py-20">
+      {/* trame — écho de la carte D4 du Hero */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+        }}
+      />
 
+      <div className="container">
         <div className="relative">
           {/* En-tête */}
           <div className="max-w-2xl">
