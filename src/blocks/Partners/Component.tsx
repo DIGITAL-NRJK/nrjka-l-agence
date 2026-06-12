@@ -177,21 +177,23 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
                   <div className="text-sm font-semibold uppercase tracking-wider text-ink">
                     {cat.label}
                   </div>
-                  <div className="flex flex-wrap gap-x-6 gap-y-3">
+                  <div className="flex flex-wrap gap-2.5">
                     {items.map((tech, i) => {
                       const logo =
                         tech.logo && typeof tech.logo === 'object' ? (tech.logo as Media) : null
                       return (
-                        <span key={i} className="inline-flex items-center gap-1.5">
-                          {logo ? (
+                        <span
+                          key={i}
+                          className="group inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 transition-all hover:-translate-y-0.5 hover:border-terracotta/40 hover:shadow-soft"
+                        >
+                          {logo && (
                             <img
                               src={logo.url || ''}
                               alt={logo.alt || tech.name || ''}
-                              className="h-6 w-auto opacity-70 grayscale"
+                              className="h-5 w-auto opacity-70 grayscale transition-all group-hover:opacity-100 group-hover:grayscale-0"
                             />
-                          ) : (
-                            <span className="text-base font-medium text-ink">{tech.name}</span>
                           )}
+                          <span className="text-sm font-medium text-ink">{tech.name}</span>
                           {tech.openSource && (
                             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />
                           )}
