@@ -1,5 +1,4 @@
 import React from 'react'
-import { Check } from 'lucide-react'
 
 import type { CommitmentsBlock as CommitmentsBlockProps } from '@/payload-types'
 
@@ -29,18 +28,16 @@ export const CommitmentsBlock: React.FC<CommitmentsBlockProps> = ({
       </div>
 
       {list.length > 0 && (
-        <div className="mt-12 grid gap-x-12 gap-y-9 sm:grid-cols-2">
+        <div className="mt-12 grid gap-x-12 sm:grid-cols-2">
           {list.map((item, i) => (
-            <div key={i} className="flex gap-4 border-t border-border pt-7">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-terracotta/40 text-terracotta">
-                <Check className="h-4 w-4" strokeWidth={2.5} />
+            <div key={i} className="border-t border-border py-7">
+              <span className="font-mono text-xs font-medium uppercase tracking-[0.15em] text-terracotta-dark">
+                {`Art. 0${i + 1}`}
               </span>
-              <div>
-                <h3 className="font-semibold text-ink">{item.title}</h3>
-                {item.description && (
-                  <p className="mt-1 text-sm leading-relaxed text-slate">{item.description}</p>
-                )}
-              </div>
+              <h3 className="mt-3 text-lg font-semibold text-ink">{item.title}</h3>
+              {item.description && (
+                <p className="mt-2 text-sm leading-relaxed text-slate">{item.description}</p>
+              )}
             </div>
           ))}
         </div>
