@@ -21,7 +21,7 @@ export const PromiseBlock: React.FC<PromiseBlockProps> = ({
   commitment,
 }) => {
   return (
-    <section className="relative overflow-hidden bg-brand py-16 sm:py-20">
+    <section className="relative overflow-hidden bg-brand py-14 sm:py-16">
       {/* trame — écho de la carte D4 du Hero */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.07]"
@@ -33,9 +33,9 @@ export const PromiseBlock: React.FC<PromiseBlockProps> = ({
       />
 
       <div className="container">
-        <div className="relative">
-          {/* En-tête */}
-          <div className="max-w-2xl">
+        <div className="relative grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+          {/* Colonne gauche — le discours */}
+          <div>
             {eyebrow && (
               <span className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
                 <span className="h-px w-8 bg-terracotta" />
@@ -43,19 +43,23 @@ export const PromiseBlock: React.FC<PromiseBlockProps> = ({
               </span>
             )}
             {title && (
-              <h2 className="text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl">
                 {title}
               </h2>
             )}
             {subtitle && <p className="mt-4 text-lg font-medium text-terracotta">{subtitle}</p>}
-            {description && (
-              <p className="mt-4 text-lg leading-relaxed text-white/70">{description}</p>
+            {description && <p className="mt-4 leading-relaxed text-white/70">{description}</p>}
+            {commitment && (
+              <div className="mt-8 flex items-center gap-3">
+                <Heart className="h-5 w-5 shrink-0 text-terracotta" strokeWidth={2.2} />
+                <p className="font-semibold text-white">{commitment}</p>
+              </div>
             )}
           </div>
 
-          {/* 4 valeurs */}
+          {/* Colonne droite — 4 valeurs en 2×2 */}
           {features && features.length > 0 && (
-            <div className="mt-12 grid gap-x-10 gap-y-9 border-t border-white/10 pt-10 sm:grid-cols-2">
+            <div className="grid content-center gap-x-10 gap-y-8 border-t border-white/10 pt-8 sm:grid-cols-2 lg:border-l lg:border-t-0 lg:pl-14 lg:pt-0">
               {features.map((feature, i) => {
                 const Icon = iconMap[feature.icon || 'userCheck'] || UserCheck
                 return (
@@ -70,14 +74,6 @@ export const PromiseBlock: React.FC<PromiseBlockProps> = ({
                   </div>
                 )
               })}
-            </div>
-          )}
-
-          {/* Engagement */}
-          {commitment && (
-            <div className="mt-10 flex items-center gap-3 border-t border-white/10 pt-7">
-              <Heart className="h-5 w-5 shrink-0 text-terracotta" strokeWidth={2.2} />
-              <p className="font-semibold text-white">{commitment}</p>
             </div>
           )}
         </div>
