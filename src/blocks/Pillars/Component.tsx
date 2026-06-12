@@ -31,7 +31,7 @@ export const PillarsBlock: React.FC<PillarsBlockProps> = ({ eyebrow, title, intr
               const rowClass = 'group flex gap-6 border-b border-border py-8 sm:gap-8'
               const inner = (
                 <>
-                  <span className="font-display text-2xl font-bold leading-none tabular-nums text-ink/20 transition-colors group-hover:text-terracotta">
+                  <span className="font-display text-4xl font-bold leading-none tabular-nums text-ink/15 transition-colors group-hover:text-terracotta sm:text-5xl">
                     {`0${i + 1}`}
                   </span>
                   <div className="flex-1">

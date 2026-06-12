@@ -59,7 +59,9 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
                     fill="none"
                   >
                     <path
+                      className="animate-draw"
                       d="M1 5.5 C 50 1, 150 1, 199 5.5"
+                      pathLength={1}
                       stroke="currentColor"
                       strokeWidth="2.5"
                       strokeLinecap="round"
