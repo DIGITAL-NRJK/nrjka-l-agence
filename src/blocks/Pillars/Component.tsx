@@ -71,13 +71,13 @@ export const PillarsBlock: React.FC<PillarsBlockProps> = ({
                     {services.length > 0 && (
                       <p className="mt-3 text-sm text-slate/70">{services.join('  ·  ')}</p>
                     )}
+                    {pillar.link && (
+                      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-terracotta-dark transition-all group-hover:gap-2.5">
+                        En savoir plus
+                        <ArrowUpRight className="h-4 w-4" strokeWidth={2.2} />
+                      </span>
+                    )}
                   </div>
-                  {pillar.link && (
-                    <ArrowUpRight
-                      className="mt-1 h-5 w-5 shrink-0 text-slate transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-terracotta"
-                      strokeWidth={2}
-                    />
-                  )}
                 </>
               )
               return pillar.link ? (
