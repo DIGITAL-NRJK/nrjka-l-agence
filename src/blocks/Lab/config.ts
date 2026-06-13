@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { appearance } from '@/fields/appearance'
 
 export const Lab: Block = {
   slug: 'lab',
@@ -67,5 +68,6 @@ export const Lab: Block = {
     },
     { name: 'ctaLabel', type: 'text', localized: true },
     { name: 'ctaHref', type: 'text' },
+    appearance,
   ],
 }

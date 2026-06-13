@@ -2,6 +2,7 @@ import React from 'react'
 import { ArrowUpRight, ShoppingCart, FileText, ShieldCheck } from 'lucide-react'
 
 import type { LabBlock as LabBlockProps, Media } from '@/payload-types'
+import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
 const sceneCss = `
 @keyframes sb-flow{0%{left:2px;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:calc(100% - 10px);opacity:0}}
@@ -115,11 +116,13 @@ export const LabBlock: React.FC<LabBlockProps> = ({
   demos,
   ctaLabel,
   ctaHref,
+  appearance,
 }) => {
   const list = demos || []
+  const a = appearance || {}
 
   return (
-    <section className="container">
+    <section className="container" style={bgStyle(a.background)}>
       <style dangerouslySetInnerHTML={{ __html: sceneCss }} />
 
       <div className="max-w-2xl">
@@ -130,11 +133,21 @@ export const LabBlock: React.FC<LabBlockProps> = ({
           </span>
         )}
         {title && (
-          <h2 className="text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
+          <h2
+            className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-bold leading-tight tracking-tight text-ink`}
+            style={colorStyle(a.titleColor)}
+          >
             {title}
           </h2>
         )}
-        {intro && <p className="mt-5 text-lg leading-relaxed text-slate">{intro}</p>}
+        {intro && (
+          <p
+            className={`${textClass(a, 'text-lg')} mt-5 leading-relaxed text-slate`}
+            style={colorStyle(a.textColor)}
+          >
+            {intro}
+          </p>
+        )}
       </div>
 
       {list.length > 0 && (

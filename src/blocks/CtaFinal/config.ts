@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { appearance } from '@/fields/appearance'
 
 export const CtaFinal: Block = {
   slug: 'ctaFinal',
@@ -16,5 +17,6 @@ export const CtaFinal: Block = {
     { name: 'primaryCtaHref', type: 'text' },
     { name: 'secondaryCtaLabel', type: 'text', localized: true },
     { name: 'secondaryCtaHref', type: 'text' },
+    appearance,
   ],
 }

@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { appearance } from '@/fields/appearance'
 
 export const Testimonials: Block = {
   slug: 'testimonialsBlock',
@@ -17,5 +18,6 @@ export const Testimonials: Block = {
       defaultValue: 6,
       admin: { description: "Nombre de témoignages à afficher (triés par « Ordre d'affichage »)." },
     },
+    appearance,
   ],
 }

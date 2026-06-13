@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { appearance } from '@/fields/appearance'
 
 export const Method: Block = {
   slug: 'method',
@@ -42,5 +43,6 @@ export const Method: Block = {
         },
       ],
     },
+    appearance,
   ],
 }

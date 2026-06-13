@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { appearance } from '@/fields/appearance'
 
 export const Pillars: Block = {
   slug: 'pillars',
@@ -44,5 +45,6 @@ export const Pillars: Block = {
         { name: 'link', type: 'text' },
       ],
     },
+    appearance,
   ],
 }

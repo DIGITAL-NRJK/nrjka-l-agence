@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { MethodBlock as MethodBlockProps } from '@/payload-types'
+import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
 const methodCss = `
 @keyframes md-pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
@@ -22,11 +23,18 @@ const methodCss = `
 }
 @media (prefers-reduced-motion:reduce){.md-node,.md-line,.md-body{animation:none}}
 `
-export const MethodBlock: React.FC<MethodBlockProps> = ({ eyebrow, title, intro, steps }) => {
+export const MethodBlock: React.FC<MethodBlockProps> = ({
+  eyebrow,
+  title,
+  intro,
+  steps,
+  appearance,
+}) => {
   const list = steps || []
+  const a = appearance || {}
 
   return (
-    <section className="container">
+    <section className="container" style={bgStyle(a.background)}>
       <style dangerouslySetInnerHTML={{ __html: methodCss }} />
       {/* En-tête */}
       <div className="max-w-2xl">
@@ -37,11 +45,21 @@ export const MethodBlock: React.FC<MethodBlockProps> = ({ eyebrow, title, intro,
           </span>
         )}
         {title && (
-          <h2 className="text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
+          <h2
+            className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-bold leading-tight tracking-tight text-ink`}
+            style={colorStyle(a.titleColor)}
+          >
             {title}
           </h2>
         )}
-        {intro && <p className="mt-5 text-lg leading-relaxed text-slate">{intro}</p>}
+        {intro && (
+          <p
+            className={`${textClass(a, 'text-lg')} mt-5 leading-relaxed text-slate`}
+            style={colorStyle(a.textColor)}
+          >
+            {intro}
+          </p>
+        )}
       </div>
 
       {/* Parcours en 4 temps */}

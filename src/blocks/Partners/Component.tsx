@@ -4,6 +4,7 @@ import configPromise from '@payload-config'
 import { ArrowUpRight } from 'lucide-react'
 
 import type { PartnersBlock as PartnersBlockProps, CaseStudy, Media } from '@/payload-types'
+import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
 const techCategories = [
   { value: 'web', label: 'Web' },
@@ -16,6 +17,7 @@ const techCategories = [
 
 export const PartnersBlock = async (props: PartnersBlockProps) => {
   const { eyebrow, title, intro, projectsLimit, techLabel, technologies, ctaLabel, ctaHref } = props
+  const a = props.appearance || {}
 
   const techs = technologies || []
   const hasOpenSource = techs.some((t) => t.openSource)
@@ -36,7 +38,7 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
   }
 
   return (
-    <section className="container">
+    <section className="container" style={bgStyle(a.background)}>
       <div className="max-w-2xl">
         {eyebrow && (
           <span className="mb-5 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-slate">
@@ -45,11 +47,21 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
           </span>
         )}
         {title && (
-          <h2 className="text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
+          <h2
+            className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-bold leading-tight tracking-tight text-ink`}
+            style={colorStyle(a.titleColor)}
+          >
             {title}
           </h2>
         )}
-        {intro && <p className="mt-5 text-lg leading-relaxed text-slate">{intro}</p>}
+        {intro && (
+          <p
+            className={`${textClass(a, 'text-lg')} mt-5 leading-relaxed text-slate`}
+            style={colorStyle(a.textColor)}
+          >
+            {intro}
+          </p>
+        )}
       </div>
 
       {projects.length > 0 && (

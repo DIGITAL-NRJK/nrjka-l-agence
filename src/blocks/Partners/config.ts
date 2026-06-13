@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { appearance } from '@/fields/appearance'
 
 export const Partners: Block = {
   slug: 'partners',
@@ -54,5 +55,6 @@ export const Partners: Block = {
     },
     { name: 'ctaLabel', type: 'text', localized: true },
     { name: 'ctaHref', type: 'text' },
+    appearance,
   ],
 }

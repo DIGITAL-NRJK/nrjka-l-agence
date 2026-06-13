@@ -8,6 +8,7 @@ import type {
   Testimonial,
   Media,
 } from '@/payload-types'
+import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
 function initials(name?: string | null) {
   if (!name) return '•'
@@ -21,6 +22,7 @@ function initials(name?: string | null) {
 
 export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
   const { eyebrow, title, intro, limit } = props
+  const a = props.appearance || {}
 
   let items: Testimonial[] = []
   try {
@@ -46,7 +48,10 @@ export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
 
   return (
     <section className="container">
-      <div className="relative overflow-hidden rounded-3xl bg-brand px-6 py-14 shadow-soft sm:px-10 sm:py-16 lg:px-14">
+      <div
+        className="relative overflow-hidden rounded-3xl bg-brand px-6 py-14 shadow-soft sm:px-10 sm:py-16 lg:px-14"
+        style={bgStyle(a.background)}
+      >
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.05]"
           style={{
@@ -66,11 +71,21 @@ export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
               </span>
             )}
             {title && (
-              <h2 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
+              <h2
+                className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-bold leading-tight tracking-tight text-white`}
+                style={colorStyle(a.titleColor)}
+              >
                 {title}
               </h2>
             )}
-            {intro && <p className="mt-4 text-lg leading-relaxed text-white/70">{intro}</p>}
+            {intro && (
+              <p
+                className={`${textClass(a, 'text-lg')} mt-4 leading-relaxed text-white/70`}
+                style={colorStyle(a.textColor)}
+              >
+                {intro}
+              </p>
+            )}
           </div>
 
           {single ? (

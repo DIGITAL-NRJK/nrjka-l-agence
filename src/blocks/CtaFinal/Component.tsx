@@ -2,6 +2,7 @@ import React from 'react'
 import { ArrowRight } from 'lucide-react'
 
 import type { CtaFinalBlock as CtaFinalBlockProps } from '@/payload-types'
+import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
 export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
   eyebrow,
@@ -12,9 +13,15 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
   primaryCtaHref,
   secondaryCtaLabel,
   secondaryCtaHref,
+  appearance,
 }) => {
+  const a = appearance || {}
+
   return (
-    <section className="relative overflow-hidden bg-brand py-16 text-center sm:py-20">
+    <section
+      className="relative overflow-hidden bg-brand py-16 text-center sm:py-20"
+      style={bgStyle(a.background)}
+    >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
         style={{
@@ -34,12 +41,20 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
             </span>
           )}
           {title && (
-            <h2 className="text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h2
+              className={`${titleClass(a, 'text-4xl sm:text-5xl lg:text-6xl')} font-bold leading-[1.05] tracking-tight text-white`}
+              style={colorStyle(a.titleColor)}
+            >
               {title}
             </h2>
           )}
           {body && (
-            <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/70">{body}</p>
+            <p
+              className={`${textClass(a, 'text-lg')} mx-auto mt-5 max-w-xl leading-relaxed text-white/70`}
+              style={colorStyle(a.textColor)}
+            >
+              {body}
+            </p>
           )}
 
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">

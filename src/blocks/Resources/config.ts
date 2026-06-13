@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { appearance } from '@/fields/appearance'
 
 export const Resources: Block = {
   slug: 'resourcesBlock',
@@ -12,5 +13,6 @@ export const Resources: Block = {
     { name: 'title', type: 'text', localized: true, required: true },
     { name: 'intro', type: 'textarea', localized: true },
     { name: 'limit', type: 'number', defaultValue: 3 },
+    appearance,
   ],
 }

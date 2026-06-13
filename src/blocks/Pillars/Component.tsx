@@ -2,10 +2,19 @@ import React from 'react'
 import { ArrowUpRight } from 'lucide-react'
 
 import type { PillarsBlock as PillarsBlockProps } from '@/payload-types'
+import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
-export const PillarsBlock: React.FC<PillarsBlockProps> = ({ eyebrow, title, intro, pillars }) => {
+export const PillarsBlock: React.FC<PillarsBlockProps> = ({
+  eyebrow,
+  title,
+  intro,
+  pillars,
+  appearance,
+}) => {
+  const a = appearance || {}
+
   return (
-    <section className="container">
+    <section className="container" style={bgStyle(a.background)}>
       <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         {/* Colonne gauche — intro fixe */}
         <div className="lg:sticky lg:top-28 lg:self-start">
@@ -16,11 +25,21 @@ export const PillarsBlock: React.FC<PillarsBlockProps> = ({ eyebrow, title, intr
             </span>
           )}
           {title && (
-            <h2 className="text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl">
+            <h2
+              className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-bold leading-tight tracking-tight text-ink`}
+              style={colorStyle(a.titleColor)}
+            >
               {title}
             </h2>
           )}
-          {intro && <p className="mt-5 max-w-md text-lg leading-relaxed text-slate">{intro}</p>}
+          {intro && (
+            <p
+              className={`${textClass(a, 'text-lg')} mt-5 max-w-md leading-relaxed text-slate`}
+              style={colorStyle(a.textColor)}
+            >
+              {intro}
+            </p>
+          )}
         </div>
 
         {/* Colonne droite — liste éditoriale */}
