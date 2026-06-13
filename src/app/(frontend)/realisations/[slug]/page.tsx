@@ -39,7 +39,7 @@ const relName = (rel: unknown): string | undefined =>
     ? (rel as { name?: string }).name
     : undefined
 
-const serviceName = (s: string | Service): string | undefined =>
+const serviceName = (s: number | Service): string | undefined =>
   typeof s === 'object'
     ? ((s as { title?: string; name?: string }).title ?? (s as { name?: string }).name)
     : undefined
