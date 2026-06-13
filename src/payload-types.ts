@@ -879,13 +879,46 @@ export interface PromiseBlock {
   description?: string | null;
   features?:
     | {
-        icon?: ('userCheck' | 'layers' | 'shield' | 'zap' | 'heart' | 'target') | null;
+        icon?:
+          | (
+              | 'userCheck'
+              | 'layers'
+              | 'shield'
+              | 'zap'
+              | 'heart'
+              | 'target'
+              | 'rocket'
+              | 'lightbulb'
+              | 'handshake'
+              | 'lock'
+              | 'globe'
+              | 'barChart'
+              | 'messageCircle'
+              | 'clock'
+              | 'leaf'
+              | 'award'
+              | 'wrench'
+              | 'search'
+              | 'trendingUp'
+              | 'sparkles'
+            )
+          | null;
         title?: string | null;
         description?: string | null;
         id?: string | null;
       }[]
     | null;
   commitment?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'promise';
@@ -913,6 +946,16 @@ export interface PillarsBlock {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'pillars';
@@ -938,6 +981,16 @@ export interface MethodBlock {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'method';
@@ -976,6 +1029,16 @@ export interface LabBlock {
     | null;
   ctaLabel?: string | null;
   ctaHref?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'lab';
@@ -995,6 +1058,16 @@ export interface CommitmentsBlock {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'commitments';
@@ -1026,6 +1099,16 @@ export interface PartnersBlock {
     | null;
   ctaLabel?: string | null;
   ctaHref?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'partners';
@@ -1042,6 +1125,16 @@ export interface TestimonialsBlock {
    * Nombre de témoignages à afficher (triés par « Ordre d'affichage »).
    */
   limit?: number | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'testimonialsBlock';
@@ -1055,6 +1148,16 @@ export interface ResourcesBlock {
   title: string;
   intro?: string | null;
   limit?: number | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'resourcesBlock';
@@ -1072,6 +1175,16 @@ export interface CtaFinalBlock {
   primaryCtaHref?: string | null;
   secondaryCtaLabel?: string | null;
   secondaryCtaHref?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'ctaFinal';
@@ -2160,6 +2273,15 @@ export interface PromiseBlockSelect<T extends boolean = true> {
         id?: T;
       };
   commitment?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -2186,6 +2308,15 @@ export interface PillarsBlockSelect<T extends boolean = true> {
         link?: T;
         id?: T;
       };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -2209,6 +2340,15 @@ export interface MethodBlockSelect<T extends boolean = true> {
               id?: T;
             };
         id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
       };
   id?: T;
   blockName?: T;
@@ -2241,6 +2381,15 @@ export interface LabBlockSelect<T extends boolean = true> {
       };
   ctaLabel?: T;
   ctaHref?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -2258,6 +2407,15 @@ export interface CommitmentsBlockSelect<T extends boolean = true> {
         title?: T;
         description?: T;
         id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
       };
   id?: T;
   blockName?: T;
@@ -2283,6 +2441,15 @@ export interface PartnersBlockSelect<T extends boolean = true> {
       };
   ctaLabel?: T;
   ctaHref?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -2295,6 +2462,15 @@ export interface TestimonialsBlockSelect<T extends boolean = true> {
   title?: T;
   intro?: T;
   limit?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -2307,6 +2483,15 @@ export interface ResourcesBlockSelect<T extends boolean = true> {
   title?: T;
   intro?: T;
   limit?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -2323,6 +2508,15 @@ export interface CtaFinalBlockSelect<T extends boolean = true> {
   primaryCtaHref?: T;
   secondaryCtaLabel?: T;
   secondaryCtaHref?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
   id?: T;
   blockName?: T;
 }
