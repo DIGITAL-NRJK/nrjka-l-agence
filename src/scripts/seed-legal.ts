@@ -7,96 +7,7 @@
  */
 import { getPayload } from 'payload'
 import config from '@payload-config'
-
-// --- Mini-convertisseur texte -> lexical (titres ##/###, listes -, gras **…**) ---
-const inlineNodes = (text: string): any[] =>
-  text
-    .split(/(\*\*[^*]+\*\*)/g)
-    .filter(Boolean)
-    .map((part) => {
-      const bold = part.startsWith('**') && part.endsWith('**')
-      return {
-        type: 'text',
-        version: 1,
-        text: bold ? part.slice(2, -2) : part,
-        format: bold ? 1 : 0,
-        style: '',
-        mode: 'normal',
-        detail: 0,
-      }
-    })
-
-const heading = (tag: string, text: string) => ({
-  type: 'heading',
-  tag,
-  version: 1,
-  format: '',
-  indent: 0,
-  direction: 'ltr',
-  children: inlineNodes(text),
-})
-
-const paragraph = (text: string) => ({
-  type: 'paragraph',
-  version: 1,
-  format: '',
-  indent: 0,
-  direction: 'ltr',
-  textFormat: 0,
-  children: inlineNodes(text),
-})
-
-const bulletList = (items: string[]) => ({
-  type: 'list',
-  listType: 'bullet',
-  tag: 'ul',
-  start: 1,
-  version: 1,
-  format: '',
-  indent: 0,
-  direction: 'ltr',
-  children: items.map((it, i) => ({
-    type: 'listitem',
-    value: i + 1,
-    version: 1,
-    format: '',
-    indent: 0,
-    direction: 'ltr',
-    children: inlineNodes(it),
-  })),
-})
-
-const toLexical = (md: string) => {
-  const children: any[] = []
-  let listBuf: string[] = []
-  const flush = () => {
-    if (listBuf.length) {
-      children.push(bulletList(listBuf))
-      listBuf = []
-    }
-  }
-  for (const raw of md.split('\n')) {
-    const line = raw.trim()
-    if (!line) {
-      flush()
-      continue
-    }
-    if (line.startsWith('### ')) {
-      flush()
-      children.push(heading('h3', line.slice(4)))
-    } else if (line.startsWith('## ')) {
-      flush()
-      children.push(heading('h2', line.slice(3)))
-    } else if (line.startsWith('- ')) {
-      listBuf.push(line.slice(2))
-    } else {
-      flush()
-      children.push(paragraph(line))
-    }
-  }
-  flush()
-  return { root: { type: 'root', format: '', indent: 0, version: 1, direction: 'ltr', children } }
-}
+import { convertMarkdownToLexical, editorConfigFactory } from '@payloadcms/richtext-lexical'
 
 // --- Contenus ---
 const mentions = `## Mentions légales
@@ -165,6 +76,8 @@ const pages = [
 
 const run = async () => {
   const payload = await getPayload({ config })
+  const editorConfig = await editorConfigFactory.default({ config: payload.config })
+  const toLex = (markdown: string) => convertMarkdownToLexical({ editorConfig, markdown })
 
   for (const p of pages) {
     const data: any = {
@@ -175,7 +88,7 @@ const run = async () => {
       layout: [
         {
           blockType: 'content',
-          columns: [{ size: 'full', enableLink: false, richText: toLexical(p.text) }],
+          columns: [{ size: 'full', enableLink: false, richText: toLex(p.text) }],
         },
       ],
     }
