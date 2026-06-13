@@ -8,6 +8,7 @@ import {
 } from '@payloadcms/richtext-lexical'
 
 import { linkGroup } from '@/fields/linkGroup'
+import { appearance } from '@/fields/appearance'
 
 export const hero: Field = {
   name: 'hero',
@@ -173,6 +174,7 @@ export const hero: Field = {
       localized: true,
       admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
     },
+    appearance,
   ],
   label: false,
 }

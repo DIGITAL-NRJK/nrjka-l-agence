@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, CheckCircle } from 'lucide-react'
 
 import type { Page } from '@/payload-types'
+import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
 type HeroProps = Page['hero']
 
@@ -25,16 +26,19 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
     secondaryCtaHref,
     trustBadges,
     stats,
-    panelEyebrow,
-    panelTitle,
     panelDimensions,
     panelAvailability,
+    appearance,
   } = props || {}
+  const a = appearance || {}
   const statList = stats || []
   const dims = panelDimensions && panelDimensions.length > 0 ? panelDimensions : defaultDimensions
 
   return (
-    <section className="relative flex min-h-[80vh] items-center overflow-hidden bg-background">
+    <section
+      className="relative flex min-h-[80vh] items-center overflow-hidden bg-background"
+      style={bgStyle(a.background)}
+    >
       <div className="relative mx-auto grid w-full max-w-7xl items-start gap-16 px-6 py-12 sm:px-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-16 lg:py-16">
         {/* Colonne gauche */}
         <div>
@@ -45,7 +49,10 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
             </span>
           )}
 
-          <h1 className="text-4xl font-bold leading-[1.05] tracking-tight text-ink animate-in fade-in slide-in-from-bottom-4 duration-700 sm:text-5xl lg:text-6xl">
+          <h1
+            className={`${titleClass(a, 'text-4xl sm:text-5xl lg:text-6xl')} font-bold leading-[1.05] tracking-tight text-ink animate-in fade-in slide-in-from-bottom-4 duration-700`}
+            style={colorStyle(a.titleColor)}
+          >
             {headline}
             {headlineAccent && (
               <>
@@ -73,7 +80,10 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
           </h1>
 
           {subtitle && (
-            <p className="mt-7 max-w-lg text-lg leading-relaxed text-slate animate-in fade-in duration-1000">
+            <p
+              className={`${textClass(a, 'text-lg')} mt-7 max-w-lg leading-relaxed text-slate animate-in fade-in duration-1000`}
+              style={colorStyle(a.textColor)}
+            >
               {subtitle}
             </p>
           )}

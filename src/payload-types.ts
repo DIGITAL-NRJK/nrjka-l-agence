@@ -266,6 +266,16 @@ export interface Page {
         }[]
       | null;
     panelAvailability?: string | null;
+    /**
+     * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+     */
+    appearance?: {
+      titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+      textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+      titleColor?: string | null;
+      textColor?: string | null;
+      background?: string | null;
+    };
   };
   layout?:
     | (
@@ -2138,6 +2148,15 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         panelAvailability?: T;
+        appearance?:
+          | T
+          | {
+              titleSize?: T;
+              textSize?: T;
+              titleColor?: T;
+              textColor?: T;
+              background?: T;
+            };
       };
   layout?:
     | T
