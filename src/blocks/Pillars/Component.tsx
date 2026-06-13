@@ -14,7 +14,7 @@ export const PillarsBlock: React.FC<PillarsBlockProps> = ({
   const a = appearance || {}
 
   return (
-    <section className="container" style={bgStyle(a.background)}>
+    <section id="expertises" className="container scroll-mt-28" style={bgStyle(a.background)}>
       <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         {/* Colonne gauche — intro fixe */}
         <div className="lg:sticky lg:top-28 lg:self-start">
