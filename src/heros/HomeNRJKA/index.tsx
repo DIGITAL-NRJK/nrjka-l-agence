@@ -26,6 +26,8 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
     secondaryCtaHref,
     trustBadges,
     stats,
+    panelEyebrow,
+    panelTitle,
     panelDimensions,
     panelAvailability,
     appearance,
