@@ -294,6 +294,7 @@ export interface Page {
         | ResourcesBlock
         | CtaFinalBlock
         | ContactBlock
+        | PresenceBlock
       )[]
     | null;
   meta?: {
@@ -1251,6 +1252,52 @@ export interface ContactBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'contact';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PresenceBlock".
+ */
+export interface PresenceBlock {
+  eyebrow?: string | null;
+  title?: string | null;
+  intro?: string | null;
+  /**
+   * Les implantations de l’agence. La carte se recadre automatiquement sur l’ensemble des points.
+   */
+  locations?:
+    | {
+        city: string;
+        country: string;
+        /**
+         * Laisser vide affiche « Adresse à venir ».
+         */
+        address?: string | null;
+        phone?: string | null;
+        /**
+         * Latitude (ex. Paris = 48.8566).
+         */
+        lat: number;
+        /**
+         * Longitude (ex. Paris = 2.3522).
+         */
+        lng: number;
+        isHeadquarters?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'presence';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2229,6 +2276,7 @@ export interface PagesSelect<T extends boolean = true> {
         resourcesBlock?: T | ResourcesBlockSelect<T>;
         ctaFinal?: T | CtaFinalBlockSelect<T>;
         contact?: T | ContactBlockSelect<T>;
+        presence?: T | PresenceBlockSelect<T>;
       };
   meta?:
     | T
@@ -2613,6 +2661,38 @@ export interface ContactBlockSelect<T extends boolean = true> {
       };
   emailIntro?: T;
   email?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PresenceBlock_select".
+ */
+export interface PresenceBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  locations?:
+    | T
+    | {
+        city?: T;
+        country?: T;
+        address?: T;
+        phone?: T;
+        lat?: T;
+        lng?: T;
+        isHeadquarters?: T;
+        id?: T;
+      };
   appearance?:
     | T
     | {
