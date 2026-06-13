@@ -16,6 +16,7 @@ import { Partners } from '../../blocks/Partners/config'
 import { Testimonials } from '../../blocks/Testimonials/config'
 import { Resources } from '../../blocks/Resources/config'
 import { CtaFinal } from '../../blocks/CtaFinal/config'
+import { Contact } from '../../blocks/Contact/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -96,6 +97,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 Testimonials,
                 Resources,
                 CtaFinal,
+                Contact,
               ],
               admin: {
                 initCollapsed: true,

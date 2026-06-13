@@ -293,6 +293,7 @@ export interface Page {
         | TestimonialsBlock
         | ResourcesBlock
         | CtaFinalBlock
+        | ContactBlock
       )[]
     | null;
   meta?: {
@@ -1198,6 +1199,58 @@ export interface CtaFinalBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'ctaFinal';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock".
+ */
+export interface ContactBlock {
+  eyebrow?: string | null;
+  title?: string | null;
+  /**
+   * Dernier mot du titre, affiché en terracotta (ex. « projet. »).
+   */
+  titleAccent?: string | null;
+  subtitle?: string | null;
+  /**
+   * Titre de la colonne gauche (ex. « Ce qui se passe ensuite »).
+   */
+  stepsHeading?: string | null;
+  /**
+   * Les étapes après l’envoi. Laisser vide = valeurs par défaut.
+   */
+  steps?:
+    | {
+        /**
+         * Icône : messageSquare, clock, shieldCheck, mail, phone, calendar, fileText ou sparkles.
+         */
+        icon?: string | null;
+        title?: string | null;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Phrase au-dessus de l’email de repli.
+   */
+  emailIntro?: string | null;
+  /**
+   * Adresse email de repli affichée et cliquable.
+   */
+  email?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contact';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2175,6 +2228,7 @@ export interface PagesSelect<T extends boolean = true> {
         testimonialsBlock?: T | TestimonialsBlockSelect<T>;
         resourcesBlock?: T | ResourcesBlockSelect<T>;
         ctaFinal?: T | CtaFinalBlockSelect<T>;
+        contact?: T | ContactBlockSelect<T>;
       };
   meta?:
     | T
@@ -2527,6 +2581,38 @@ export interface CtaFinalBlockSelect<T extends boolean = true> {
   primaryCtaHref?: T;
   secondaryCtaLabel?: T;
   secondaryCtaHref?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock_select".
+ */
+export interface ContactBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  titleAccent?: T;
+  subtitle?: T;
+  stepsHeading?: T;
+  steps?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  emailIntro?: T;
+  email?: T;
   appearance?:
     | T
     | {

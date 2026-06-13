@@ -16,6 +16,7 @@ import { PartnersBlock } from '@/blocks/Partners/Component'
 import { TestimonialsBlock } from '@/blocks/Testimonials/Component'
 import { ResourcesBlock } from '@/blocks/Resources/Component'
 import { CtaFinalBlock } from '@/blocks/CtaFinal/Component'
+import { ContactBlock } from '@/blocks/Contact/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -32,6 +33,7 @@ const blockComponents = {
   testimonialsBlock: TestimonialsBlock,
   resourcesBlock: ResourcesBlock,
   ctaFinal: CtaFinalBlock,
+  contact: ContactBlock,
 }
 // Rythme vertical de la home : les sections liées sont rapprochées,
 // chaque nouveau « mouvement » respire davantage.
