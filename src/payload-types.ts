@@ -295,6 +295,7 @@ export interface Page {
         | CtaFinalBlock
         | ContactBlock
         | PresenceBlock
+        | CaseStudiesIndexBlock
       )[]
     | null;
   meta?: {
@@ -1301,6 +1302,28 @@ export interface PresenceBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CaseStudiesIndexBlock".
+ */
+export interface CaseStudiesIndexBlock {
+  eyebrow?: string | null;
+  title?: string | null;
+  intro?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'caseStudiesIndex';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
 export interface Service {
@@ -2277,6 +2300,7 @@ export interface PagesSelect<T extends boolean = true> {
         ctaFinal?: T | CtaFinalBlockSelect<T>;
         contact?: T | ContactBlockSelect<T>;
         presence?: T | PresenceBlockSelect<T>;
+        caseStudiesIndex?: T | CaseStudiesIndexBlockSelect<T>;
       };
   meta?:
     | T
@@ -2693,6 +2717,26 @@ export interface PresenceBlockSelect<T extends boolean = true> {
         isHeadquarters?: T;
         id?: T;
       };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CaseStudiesIndexBlock_select".
+ */
+export interface CaseStudiesIndexBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
   appearance?:
     | T
     | {

@@ -18,6 +18,7 @@ import { Resources } from '../../blocks/Resources/config'
 import { CtaFinal } from '../../blocks/CtaFinal/config'
 import { Contact } from '../../blocks/Contact/config'
 import { Presence } from '../../blocks/Presence/config'
+import { CaseStudiesIndex } from '../../blocks/CaseStudiesIndex/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -100,6 +101,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 CtaFinal,
                 Contact,
                 Presence,
+                CaseStudiesIndex,
               ],
               admin: {
                 initCollapsed: true,

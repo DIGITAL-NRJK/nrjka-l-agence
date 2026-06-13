@@ -1,6 +1,7 @@
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 
 import type { PartnersBlock as PartnersBlockProps, CaseStudy, Media } from '@/payload-types'
@@ -83,8 +84,9 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
               .slice(0, 4)
             const metric = p.metrics && p.metrics.length > 0 ? p.metrics[0] : null
             return (
-              <div
+              <Link
                 key={p.id}
+                href={`/realisations/${p.slug}`}
                 className={[
                   'group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-terracotta/40',
                   single ? 'lg:grid lg:grid-cols-[1.05fr_0.95fr]' : 'flex flex-col',
@@ -164,7 +166,7 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
                     </p>
                   )}
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>
