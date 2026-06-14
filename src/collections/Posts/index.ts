@@ -48,6 +48,7 @@ export const Posts: CollectionConfig<'posts'> = {
     },
   },
   admin: {
+    description: 'Les articles de blog du site (liste sur /posts).',
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>

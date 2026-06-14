@@ -17,6 +17,10 @@ const dirname = path.dirname(filename)
 export const Media: CollectionConfig = {
   slug: 'media',
   folders: true,
+  admin: {
+    description:
+      'La bibliothèque de médias (images, logos, fichiers) utilisés sur le site. Pensez à renseigner le texte alternatif (alt) de chaque image pour le SEO et l’accessibilité.',
+  },
   access: {
     create: authenticated,
     delete: authenticated,

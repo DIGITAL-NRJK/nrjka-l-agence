@@ -14,6 +14,8 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    group: 'Contenu',
+    description: 'Catégories de classement des articles de blog (collection Articles).',
   },
   fields: [
     {

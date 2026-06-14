@@ -8,6 +8,8 @@ export const Products: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'price', 'category', 'bestseller', 'updatedAt'],
     group: 'E-commerce',
+    description:
+      'Catalogue de produits (boutique). Non utilisé sur le site vitrine actuel — réservé à une future activité e-commerce.',
   },
   access: {
     read: publicRead,

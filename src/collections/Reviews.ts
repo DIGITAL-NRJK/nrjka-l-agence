@@ -8,6 +8,8 @@ export const Reviews: CollectionConfig = {
     useAsTitle: 'author_name',
     defaultColumns: ['author_name', 'rating', 'service_category', 'approved', 'createdAt'],
     group: 'CRM',
+    description:
+      'Les avis laissés par les visiteurs via un formulaire public (différents des Témoignages, que vous sélectionnez vous-même). À approuver avant tout affichage.',
   },
   access: {
     read: publicRead,

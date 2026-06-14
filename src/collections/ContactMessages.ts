@@ -8,6 +8,8 @@ export const ContactMessages: CollectionConfig = {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'type', 'status', 'createdAt'],
     group: 'CRM',
+    description:
+      'Les messages envoyés via le formulaire de contact du site (source du flux de demandes d’audit). Créés automatiquement ; suivez leur statut (Nouveau, Lu, Répondu…).',
   },
   access: {
     // Le formulaire public peut créer (pas besoin d'être connecté)

@@ -14,6 +14,8 @@ export const Users: CollectionConfig = {
   admin: {
     defaultColumns: ['name', 'email'],
     useAsTitle: 'name',
+    description:
+      'Les comptes qui accèdent au back-office (administrateurs, éditeurs). Réservé aux personnes de l’équipe.',
   },
   auth: true,
   fields: [
