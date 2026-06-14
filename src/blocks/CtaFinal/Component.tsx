@@ -19,7 +19,7 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
 
   return (
     <section
-      className="relative overflow-hidden bg-brand py-16 text-center sm:py-20"
+      className="relative overflow-hidden bg-brand py-12 text-center sm:py-14"
       style={bgStyle(a.background)}
     >
       <div
@@ -34,7 +34,7 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
       <div className="container">
         <div className="relative mx-auto max-w-3xl">
           {eyebrow && (
-            <span className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
+            <span className="mb-5 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
               <span className="h-px w-8 bg-terracotta" />
               {eyebrow}
               <span className="h-px w-8 bg-terracotta" />
@@ -42,7 +42,7 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
           )}
           {title && (
             <h2
-              className={`${titleClass(a, 'text-4xl sm:text-5xl lg:text-6xl')} font-bold leading-[1.05] tracking-tight text-white`}
+              className={`${titleClass(a, 'text-3xl sm:text-4xl lg:text-5xl')} font-display font-bold leading-[1.05] tracking-tight text-white`}
               style={colorStyle(a.titleColor)}
             >
               {title}
@@ -50,14 +50,14 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
           )}
           {body && (
             <p
-              className={`${textClass(a, 'text-lg')} mx-auto mt-5 max-w-xl leading-relaxed text-white/70`}
+              className={`${textClass(a, 'text-lg')} mx-auto mt-4 max-w-xl leading-relaxed text-white/70`}
               style={colorStyle(a.textColor)}
             >
               {body}
             </p>
           )}
 
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             {primaryCtaLabel && (
               <a
                 href={primaryCtaHref || '#'}
@@ -81,7 +81,7 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
           </div>
 
           {note && (
-            <div className="mt-8 inline-flex items-center gap-2 text-sm text-white/60">
+            <div className="mt-6 inline-flex items-center gap-2 text-sm text-white/60">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
               {note}
             </div>
