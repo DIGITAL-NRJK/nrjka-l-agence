@@ -1601,6 +1601,8 @@ export interface Service {
   createdAt: string;
 }
 /**
+ * Vos projets / références clients. Chaque étude de cas alimente la page /realisations (liste filtrable) et sa page détail. Reliez-la à un ou plusieurs pôles pour qu’elle apparaisse aussi sur les pages d’expertise concernées. Cochez « Mis en avant » pour la montrer sur la page d’accueil.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "case-studies".
  */
@@ -1717,7 +1719,14 @@ export interface CaseStudy {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Les services granulaires mobilisés sur ce projet (optionnel).
+   */
   services_used?: (number | Service)[] | null;
+  /**
+   * Les pôles d’expertise dont relève ce projet. Il s’affichera dans la section « Projets » de chaque page de pôle sélectionnée.
+   */
+  expertises?: (number | Expertise)[] | null;
   duration?: string | null;
   team_size?: number | null;
   /**
@@ -3276,6 +3285,7 @@ export interface CaseStudiesSelect<T extends boolean = true> {
         id?: T;
       };
   services_used?: T;
+  expertises?: T;
   duration?: T;
   team_size?: T;
   testimonials?:

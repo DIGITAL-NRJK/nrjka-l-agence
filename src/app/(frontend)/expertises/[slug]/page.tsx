@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
-import type { Expertise, Service } from '@/payload-types'
+import type { Expertise, Service, CaseStudy, Media } from '@/payload-types'
 import RichText from '@/components/RichText'
 
 import { Faq } from './Faq'
@@ -49,6 +49,21 @@ export default async function ExpertisePage({ params }: Args) {
   const services = ((e.services as { docs?: Service[] } | undefined)?.docs || []).filter(
     (s): s is Service => typeof s === 'object',
   )
+
+  let projects: CaseStudy[] = []
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const res = await payload.find({
+      collection: 'case-studies',
+      where: { expertises: { equals: e.id } },
+      sort: '-is_featured',
+      limit: 6,
+      depth: 1,
+    })
+    projects = res.docs as CaseStudy[]
+  } catch {
+    projects = []
+  }
 
   return (
     <article className="pt-28 pb-24 sm:pt-32">
@@ -159,6 +174,69 @@ export default async function ExpertisePage({ params }: Args) {
                 {t}
               </span>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Projets reliés à ce pôle */}
+      {projects.length > 0 && (
+        <div className="container mt-20">
+          <h2 className="font-display text-2xl font-bold tracking-tight text-ink">
+            Des projets qui en témoignent
+          </h2>
+          <p className="mt-2 max-w-2xl leading-relaxed text-slate">
+            Quelques réalisations où cette expertise a fait la différence.
+          </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {projects.map((p) => {
+              const img = p.image && typeof p.image === 'object' ? (p.image as Media) : null
+              const sector =
+                p.industry && typeof p.industry === 'object' && 'name' in p.industry
+                  ? (p.industry as { name?: string }).name
+                  : undefined
+              const metric = p.metrics && p.metrics.length > 0 ? p.metrics[0] : null
+              return (
+                <Link
+                  key={p.id}
+                  href={`/realisations/${p.slug}`}
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-terracotta/40"
+                >
+                  <div className="relative aspect-16/10 overflow-hidden bg-brand">
+                    {img?.url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={img.url}
+                        alt={img.alt || p.client_name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center font-display text-2xl font-bold text-white/30">
+                        {p.client_name}
+                      </div>
+                    )}
+                    {sector && (
+                      <span className="absolute left-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-[0.7rem] font-medium text-ink">
+                        {sector}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="font-semibold text-ink">{p.client_name}</h3>
+                    {p.excerpt && (
+                      <p className="mt-1.5 line-clamp-3 text-sm leading-relaxed text-slate">
+                        {p.excerpt}
+                      </p>
+                    )}
+                    {metric && (
+                      <p className="mt-3 text-sm">
+                        <span className="font-semibold text-terracotta-dark">{metric.value}</span>{' '}
+                        <span className="text-slate">{metric.label}</span>
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}

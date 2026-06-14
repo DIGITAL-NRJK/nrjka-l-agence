@@ -23,6 +23,8 @@ export const CaseStudies: CollectionConfig = {
     useAsTitle: 'client_name',
     defaultColumns: ['client_name', 'industry', 'is_featured', 'updatedAt'],
     group: 'Contenu',
+    description:
+      'Vos projets / références clients. Chaque étude de cas alimente la page /realisations (liste filtrable) et sa page détail. Reliez-la à un ou plusieurs pôles pour qu’elle apparaisse aussi sur les pages d’expertise concernées. Cochez « Mis en avant » pour la montrer sur la page d’accueil.',
   },
   access: {
     read: publicRead,
@@ -83,6 +85,18 @@ export const CaseStudies: CollectionConfig = {
       relationTo: 'services',
       hasMany: true,
       label: 'Services utilisés',
+      admin: { description: 'Les services granulaires mobilisés sur ce projet (optionnel).' },
+    },
+    {
+      name: 'expertises',
+      type: 'relationship',
+      relationTo: 'expertises',
+      hasMany: true,
+      label: 'Pôles concernés',
+      admin: {
+        description:
+          'Les pôles d’expertise dont relève ce projet. Il s’affichera dans la section « Projets » de chaque page de pôle sélectionnée.',
+      },
     },
     { name: 'duration', type: 'text', label: 'Durée du projet' },
     { name: 'team_size', type: 'number', label: "Taille de l'équipe" },

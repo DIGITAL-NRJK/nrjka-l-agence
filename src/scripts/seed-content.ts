@@ -12,45 +12,45 @@ import config from '@payload-config'
 
 const engagements = {
   eyebrow: 'Nos engagements',
-  title: 'Notre façon de travailler',
+  title: 'Ce sur quoi on ne transige jamais',
   intro:
-    'Pas des promesses marketing : des principes qui guident chaque projet — et que vous pouvez nous opposer.',
+    'Pas des promesses marketing : six principes concrets qui guident chaque projet — et que vous pouvez nous opposer à tout moment.',
   commitments: [
     {
       keyword: 'RÉSULTAT',
       title: 'Le résultat avant l’esthétique.',
       description:
-        'Chaque choix sert votre croissance — visibilité, temps gagné, autonomie — pas notre portfolio.',
+        'Le beau ne suffit pas. Chaque décision — un mot, une couleur, une fonctionnalité — est passée au crible d’une seule question : est-ce que ça sert votre croissance ? Visibilité, temps gagné, clients mieux qualifiés : voilà le vrai livrable, pas une ligne de plus dans notre portfolio.',
     },
     {
       keyword: 'ENGAGEMENT',
       title: 'Engagés à fond, sur peu de projets.',
       description:
-        'On choisit nos clients avec soin pour donner à chacun le maximum. Quand on s’engage, on est responsables du résultat.',
+        'On prend peu de projets, volontairement, pour donner à chacun toute notre attention. Quand on s’engage avec vous, on est pleinement présents et responsables du résultat — pas un prestataire parmi d’autres qui coche des cases.',
     },
     {
       keyword: 'HUMAIN',
       title: 'Un humain, pas un ticket.',
       description:
-        'Derrière chaque marque, une personne avec de vrais enjeux. On ne l’oublie jamais.',
+        'Derrière chaque marque, il y a une personne, une histoire et de vrais enjeux. On ne l’oublie jamais. Vous parlez à un humain qui comprend votre métier, pas à un ticket noyé dans une file d’attente.',
     },
     {
       keyword: 'PROPRIÉTÉ',
       title: 'Vous restez propriétaire.',
       description:
-        'Open source par défaut, vos données chez vous, vos fichiers sources livrés. Jamais dépendant d’un prestataire de plus.',
+        'Open source par défaut, données hébergées chez vous, fichiers sources systématiquement livrés. Vous possédez ce qu’on construit et pouvez le faire évoluer avec qui vous voulez. Jamais prisonnier d’un outil, d’un abonnement ou d’un prestataire de plus.',
     },
     {
       keyword: 'TRANSPARENCE',
       title: 'Des prix clairs, sans piège.',
       description:
-        'Devis sur-mesure après audit gratuit, sans coût caché ni abonnement qui enferme.',
+        'Pas de devis flou ni de coûts qui apparaissent en cours de route. On chiffre clairement, après un audit gratuit, et on raisonne en valeur plutôt qu’en liste de livrables. Aucun abonnement déguisé qui vous enferme.',
     },
     {
       keyword: 'SOBRIÉTÉ',
       title: 'Un numérique sobre et durable.',
       description:
-        'Des solutions légères et éco-conçues, qui durent — parce que la sobriété est aussi une performance.',
+        'Un numérique plus léger, c’est plus rapide pour vos visiteurs, moins coûteux à héberger et plus respectueux de l’environnement. On éco-conçoit nos solutions pour qu’elles durent. La sobriété n’est pas une contrainte : c’est une performance.',
     },
   ],
 }

@@ -35,7 +35,13 @@ const poles: Pole[] = [
       'Une marque claire, cohérente et mémorable — du positionnement à la charte graphique, du message aux contenus.',
     long: `Avant la technique, il y a le sens. Nous posons d'abord les fondations de votre marque : ce que vous êtes, ce que vous promettez, et à qui.
 
-De ce socle découlent une identité visuelle juste, un ton de voix reconnaissable et des contenus qui portent votre valeur. Pas de gadgets : une cohérence totale, sur chaque support, qui installe la confiance et facilite tout le reste de votre présence digitale.`,
+De ce socle découlent une identité visuelle juste, un ton de voix reconnaissable et des contenus qui portent votre valeur. Pas de gadgets : une cohérence totale, sur chaque support, qui installe la confiance et facilite tout le reste de votre présence digitale.
+
+## Pour qui ?
+TPE, PME, artisans et associations qui veulent enfin une présence à la hauteur de leur travail — qu'il s'agisse de créer une marque de zéro, de la clarifier, ou de la faire grandir.
+
+## Comment on travaille
+On part de votre réalité, pas d'un modèle. On comprend votre métier, vos clients et ce qui vous distingue vraiment, puis on en tire un positionnement clair, une identité qui vous ressemble et des messages qui parlent — sans jargon. Le résultat : une marque qui inspire confiance dès le premier contact, se décline sans effort, et que vous gardez en main grâce à un brand book et des fichiers sources qui vous appartiennent.`,
     highlights: ['Branding', 'Identité visuelle', 'Copywriting', 'Direction artistique'],
     benefits: ['Reconnaissance immédiate', 'Positionnement clair', 'Connexion émotionnelle', 'Cohérence totale'],
     process: [
@@ -87,7 +93,13 @@ De ce socle découlent une identité visuelle juste, un ton de voix reconnaissab
       'Des sites et e-commerce sur-mesure, rapides et évolutifs — pensés pour convertir, et pour vous appartenir.',
     long: `Un site n'est pas qu'une vitrine : c'est votre meilleur commercial, disponible en continu. Nous concevons des plateformes performantes, accessibles et faciles à faire vivre.
 
-Nous privilégions des technologies ouvertes et souveraines — WordPress, WooCommerce, PrestaShop, Medusa ou du headless sur-mesure — pour que vous ne soyez jamais prisonnier d'un outil. Vous gardez la main sur votre contenu, vos données et votre hébergement.`,
+Nous privilégions des technologies ouvertes et souveraines — WordPress, WooCommerce, PrestaShop, Medusa ou du headless sur-mesure — pour que vous ne soyez jamais prisonnier d'un outil. Vous gardez la main sur votre contenu, vos données et votre hébergement.
+
+## Un site qui performe, pas qui pèse
+Vitesse, accessibilité, référencement : on soigne les fondations techniques dès la conception. Un site rapide et bien structuré, c'est plus de visiteurs convertis, un meilleur classement Google, et une expérience irréprochable sur mobile comme sur ordinateur.
+
+## Et après le lancement ?
+On ne disparaît pas une fois le site en ligne. Formation incluse pour que vous soyez autonome, documentation claire, et plans de maintenance si vous le souhaitez. Votre site est un actif qui grandit avec vous — pas un projet qu'on referme.`,
     highlights: ['Sites vitrines', 'E-commerce', 'Headless CMS', 'UX/UI Design'],
     benefits: ['100% responsive', 'Core Web Vitals A+', 'SEO-ready', 'Sécurisé & souverain'],
     process: [
@@ -144,7 +156,13 @@ Nous privilégions des technologies ouvertes et souveraines — WordPress, WooCo
       'Référencement naturel, optimisation pour les moteurs IA (AIO) et campagnes ROIstes — une visibilité durable et mesurable.',
     long: `La visibilité ne s'improvise pas et ne s'achète pas durablement. Nous combinons un SEO technique solide, des contenus utiles et une optimisation pour les nouveaux moteurs IA (ChatGPT, Perplexity, Claude).
 
-Tout est mesuré, en clair. Nous privilégions des outils respectueux de la vie privée comme Matomo, pour que vos données d'audience restent les vôtres — et que vos décisions s'appuient sur des chiffres fiables.`,
+Tout est mesuré, en clair. Nous privilégions des outils respectueux de la vie privée comme Matomo, pour que vos données d'audience restent les vôtres — et que vos décisions s'appuient sur des chiffres fiables.
+
+## SEO, SEA, AIO : la bonne combinaison
+Le référencement naturel (SEO) construit une visibilité durable ; la publicité (SEA) apporte un trafic immédiat ; l'optimisation IA (AIO) vous rend visible là où vos clients cherchent désormais — dans les réponses de ChatGPT, Perplexity ou Claude. On dose ces trois leviers selon vos objectifs et votre budget, sans jamais vous enfermer dans une dépense permanente.
+
+## Honnêteté avant tout
+On ne vous promet pas la première place du jour au lendemain — personne de sérieux ne le fait. On s'engage sur une méthode, des priorités claires et des progrès mesurés, mois après mois.`,
     highlights: ['SEO & AIO', 'Google Ads', 'Social Media', 'Analytics'],
     benefits: ['Visibilité accrue', 'Trafic qualifié', 'ROI mesurable', 'IA-ready'],
     process: [
@@ -201,7 +219,13 @@ Tout est mesuré, en clair. Nous privilégions des outils respectueux de la vie 
       'ERP, CRM et automatisations pour éliminer la double saisie et gagner du temps — avec des outils open source que vous maîtrisez.',
     long: `La vraie productivité, c'est arrêter de perdre du temps sur des tâches répétitives. Nous connectons vos outils et automatisons vos flux pour supprimer les doubles saisies et les oublis.
 
-Notre parti pris : des briques open source et auto-hébergeables — Dolibarr pour l'ERP/CRM, n8n pour l'automatisation — pour que vos process et vos données restent chez vous. On vous forme à les piloter, pour une autonomie réelle.`,
+Notre parti pris : des briques open source et auto-hébergeables — Dolibarr pour l'ERP/CRM, n8n pour l'automatisation — pour que vos process et vos données restent chez vous. On vous forme à les piloter, pour une autonomie réelle.
+
+## Ce que ça change au quotidien
+Une commande sur votre site qui crée automatiquement la facture et met à jour le stock. Un nouveau contact qui atterrit directement dans votre CRM. Des relances envoyées sans y penser. Autant de tâches qui ne vous coûtent plus ni temps, ni erreurs.
+
+## Maintenance & Formation incluses
+On documente tout, on forme vos équipes, et on propose des plans de maintenance (mises à jour, sauvegardes, supervision) pour que votre système reste fiable dans la durée — sans jamais vous rendre captifs. Vous gardez la main, on reste à vos côtés si besoin.`,
     highlights: ['ERP Dolibarr', 'CRM Notion', 'Automatisation', 'Maintenance & Formation'],
     benefits: ['Gain de temps', 'Zéro double saisie', 'Process documentés', 'Équipe autonome'],
     process: [
