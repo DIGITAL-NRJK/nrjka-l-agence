@@ -18,10 +18,19 @@ export const Commitments: Block = {
       type: 'array',
       localized: true,
       maxRows: 10,
-      admin: { initCollapsed: true },
+      labels: { singular: 'Engagement', plural: 'Engagements' },
+      admin: {
+        initCollapsed: true,
+        description: 'Vos principes / engagements. Affichés en manifeste (mot-clé + énoncé + explication).',
+      },
       fields: [
-        { name: 'title', type: 'text' },
-        { name: 'description', type: 'textarea' },
+        {
+          name: 'keyword',
+          type: 'text',
+          admin: { description: 'Mot-clé en un mot (ex. RÉSULTAT, HUMAIN, PROPRIÉTÉ).' },
+        },
+        { name: 'title', type: 'text', admin: { description: 'L’énoncé du principe.' } },
+        { name: 'description', type: 'textarea', admin: { description: 'Courte explication.' } },
       ],
     },
     appearance,

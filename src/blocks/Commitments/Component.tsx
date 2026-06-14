@@ -7,12 +7,12 @@ const commitmentsCss = `
 @keyframes cm-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @supports (animation-timeline: view()) {
   .cm-track{view-timeline-name:--charte}
-  .cm-item{animation:cm-rise .5s ease-out both;animation-timeline:--charte;animation-range:entry 0% entry 30%}
-  .cm-item:nth-child(2){animation-range:entry 5% entry 35%}
-  .cm-item:nth-child(3){animation-range:entry 10% entry 40%}
-  .cm-item:nth-child(4){animation-range:entry 15% entry 45%}
-  .cm-item:nth-child(5){animation-range:entry 20% entry 50%}
-  .cm-item:nth-child(6){animation-range:entry 25% entry 55%}
+  .cm-item{animation:cm-rise .5s ease-out both;animation-timeline:--charte;animation-range:entry 0% entry 35%}
+  .cm-item:nth-child(2){animation-range:entry 5% entry 40%}
+  .cm-item:nth-child(3){animation-range:entry 10% entry 45%}
+  .cm-item:nth-child(4){animation-range:entry 15% entry 50%}
+  .cm-item:nth-child(5){animation-range:entry 20% entry 55%}
+  .cm-item:nth-child(6){animation-range:entry 25% entry 60%}
 }
 @media (prefers-reduced-motion:reduce){.cm-item{animation:none}}
 `
@@ -28,7 +28,7 @@ export const CommitmentsBlock: React.FC<CommitmentsBlockProps> = ({
   const a = appearance || {}
 
   return (
-    <section className="container">
+    <section className="container" style={bgStyle(a.background)}>
       <style dangerouslySetInnerHTML={{ __html: commitmentsCss }} />
       <div className="max-w-2xl">
         {eyebrow && (
@@ -39,7 +39,7 @@ export const CommitmentsBlock: React.FC<CommitmentsBlockProps> = ({
         )}
         {title && (
           <h2
-            className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-bold leading-tight tracking-tight text-ink`}
+            className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-display font-bold leading-tight tracking-tight text-ink`}
             style={colorStyle(a.titleColor)}
           >
             {title}
@@ -56,24 +56,28 @@ export const CommitmentsBlock: React.FC<CommitmentsBlockProps> = ({
       </div>
 
       {list.length > 0 && (
-        <div className="cm-track mt-12 grid gap-x-12 sm:grid-cols-2">
+        <ol className="cm-track mt-14 border-t border-border">
           {list.map((item, i) => (
-            <div
+            <li
               key={i}
-              className="cm-item group border-t border-border py-7 transition-colors hover:border-terracotta/60"
+              className="cm-item group grid gap-3 border-b border-border py-8 transition-colors lg:grid-cols-[0.42fr_0.58fr] lg:gap-12"
             >
-              <span className="font-mono text-xs font-medium uppercase tracking-[0.15em] text-terracotta-dark">
-                {`Art. 0${i + 1}`}
-              </span>
-              <h3 className="mt-3 text-lg font-semibold text-ink transition-colors group-hover:text-terracotta-dark">
-                {item.title}
-              </h3>
+              <div>
+                {item.keyword && (
+                  <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-dark">
+                    {item.keyword}
+                  </span>
+                )}
+                <h3 className="mt-2 font-display text-2xl font-semibold leading-snug tracking-tight text-ink">
+                  {item.title}
+                </h3>
+              </div>
               {item.description && (
-                <p className="mt-2 text-sm leading-relaxed text-slate">{item.description}</p>
+                <p className="leading-relaxed text-slate lg:self-center">{item.description}</p>
               )}
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
       )}
     </section>
   )

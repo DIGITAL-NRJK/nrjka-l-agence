@@ -17,6 +17,7 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { s3Storage } from '@payloadcms/storage-s3'
 
+import { Expertises } from './collections/Expertises'
 import { Services } from './collections/Services'
 import { CaseStudies } from './collections/CaseStudies'
 import { CaseStudySectors } from './collections/CaseStudySectors'
@@ -93,6 +94,7 @@ export default buildConfig({
     Media,
     Categories,
     Users,
+    Expertises,
     Services,
     CaseStudies,
     CaseStudySectors,

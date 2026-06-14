@@ -72,6 +72,7 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    expertises: Expertise;
     services: Service;
     'case-studies': CaseStudy;
     'case-study-sectors': CaseStudySector;
@@ -97,6 +98,9 @@ export interface Config {
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
+    expertises: {
+      services: 'services';
+    };
     'payload-folders': {
       documentsAndFolders: 'payload-folders' | 'media';
     };
@@ -107,6 +111,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    expertises: ExpertisesSelect<false> | ExpertisesSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
     'case-study-sectors': CaseStudySectorsSelect<false> | CaseStudySectorsSelect<true>;
@@ -296,6 +301,7 @@ export interface Page {
         | ContactBlock
         | PresenceBlock
         | CaseStudiesIndexBlock
+        | FaqBlock
       )[]
     | null;
   meta?: {
@@ -941,24 +947,18 @@ export interface PromiseBlock {
  * via the `definition` "PillarsBlock".
  */
 export interface PillarsBlock {
+  /**
+   * Petit libellé au-dessus du titre (ex. « Nos expertises »).
+   */
   eyebrow?: string | null;
+  /**
+   * Titre de la section.
+   */
   title: string;
+  /**
+   * Texte d’introduction. Les cartes de piliers sont générées automatiquement à partir des pôles « mis en avant sur la home » (collection Pôles & Expertises).
+   */
   intro?: string | null;
-  pillars?:
-    | {
-        title?: string | null;
-        subtitle?: string | null;
-        description?: string | null;
-        services?:
-          | {
-              label?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        link?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   /**
    * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
    */
@@ -1064,9 +1064,22 @@ export interface CommitmentsBlock {
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
+  /**
+   * Vos principes / engagements. Affichés en manifeste (mot-clé + énoncé + explication).
+   */
   commitments?:
     | {
+        /**
+         * Mot-clé en un mot (ex. RÉSULTAT, HUMAIN, PROPRIÉTÉ).
+         */
+        keyword?: string | null;
+        /**
+         * L’énoncé du principe.
+         */
         title?: string | null;
+        /**
+         * Courte explication.
+         */
         description?: string | null;
         id?: string | null;
       }[]
@@ -1324,6 +1337,172 @@ export interface CaseStudiesIndexBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlock".
+ */
+export interface FaqBlock {
+  /**
+   * Petit libellé au-dessus du titre (ex. « Questions fréquentes »).
+   */
+  eyebrow?: string | null;
+  /**
+   * Titre de la section.
+   */
+  title?: string | null;
+  /**
+   * Texte d’introduction (optionnel).
+   */
+  intro?: string | null;
+  /**
+   * Les questions / réponses, affichées en accordéon dépliable.
+   */
+  items?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
+}
+/**
+ * Les grands domaines d'expertise de l'agence (les « pôles »). Chaque pôle a sa propre page /expertises/[slug] et peut être mis en avant comme pilier sur la page d'accueil. Les services granulaires (collection Services) se rattachent à un pôle.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expertises".
+ */
+export interface Expertise {
+  id: number;
+  /**
+   * Ex. « Web & Expérience ». S’affiche en titre de la carte et de la page.
+   */
+  title: string;
+  /**
+   * Identifiant dans l’URL : /expertises/<slug>. Ex. « web-experience ». Sans espaces ni accents.
+   */
+  slug: string;
+  /**
+   * Nom d’une icône Lucide (ex. Palette, Globe, TrendingUp, Database).
+   */
+  icon?: string | null;
+  /**
+   * Petite ligne sous le titre, ex. « Stratégie, Design, Création ».
+   */
+  subtitle?: string | null;
+  /**
+   * Phrase de présentation, affichée sur la carte de la home et en intro de page.
+   */
+  description: string;
+  /**
+   * Petits libellés affichés sur la carte de la home (ex. Branding, Copywriting…). 3 à 5 idéalement.
+   */
+  highlights?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Le texte développé affiché sur la page du pôle (titres, paragraphes, listes).
+   */
+  long_description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Les bénéfices clés, affichés en bandeau (ex. « Reconnaissance immédiate »).
+   */
+  benefits?:
+    | {
+        benefit: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Les étapes de la méthode pour ce pôle (titre + courte description).
+   */
+  process_steps?:
+    | {
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Les outils mis en avant (ex. WordPress, n8n, Matomo…).
+   */
+  technologies?:
+    | {
+        name: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Questions fréquentes propres à ce pôle, affichées en accordéon sur la page.
+   */
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Les services granulaires rattachés à ce pôle (gérés dans la collection Services).
+   */
+  services?: {
+    docs?: (number | Service)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  /**
+   * Coché = ce pôle apparaît comme pilier sur la page d’accueil.
+   */
+  featured?: boolean | null;
+  /**
+   * Décoché = la page n’est pas visible publiquement.
+   */
+  published?: boolean | null;
+  /**
+   * Plus petit = affiché en premier (home et listes).
+   */
+  order?: number | null;
+  /**
+   * Titre et description pour les moteurs de recherche (optionnel).
+   */
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Les offres granulaires de l’agence (ex. Sites vitrines, SEO, Maintenance, Formation…). Chaque service est rattaché à un pôle (collection Pôles & Expertises) et peut être lié à des études de cas.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
 export interface Service {
@@ -1363,7 +1542,10 @@ export interface Service {
     };
     [k: string]: unknown;
   } | null;
-  category: 'web-mobile' | 'ecommerce' | 'seo' | 'automation' | 'maintenance' | 'training' | 'hosting';
+  /**
+   * Le pôle auquel ce service appartient (ex. « Digitalisation & Process » pour la Maintenance ou la Formation).
+   */
+  pole: number | Expertise;
   image?: (number | null) | Media;
   /**
    * Ex: Globe, Code, Search...
@@ -2100,6 +2282,10 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
+        relationTo: 'expertises';
+        value: number | Expertise;
+      } | null)
+    | ({
         relationTo: 'services';
         value: number | Service;
       } | null)
@@ -2301,6 +2487,7 @@ export interface PagesSelect<T extends boolean = true> {
         contact?: T | ContactBlockSelect<T>;
         presence?: T | PresenceBlockSelect<T>;
         caseStudiesIndex?: T | CaseStudiesIndexBlockSelect<T>;
+        faq?: T | FaqBlockSelect<T>;
       };
   meta?:
     | T
@@ -2438,21 +2625,6 @@ export interface PillarsBlockSelect<T extends boolean = true> {
   eyebrow?: T;
   title?: T;
   intro?: T;
-  pillars?:
-    | T
-    | {
-        title?: T;
-        subtitle?: T;
-        description?: T;
-        services?:
-          | T
-          | {
-              label?: T;
-              id?: T;
-            };
-        link?: T;
-        id?: T;
-      };
   appearance?:
     | T
     | {
@@ -2549,6 +2721,7 @@ export interface CommitmentsBlockSelect<T extends boolean = true> {
   commitments?:
     | T
     | {
+        keyword?: T;
         title?: T;
         description?: T;
         id?: T;
@@ -2751,6 +2924,33 @@ export interface CaseStudiesIndexBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlock_select".
+ */
+export interface FaqBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  items?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -2923,6 +3123,62 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expertises_select".
+ */
+export interface ExpertisesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  icon?: T;
+  subtitle?: T;
+  description?: T;
+  highlights?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  long_description?: T;
+  benefits?:
+    | T
+    | {
+        benefit?: T;
+        id?: T;
+      };
+  process_steps?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  technologies?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  services?: T;
+  featured?: T;
+  published?: T;
+  order?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
@@ -2933,7 +3189,7 @@ export interface ServicesSelect<T extends boolean = true> {
   description_en?: T;
   long_description?: T;
   long_description_en?: T;
-  category?: T;
+  pole?: T;
   image?: T;
   icon?: T;
   pricing_start?: T;

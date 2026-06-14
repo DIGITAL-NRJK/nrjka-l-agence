@@ -6,8 +6,10 @@ export const Services: CollectionConfig = {
   labels: { singular: 'Service', plural: 'Services' },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'published', 'updatedAt'],
+    defaultColumns: ['title', 'pole', 'published', 'updatedAt'],
     group: 'Contenu',
+    description:
+      'Les offres granulaires de l’agence (ex. Sites vitrines, SEO, Maintenance, Formation…). Chaque service est rattaché à un pôle (collection Pôles & Expertises) et peut être lié à des études de cas.',
   },
   access: {
     read: publicRead,
@@ -31,19 +33,15 @@ export const Services: CollectionConfig = {
     { name: 'long_description', type: 'richText', label: 'Description longue' },
     { name: 'long_description_en', type: 'richText', label: 'Description longue (EN)' },
     {
-      name: 'category',
-      type: 'select',
+      name: 'pole',
+      type: 'relationship',
+      relationTo: 'expertises',
       required: true,
-      label: 'Catégorie',
-      options: [
-        { label: 'Web & Mobile', value: 'web-mobile' },
-        { label: 'E-commerce', value: 'ecommerce' },
-        { label: 'SEO & Visibilité', value: 'seo' },
-        { label: 'Automation & CRM', value: 'automation' },
-        { label: 'Maintenance & Support', value: 'maintenance' },
-        { label: 'Formation', value: 'training' },
-        { label: 'Hébergement', value: 'hosting' },
-      ],
+      label: 'Pôle / Expertise',
+      admin: {
+        description:
+          'Le pôle auquel ce service appartient (ex. « Digitalisation & Process » pour la Maintenance ou la Formation).',
+      },
     },
     {
       name: 'image',

@@ -6,31 +6,31 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
-import type { Service, Media } from '@/payload-types'
+import type { Expertise, Service } from '@/payload-types'
 import RichText from '@/components/RichText'
 
 import { Faq } from './Faq'
 
 type Args = { params: Promise<{ slug: string }> }
 
-const queryService = cache(async (slug: string) => {
+const queryExpertise = cache(async (slug: string) => {
   const payload = await getPayload({ config: configPromise })
   const res = await payload.find({
-    collection: 'services',
+    collection: 'expertises',
     where: { slug: { equals: slug }, published: { equals: true } },
     limit: 1,
     depth: 1,
     pagination: false,
   })
-  return (res.docs?.[0] as Service) || null
+  return (res.docs?.[0] as Expertise) || null
 })
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const res = await payload.find({
-    collection: 'services',
+    collection: 'expertises',
     where: { published: { equals: true } },
-    limit: 500,
+    limit: 100,
     pagination: false,
     select: { slug: true },
   })
@@ -39,15 +39,16 @@ export async function generateStaticParams() {
 
 export default async function ExpertisePage({ params }: Args) {
   const { slug } = await params
-  const s = await queryService(decodeURIComponent(slug))
-  if (!s) notFound()
+  const e = await queryExpertise(decodeURIComponent(slug))
+  if (!e) notFound()
 
-  const benefits = (s.benefits || []).map((b) => b.benefit).filter(Boolean) as string[]
-  const features = (s.features || []).map((f) => f.feature).filter(Boolean) as string[]
-  const steps = s.process_steps || []
-  const techs = (s.technologies || []).map((t) => t.name).filter(Boolean) as string[]
-  const faqs = s.faqs || []
-  const eyebrow = 'Notre expertise'
+  const benefits = (e.benefits || []).map((b) => b.benefit).filter(Boolean) as string[]
+  const steps = e.process_steps || []
+  const techs = (e.technologies || []).map((t) => t.name).filter(Boolean) as string[]
+  const faqs = e.faqs || []
+  const services = ((e.services as { docs?: Service[] } | undefined)?.docs || []).filter(
+    (s): s is Service => typeof s === 'object',
+  )
 
   return (
     <article className="pt-28 pb-24 sm:pt-32">
@@ -64,13 +65,13 @@ export default async function ExpertisePage({ params }: Args) {
         <div className="mt-8 max-w-3xl">
           <span className="mb-5 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-slate">
             <span className="h-px w-8 bg-terracotta" />
-            {eyebrow}
+            {e.subtitle || 'Notre expertise'}
           </span>
           <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-6xl">
-            {s.title}
+            {e.title}
           </h1>
-          {s.description && (
-            <p className="mt-6 text-lg leading-relaxed text-slate">{s.description}</p>
+          {e.description && (
+            <p className="mt-6 text-lg leading-relaxed text-slate">{e.description}</p>
           )}
           <div className="mt-8">
             <Link
@@ -100,26 +101,25 @@ export default async function ExpertisePage({ params }: Args) {
       </header>
 
       {/* Contenu long */}
-      {s.long_description && (
+      {e.long_description && (
         <div className="container mt-16 max-w-3xl">
-          <RichText data={s.long_description} enableGutter={false} />
+          <RichText data={e.long_description} enableGutter={false} />
         </div>
       )}
 
-      {/* Prestations */}
-      {features.length > 0 && (
+      {/* Services rattachés */}
+      {services.length > 0 && (
         <div className="container mt-16">
           <h2 className="font-display text-2xl font-bold tracking-tight text-ink">
             Ce que nous faisons
           </h2>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((f, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 rounded-2xl border border-border bg-surface-soft p-5"
-              >
-                <Check className="mt-0.5 h-5 w-5 shrink-0 text-terracotta" strokeWidth={2.4} />
-                <span className="text-ink">{f}</span>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((s) => (
+              <div key={s.id} className="rounded-2xl border border-border bg-surface-soft p-6">
+                <h3 className="font-semibold text-ink">{s.title}</h3>
+                {s.description && (
+                  <p className="mt-2 text-sm leading-relaxed text-slate">{s.description}</p>
+                )}
               </div>
             ))}
           </div>
@@ -200,10 +200,10 @@ export default async function ExpertisePage({ params }: Args) {
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
-  const s = await queryService(decodeURIComponent(slug))
-  if (!s) return {}
+  const e = await queryExpertise(decodeURIComponent(slug))
+  if (!e) return {}
   return {
-    title: s.seo?.metaTitle || `${s.title} — NRJKA`,
-    description: s.seo?.metaDescription || s.description || undefined,
+    title: e.seo?.metaTitle || `${e.title} — Expertise NRJKA`,
+    description: e.seo?.metaDescription || e.description || undefined,
   }
 }

@@ -1,50 +1,43 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * Crée (ou met à jour) les 4 pages d'expertise (piliers) dans la collection Services,
- * publiées, avec contenu premium + FAQ, puis branche les liens des piliers de la home.
+ * Modèle deux niveaux :
+ *  - Pôles (collection « expertises ») : les 4 grands domaines, mis en avant sur la home.
+ *  - Services (collection « services ») : les offres granulaires, rattachées à un pôle.
+ * Crée/MAJ les 4 pôles + leurs services (dont Formation & Maintenance sous Digitalisation),
+ * et nettoie les anciennes entrées Services en double.
  * Lancement : pnpm payload run src/scripts/seed-expertises.ts
- * Tout reste éditable ensuite dans l'admin.
  */
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { convertMarkdownToLexical, editorConfigFactory } from '@payloadcms/richtext-lexical'
 
-type Expertise = {
+type Pole = {
   slug: string
   title: string
   icon: string
-  category: string
+  subtitle: string
   description: string
   long: string
+  highlights: string[]
   benefits: string[]
-  features: string[]
   process: { title: string; description: string }[]
   technologies: string[]
   faqs: { question: string; answer: string }[]
 }
 
-const expertises: Expertise[] = [
+const poles: Pole[] = [
   {
     slug: 'marque-contenu',
     title: 'Marque & Contenu',
     icon: 'Palette',
-    category: 'web-mobile',
+    subtitle: 'Stratégie, Design, Création',
     description:
       'Une marque claire, cohérente et mémorable — du positionnement à la charte graphique, du message aux contenus.',
     long: `Avant la technique, il y a le sens. Nous posons d'abord les fondations de votre marque : ce que vous êtes, ce que vous promettez, et à qui.
 
-De ce socle découlent une identité visuelle juste, un ton de voix reconnaissable et des contenus qui portent vraiment votre valeur. Pas de gadgets : une cohérence totale, sur chaque support, qui installe la confiance et facilite tout le reste de votre présence digitale.`,
+De ce socle découlent une identité visuelle juste, un ton de voix reconnaissable et des contenus qui portent votre valeur. Pas de gadgets : une cohérence totale, sur chaque support, qui installe la confiance et facilite tout le reste de votre présence digitale.`,
+    highlights: ['Branding', 'Identité visuelle', 'Copywriting', 'Direction artistique'],
     benefits: ['Reconnaissance immédiate', 'Positionnement clair', 'Connexion émotionnelle', 'Cohérence totale'],
-    features: [
-      'Naming & tagline',
-      'Logo & déclinaisons',
-      'Charte graphique & brand book',
-      'Positionnement & tone of voice',
-      'Copywriting web',
-      'Direction artistique',
-      'Plan de communication',
-      'Calendrier éditorial',
-    ],
     process: [
       { title: 'Immersion', description: 'On comprend votre ADN, vos valeurs et vos cibles.' },
       { title: 'Stratégie', description: 'On définit le positionnement et les axes créatifs.' },
@@ -59,14 +52,29 @@ De ce socle découlent une identité visuelle juste, un ton de voix reconnaissab
           "Oui. Du nom à la charte graphique en passant par le ton et les premiers contenus, on construit une marque cohérente et prête à l'emploi. Vous repartez avec un brand book clair et tous les fichiers sources — ils vous appartiennent.",
       },
       {
-        question: "J'ai déjà un logo, puis-je ne prendre qu'une partie ?",
-        answer:
-          'Bien sûr. On peut intervenir sur un périmètre précis (refonte de charte, copywriting, direction artistique) et s’appuyer sur l’existant. On commence toujours par un audit gratuit pour cibler ce qui aura le plus d’impact.',
-      },
-      {
         question: 'Les fichiers sources sont-ils livrés ?',
         answer:
           'Toujours. Vous récupérez l’ensemble des fichiers sources et des droits associés. Notre principe : vous restez propriétaire de votre marque, sans dépendance à un prestataire.',
+      },
+      {
+        question: 'Quelle différence entre un logo et une identité de marque ?',
+        answer:
+          'Un logo est un signe. Une identité de marque, c’est le système complet — logo, couleurs, typographies, ton de voix, règles d’usage — qui rend votre marque reconnaissable et cohérente sur tous vos supports.',
+      },
+      {
+        question: 'Pouvez-vous refondre ma marque sans tout changer ?',
+        answer:
+          'Oui. On part de l’existant, on garde ce qui fonctionne et on clarifie le reste. Une refonte n’est pas forcément une révolution : souvent, remettre de la cohérence suffit à tout changer.',
+      },
+      {
+        question: 'Rédigez-vous aussi les textes (copywriting) ?',
+        answer:
+          'Oui. Le positionnement, le ton de voix et la rédaction de vos contenus font partie de ce pôle. Une belle identité sans les bons mots reste muette.',
+      },
+      {
+        question: 'Combien coûte une identité de marque ?',
+        answer:
+          'Cela dépend du périmètre. On raisonne en valeur, avec un devis sur-mesure établi après un audit gratuit — transparent, sans coût caché. Vous repartez propriétaire de tous les fichiers.',
       },
     ],
   },
@@ -74,23 +82,14 @@ De ce socle découlent une identité visuelle juste, un ton de voix reconnaissab
     slug: 'web-experience',
     title: 'Web & Expérience',
     icon: 'Globe',
-    category: 'web-mobile',
+    subtitle: 'Sites & E-commerce',
     description:
       'Des sites et e-commerce sur-mesure, rapides et évolutifs — pensés pour convertir, et pour vous appartenir.',
     long: `Un site n'est pas qu'une vitrine : c'est votre meilleur commercial, disponible en continu. Nous concevons des plateformes performantes, accessibles et faciles à faire vivre.
 
 Nous privilégions des technologies ouvertes et souveraines — WordPress, WooCommerce, PrestaShop, Medusa ou du headless sur-mesure — pour que vous ne soyez jamais prisonnier d'un outil. Vous gardez la main sur votre contenu, vos données et votre hébergement.`,
+    highlights: ['Sites vitrines', 'E-commerce', 'Headless CMS', 'UX/UI Design'],
     benefits: ['100% responsive', 'Core Web Vitals A+', 'SEO-ready', 'Sécurisé & souverain'],
-    features: [
-      'Sites vitrines sur-mesure',
-      'E-commerce (WooCommerce, PrestaShop, Medusa)',
-      'Sites institutionnels',
-      'Headless & développement custom',
-      'Design responsive',
-      'Optimisation SEO & performance',
-      'Back-office intuitif',
-      'Formation incluse',
-    ],
     process: [
       { title: 'Discovery', description: 'On analyse vos besoins et vos objectifs business.' },
       { title: 'Design', description: 'On valide ensemble maquettes et prototypes.' },
@@ -102,17 +101,37 @@ Nous privilégions des technologies ouvertes et souveraines — WordPress, WooCo
       {
         question: 'Pourquoi pas Shopify ?',
         answer:
-          'Shopify est pratique mais c’est une location : vos données et votre boutique vivent chez un tiers, avec des frais et des limites. Nous préférons des solutions open source comme WooCommerce, PrestaShop ou Medusa, que vous hébergez et possédez réellement. À la clé : plus de liberté et des coûts maîtrisés sur la durée.',
+          'Shopify est pratique mais c’est une location : vos données et votre boutique vivent chez un tiers, avec des frais et des limites. Nous préférons des solutions open source comme WooCommerce, PrestaShop ou Medusa, que vous hébergez et possédez réellement.',
       },
       {
         question: 'Serai-je autonome pour modifier mon site ?',
         answer:
-          'Oui, c’est un objectif central. On choisit un back-office clair, et la formation est incluse. Vous éditez vos pages, vos produits et vos contenus sans dépendre de nous au quotidien.',
+          'Oui, c’est un objectif central. On choisit un back-office clair, et la formation est incluse. Vous éditez vos pages et vos contenus sans dépendre de nous au quotidien.',
       },
       {
-        question: 'Combien de temps pour un site ?',
+        question: 'Combien coûte un site web ?',
         answer:
-          'Un site vitrine soigné se compte en semaines, un e-commerce ou un projet headless davantage selon le périmètre. On vous donne un calendrier clair dès l’audit, sans surprise.',
+          'Le prix dépend du périmètre (vitrine, e-commerce, sur-mesure). On établit un devis clair après un audit gratuit — sans coût caché, et sans abonnement qui vous enferme. Vous restez propriétaire du site et de son hébergement.',
+      },
+      {
+        question: 'WordPress ou développement sur-mesure : que choisir ?',
+        answer:
+          'WordPress convient à la majorité des projets : autonome, éprouvé, riche en extensions. Le headless / sur-mesure (Next.js, Payload) est réservé aux besoins spécifiques ou à la performance maximale. On vous conseille la solution la plus adaptée, pas la plus chère.',
+      },
+      {
+        question: 'Mon site sera-t-il bien référencé sur Google ?',
+        answer:
+          'Les bonnes pratiques SEO et la performance sont intégrées dès la conception (structure, vitesse, balises). Le référencement de fond — contenu, mots-clés, netlinking — est un travail dédié, géré par le pôle Performance & Visibilité.',
+      },
+      {
+        question: 'Puis-je vendre en ligne ?',
+        answer:
+          'Oui. Selon votre projet, on déploie WooCommerce, PrestaShop ou Medusa — des solutions e-commerce open source que vous possédez, avec gestion des produits, des paiements et des stocks.',
+      },
+      {
+        question: 'Reprenez-vous un site existant ?',
+        answer:
+          'Oui. Après un audit, on peut refondre votre site, le reprendre pour le faire évoluer, ou le migrer vers une solution plus saine — sans repartir de zéro si ce n’est pas nécessaire.',
       },
     ],
   },
@@ -120,45 +139,56 @@ Nous privilégions des technologies ouvertes et souveraines — WordPress, WooCo
     slug: 'performance-visibilite',
     title: 'Performance & Visibilité',
     icon: 'TrendingUp',
-    category: 'seo',
+    subtitle: 'SEO, SEA, AIO',
     description:
       'Référencement naturel, optimisation pour les moteurs IA (AIO) et campagnes ROIstes — une visibilité durable et mesurable.',
     long: `La visibilité ne s'improvise pas et ne s'achète pas durablement. Nous combinons un SEO technique solide, des contenus utiles et une optimisation pour les nouveaux moteurs IA (ChatGPT, Perplexity, Claude).
 
-Tout est mesuré, en clair. Nous privilégions des outils de mesure respectueux de la vie privée comme Matomo, pour que vos données d'audience restent les vôtres — et que vos décisions s'appuient sur des chiffres fiables, pas sur des impressions.`,
+Tout est mesuré, en clair. Nous privilégions des outils respectueux de la vie privée comme Matomo, pour que vos données d'audience restent les vôtres — et que vos décisions s'appuient sur des chiffres fiables.`,
+    highlights: ['SEO & AIO', 'Google Ads', 'Social Media', 'Analytics'],
     benefits: ['Visibilité accrue', 'Trafic qualifié', 'ROI mesurable', 'IA-ready'],
-    features: [
-      'Audit SEO technique',
-      'Stratégie de contenu',
-      'Optimisation AIO (moteurs IA)',
-      'Google Ads',
-      'Social Ads',
-      'Social media',
-      'Analytics & tableaux de bord',
-      'Reporting mensuel clair',
-    ],
     process: [
       { title: 'Audit', description: 'État des lieux technique, contenu et concurrence.' },
       { title: 'Stratégie', description: 'Priorités, mots-clés et plan de contenu.' },
       { title: 'Exécution', description: 'Optimisations on-page, contenus, campagnes.' },
       { title: 'Mesure', description: 'Suivi des positions, du trafic et du ROI.' },
     ],
-    technologies: ['Matomo (open source)', 'Google Search Console', 'Metabase', 'Data structurée Schema.org'],
+    technologies: ['Matomo (open source)', 'Google Search Console', 'Metabase', 'Schema.org'],
     faqs: [
       {
         question: "C'est quoi l'AIO, et pourquoi ça compte ?",
         answer:
-          'L’AIO (AI Optimization) consiste à rendre votre site lisible et citable par les moteurs IA comme ChatGPT, Perplexity ou Claude — qui répondent de plus en plus aux recherches. Structure sémantique, données structurées, contenu clair : on optimise pour être compris et recommandé par ces nouveaux acteurs.',
-      },
-      {
-        question: 'En combien de temps voit-on des résultats SEO ?',
-        answer:
-          'Le SEO est un investissement de fond : les premiers effets se voient souvent en 2 à 4 mois, et s’installent durablement. On commence par les gains rapides (technique, pages clés) pendant que la stratégie de contenu monte en puissance.',
+          'L’AIO (AI Optimization) rend votre site lisible et citable par les moteurs IA comme ChatGPT, Perplexity ou Claude — qui répondent de plus en plus aux recherches. On optimise structure, données structurées et contenu pour être compris et recommandé par ces nouveaux acteurs.',
       },
       {
         question: 'Pourquoi Matomo plutôt que Google Analytics ?',
         answer:
-          'Matomo est open source et respecte la vie privée : vos données d’audience vous appartiennent et restent hébergées chez vous, sans partage publicitaire. C’est cohérent avec notre approche souveraine — et souvent plus simple côté conformité RGPD.',
+          'Matomo est open source et respecte la vie privée : vos données d’audience vous appartiennent et restent hébergées chez vous, sans partage publicitaire. C’est cohérent avec notre approche souveraine et souvent plus simple côté RGPD.',
+      },
+      {
+        question: 'En combien de temps voit-on des résultats en SEO ?',
+        answer:
+          'Le SEO est un investissement de fond : les premiers effets apparaissent souvent en 2 à 4 mois, puis s’installent durablement. On commence par les gains rapides (technique, pages clés) pendant que la stratégie de contenu monte en puissance.',
+      },
+      {
+        question: 'Quelle différence entre SEO et SEA ?',
+        answer:
+          'Le SEO (référencement naturel) construit une visibilité durable et gratuite dans le temps. Le SEA (publicité) achète une visibilité immédiate, tant que vous payez. On combine les deux selon vos objectifs et votre budget.',
+      },
+      {
+        question: 'Garantissez-vous la première place sur Google ?',
+        answer:
+          'Personne ne peut le garantir honnêtement — Google seul décide. Ce sur quoi on s’engage : une méthode rigoureuse, des actions priorisées et des progrès mesurés, en toute transparence.',
+      },
+      {
+        question: 'Gérez-vous aussi les réseaux sociaux ?',
+        answer:
+          'Oui : stratégie éditoriale, création de contenu et community management font partie de ce pôle, en cohérence avec votre marque et vos objectifs de visibilité.',
+      },
+      {
+        question: 'Combien coûte une prestation SEO ou une campagne ?',
+        answer:
+          'Cela dépend de vos objectifs et de votre marché. On établit un devis après un audit gratuit, et on privilégie toujours les actions au meilleur rapport impact/coût.',
       },
     ],
   },
@@ -166,23 +196,14 @@ Tout est mesuré, en clair. Nous privilégions des outils de mesure respectueux 
     slug: 'digitalisation-process',
     title: 'Digitalisation & Process',
     icon: 'Database',
-    category: 'automation',
+    subtitle: 'ERP, CRM, Automatisation',
     description:
       'ERP, CRM et automatisations pour éliminer la double saisie et gagner du temps — avec des outils open source que vous maîtrisez.',
     long: `La vraie productivité, c'est arrêter de perdre du temps sur des tâches répétitives. Nous connectons vos outils et automatisons vos flux pour supprimer les doubles saisies et les oublis.
 
-Notre parti pris : des briques open source et auto-hébergeables — Dolibarr pour l'ERP/CRM, n8n pour l'automatisation — pour que vos process et vos données restent chez vous. On vous forme à les piloter, pour une autonomie réelle, sans dépendance.`,
+Notre parti pris : des briques open source et auto-hébergeables — Dolibarr pour l'ERP/CRM, n8n pour l'automatisation — pour que vos process et vos données restent chez vous. On vous forme à les piloter, pour une autonomie réelle.`,
+    highlights: ['ERP Dolibarr', 'CRM Notion', 'Automatisation', 'Maintenance & Formation'],
     benefits: ['Gain de temps', 'Zéro double saisie', 'Process documentés', 'Équipe autonome'],
-    features: [
-      'ERP Dolibarr',
-      'CRM (Dolibarr / Notion)',
-      'Automatisation n8n',
-      'Synchronisation site ↔ ERP',
-      'Tableaux de bord Metabase',
-      'Audit & cartographie des process',
-      'Formation des équipes',
-      'Maintenance incluse',
-    ],
     process: [
       { title: 'Audit', description: 'On cartographie vos process et vos irritants.' },
       { title: 'Conception', description: 'On dessine les flux et les automatisations.' },
@@ -194,28 +215,69 @@ Notre parti pris : des briques open source et auto-hébergeables — Dolibarr po
       {
         question: 'Pourquoi des outils open source plutôt que Make ou Zapier ?',
         answer:
-          'Make et Zapier sont efficaces mais facturés à l’usage et hébergés chez des tiers : vos automatisations et vos données en dépendent. Avec n8n auto-hébergé, vous gardez le contrôle complet, sans coût à la tâche — et vos flux restent souverains.',
-      },
-      {
-        question: 'Dolibarr, c’est adapté à une petite structure ?',
-        answer:
-          'Oui. Dolibarr est modulaire : on n’active que ce dont vous avez besoin (devis, factures, stocks, CRM). C’est open source, économique et évolutif — idéal pour les TPE/PME et les associations qui veulent se structurer sans s’enfermer.',
+          'Make et Zapier sont efficaces mais facturés à l’usage et hébergés chez des tiers. Avec n8n auto-hébergé, vous gardez le contrôle complet, sans coût à la tâche — et vos flux restent souverains.',
       },
       {
         question: 'Vais-je dépendre de vous pour faire tourner tout ça ?',
         answer:
-          'Non, c’est tout l’inverse de notre promesse. On documente vos process et on forme vos équipes pour que vous soyez autonomes. On reste disponible pour les évolutions, mais jamais comme un point de blocage.',
+          'Non, c’est tout l’inverse de notre promesse. On documente vos process et on forme vos équipes pour que vous soyez autonomes. On reste disponible pour les évolutions, jamais comme un point de blocage.',
+      },
+      {
+        question: 'Dolibarr est-il adapté à une petite structure ?',
+        answer:
+          'Oui. Dolibarr est modulaire : on n’active que ce dont vous avez besoin (devis, factures, stocks, CRM). C’est open source, économique et évolutif — idéal pour les TPE/PME et les associations qui veulent se structurer sans s’enfermer.',
+      },
+      {
+        question: 'Pouvez-vous connecter mon site à mon outil de gestion ?',
+        answer:
+          'Oui. On met en place la synchronisation site ↔ ERP : une commande sur votre site crée automatiquement la facture, met à jour le stock, etc. Fini la double saisie.',
+      },
+      {
+        question: 'Qu’est-ce que l’automatisation peut me faire gagner concrètement ?',
+        answer:
+          'Du temps, surtout. On supprime les tâches répétitives, les copier-coller entre outils et les oublis. Vos équipes se concentrent sur ce qui a de la valeur, pas sur la saisie.',
+      },
+      {
+        question: 'Proposez-vous de la formation à ces outils ?',
+        answer:
+          'Oui, la formation est au cœur du pôle : sessions personnalisées, documentation et tutoriels pour rendre vos équipes vraiment autonomes.',
+      },
+      {
+        question: 'Et la maintenance, une fois en place ?',
+        answer:
+          'On propose des plans de maintenance adaptés (mises à jour, sauvegardes, supervision) si vous le souhaitez — sans jamais vous rendre captifs. Vous gardez la main.',
       },
     ],
   },
 ]
 
-// Map titre de pilier (home) -> slug d'expertise, pour brancher les liens
-const pillarLinkByTitle: Record<string, string> = {
-  'Marque & Contenu': '/expertises/marque-contenu',
-  'Web & Expérience': '/expertises/web-experience',
-  'Performance & Visibilité': '/expertises/performance-visibilite',
-  'Digitalisation & Process': '/expertises/digitalisation-process',
+// Services granulaires rattachés à chaque pôle (slug du pôle -> services)
+const servicesByPole: Record<string, { slug: string; title: string; description: string }[]> = {
+  'marque-contenu': [
+    { slug: 'branding-identite', title: 'Branding & Identité', description: 'Logo, palette, typographie : un système graphique complet et cohérent.' },
+    { slug: 'strategie-copywriting', title: 'Stratégie & Copywriting', description: 'Positionnement, ton de voix et messages qui résonnent avec votre audience.' },
+    { slug: 'direction-artistique', title: 'Direction artistique', description: 'Supervision créative de vos visuels, pour un impact cohérent partout.' },
+    { slug: 'communication', title: 'Communication', description: 'Plan multi-canal et calendrier éditorial pour toucher la bonne cible au bon moment.' },
+  ],
+  'web-experience': [
+    { slug: 'sites-vitrines', title: 'Sites vitrines', description: 'Des sites sur-mesure, rapides et optimisés SEO, faciles à faire vivre.' },
+    { slug: 'e-commerce', title: 'E-commerce', description: 'Boutiques performantes sur WooCommerce, PrestaShop ou Medusa — que vous possédez.' },
+    { slug: 'sites-institutionnels', title: 'Sites institutionnels', description: "Projets d'envergure : multi-sites, portails, accessibilité RGAA." },
+    { slug: 'headless-sur-mesure', title: 'Headless & sur-mesure', description: 'Architecture découplée (Next.js, Payload) pour les projets ambitieux.' },
+  ],
+  'performance-visibilite': [
+    { slug: 'seo-aio', title: 'SEO & AIO', description: 'Référencement naturel et optimisation pour les moteurs IA (ChatGPT, Perplexity, Claude).' },
+    { slug: 'publicite-digitale', title: 'Publicité digitale', description: 'Campagnes Google Ads et Social Ads orientées ROI, budget maîtrisé.' },
+    { slug: 'social-media', title: 'Social media', description: 'Stratégie éditoriale, création de contenu et community management.' },
+    { slug: 'analytics-data', title: 'Analytics & data', description: 'Tableaux de bord clairs (Matomo, Metabase) pour décider sur des faits.' },
+  ],
+  'digitalisation-process': [
+    { slug: 'erp-dolibarr', title: 'ERP Dolibarr', description: "Gestion d'entreprise open source : devis, factures, stocks, CRM intégré." },
+    { slug: 'crm-notion', title: 'CRM & Notion', description: 'Écosystèmes de gestion clients et projets, sur-mesure et automatisés.' },
+    { slug: 'automatisation-n8n', title: 'Automatisation n8n', description: 'Connectez vos outils et supprimez la double saisie, en auto-hébergé.' },
+    { slug: 'formation', title: 'Formation', description: 'On vous forme à vos outils pour une autonomie réelle, sans dépendance.' },
+    { slug: 'maintenance-support', title: 'Maintenance & Support', description: 'Mises à jour, sauvegardes, supervision : votre plateforme reste fiable et sûre.' },
+  ],
 }
 
 const run = async () => {
@@ -223,82 +285,90 @@ const run = async () => {
   const editorConfig = await editorConfigFactory.default({ config: payload.config })
   const toLex = (markdown: string) => convertMarkdownToLexical({ editorConfig, markdown })
 
-  // 1) Upsert des 4 services
-  for (let i = 0; i < expertises.length; i++) {
-    const e = expertises[i]
+  const poleIdBySlug: Record<string, number | string> = {}
+
+  // 1) Upsert des pôles
+  for (let i = 0; i < poles.length; i++) {
+    const p = poles[i]
     const data: any = {
-      title: e.title,
-      slug: e.slug,
-      description: e.description,
-      long_description: toLex(e.long),
-      category: e.category,
-      icon: e.icon,
+      title: p.title,
+      slug: p.slug,
+      icon: p.icon,
+      subtitle: p.subtitle,
+      description: p.description,
+      long_description: toLex(p.long),
+      highlights: p.highlights.map((label) => ({ label })),
+      benefits: p.benefits.map((benefit) => ({ benefit })),
+      process_steps: p.process,
+      technologies: p.technologies.map((name) => ({ name })),
+      faqs: p.faqs,
+      featured: true,
       published: true,
       order: i + 1,
-      benefits: e.benefits.map((benefit) => ({ benefit })),
-      features: e.features.map((feature) => ({ feature })),
-      process_steps: e.process,
-      technologies: e.technologies.map((name) => ({ name })),
-      faqs: e.faqs,
-      seo: {
-        metaTitle: `${e.title} — Expertise NRJKA`,
-        metaDescription: e.description,
-      },
+      seo: { metaTitle: `${p.title} — Expertise NRJKA`, metaDescription: p.description },
     }
-
     const existing = await payload.find({
-      collection: 'services',
-      where: { slug: { equals: e.slug } },
+      collection: 'expertises',
+      where: { slug: { equals: p.slug } },
       limit: 1,
       pagination: false,
     })
     if (existing.docs[0]) {
-      await payload.update({ collection: 'services', id: existing.docs[0].id, data })
-      payload.logger.info(`↻ Service mis à jour : ${e.slug}`)
+      const doc = await payload.update({ collection: 'expertises', id: existing.docs[0].id, data })
+      poleIdBySlug[p.slug] = doc.id
+      payload.logger.info(`↻ Pôle mis à jour : ${p.slug}`)
     } else {
-      await payload.create({ collection: 'services', data })
-      payload.logger.info(`✅ Service créé : ${e.slug}`)
+      const doc = await payload.create({ collection: 'expertises', data })
+      poleIdBySlug[p.slug] = doc.id
+      payload.logger.info(`✅ Pôle créé : ${p.slug}`)
     }
   }
 
-  // 2) Brancher les liens des piliers de la home
-  try {
-    const home = await payload.find({
-      collection: 'pages',
-      where: { slug: { equals: 'home' } },
+  // 2) Nettoyage : anciennes entrées Services en double (créées avant le modèle 2 niveaux)
+  for (const oldSlug of Object.keys(servicesByPole)) {
+    const dup = await payload.find({
+      collection: 'services',
+      where: { slug: { equals: oldSlug } },
       limit: 1,
-      depth: 0,
       pagination: false,
     })
-    const page: any = home.docs[0]
-    if (page && Array.isArray(page.layout)) {
-      let touched = false
-      for (const block of page.layout) {
-        if (block?.blockType === 'pillars' && Array.isArray(block.pillars)) {
-          for (const p of block.pillars) {
-            const target = pillarLinkByTitle[(p.title || '').trim()]
-            if (target && p.link !== target) {
-              p.link = target
-              touched = true
-            }
-          }
-        }
-      }
-      if (touched) {
-        await payload.update({
-          collection: 'pages',
-          id: page.id,
-          data: { layout: page.layout, _status: 'published' },
-        })
-        payload.logger.info('✅ Liens des piliers branchés sur /expertises/*.')
-      } else {
-        payload.logger.info('ℹ️ Aucun lien de pilier à mettre à jour (titres non trouvés ?).')
-      }
+    if (dup.docs[0]) {
+      await payload.delete({ collection: 'services', id: dup.docs[0].id })
+      payload.logger.info(`🗑️  Ancien service en double supprimé : ${oldSlug}`)
     }
-  } catch (err) {
-    payload.logger.warn(`⚠️ Liens des piliers non mis à jour automatiquement : ${String(err)}`)
   }
 
+  // 3) Upsert des services rattachés
+  let order = 0
+  for (const [poleSlug, services] of Object.entries(servicesByPole)) {
+    const poleId = poleIdBySlug[poleSlug]
+    for (const s of services) {
+      order += 1
+      const data: any = {
+        title: s.title,
+        slug: s.slug,
+        description: s.description,
+        pole: poleId,
+        published: true,
+        order,
+      }
+      const existing = await payload.find({
+        collection: 'services',
+        where: { slug: { equals: s.slug } },
+        limit: 1,
+        pagination: false,
+      })
+      if (existing.docs[0]) {
+        await payload.update({ collection: 'services', id: existing.docs[0].id, data })
+        payload.logger.info(`↻ Service mis à jour : ${s.slug}`)
+      } else {
+        await payload.create({ collection: 'services', data })
+        payload.logger.info(`✅ Service créé : ${s.slug} (→ ${poleSlug})`)
+      }
+    }
+  }
+
+  payload.logger.info('🎉 Pôles + services rattachés en place.')
   process.exit(0)
 }
 

@@ -19,6 +19,7 @@ import { CtaFinalBlock } from '@/blocks/CtaFinal/Component'
 import { ContactBlock } from '@/blocks/Contact/Component'
 import { PresenceBlock } from '@/blocks/Presence/Component'
 import { CaseStudiesIndexBlock } from '@/blocks/CaseStudiesIndex/Component'
+import { FaqBlock } from '@/blocks/Faq/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -38,6 +39,7 @@ const blockComponents = {
   contact: ContactBlock,
   presence: PresenceBlock,
   caseStudiesIndex: CaseStudiesIndexBlock,
+  faq: FaqBlock,
 }
 // Rythme vertical de la home : les sections liées sont rapprochées,
 // chaque nouveau « mouvement » respire davantage.

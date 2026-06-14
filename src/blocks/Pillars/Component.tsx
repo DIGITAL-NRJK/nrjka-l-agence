@@ -1,17 +1,29 @@
 import React from 'react'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 import { ArrowUpRight } from 'lucide-react'
 
-import type { PillarsBlock as PillarsBlockProps } from '@/payload-types'
+import type { PillarsBlock as PillarsBlockProps, Expertise } from '@/payload-types'
 import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
-export const PillarsBlock: React.FC<PillarsBlockProps> = ({
-  eyebrow,
-  title,
-  intro,
-  pillars,
-  appearance,
-}) => {
-  const a = appearance || {}
+export const PillarsBlock = async (props: PillarsBlockProps) => {
+  const { eyebrow, title, intro } = props
+  const a = props.appearance || {}
+
+  let items: Expertise[] = []
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const res = await payload.find({
+      collection: 'expertises',
+      where: { featured: { equals: true }, published: { equals: true } },
+      sort: 'order',
+      limit: 20,
+      depth: 0,
+    })
+    items = res.docs as Expertise[]
+  } catch {
+    items = []
+  }
 
   return (
     <section id="expertises" className="container scroll-mt-28" style={bgStyle(a.background)}>
@@ -26,7 +38,7 @@ export const PillarsBlock: React.FC<PillarsBlockProps> = ({
           )}
           {title && (
             <h2
-              className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-bold leading-tight tracking-tight text-ink`}
+              className={`${titleClass(a, 'text-4xl sm:text-5xl')} font-display font-bold leading-tight tracking-tight text-ink`}
               style={colorStyle(a.titleColor)}
             >
               {title}
@@ -42,52 +54,43 @@ export const PillarsBlock: React.FC<PillarsBlockProps> = ({
           )}
         </div>
 
-        {/* Colonne droite — liste éditoriale */}
-        {pillars && pillars.length > 0 && (
+        {/* Colonne droite — liste éditoriale (pôles mis en avant) */}
+        {items.length > 0 && (
           <div className="border-t border-border">
-            {pillars.map((pillar, i) => {
-              const services = (pillar.services || []).map((s) => s.label).filter(Boolean)
-              const rowClass =
-                'group flex gap-6 border-b border-border py-8 transition-all duration-300 hover:border-terracotta/50 hover:pl-2 sm:gap-8'
-              const inner = (
-                <>
+            {items.map((pole, i) => {
+              const highlights = (pole.highlights || []).map((h) => h.label).filter(Boolean)
+              return (
+                <a
+                  key={pole.id}
+                  href={`/expertises/${pole.slug}`}
+                  className="group flex gap-6 border-b border-border py-8 transition-all duration-300 hover:border-terracotta/50 hover:pl-2 sm:gap-8"
+                >
                   <span className="font-display text-4xl font-bold leading-none tabular-nums text-ink/15 transition-colors group-hover:text-terracotta sm:text-5xl">
                     {`0${i + 1}`}
                   </span>
                   <div className="flex-1">
                     <div className="flex items-baseline justify-between gap-4">
                       <h3 className="text-xl font-semibold text-ink transition-colors group-hover:text-terracotta-dark">
-                        {pillar.title}
+                        {pole.title}
                       </h3>
-                      {pillar.subtitle && (
+                      {pole.subtitle && (
                         <span className="hidden shrink-0 text-xs uppercase tracking-[0.12em] text-slate sm:block">
-                          {pillar.subtitle}
+                          {pole.subtitle}
                         </span>
                       )}
                     </div>
-                    {pillar.description && (
-                      <p className="mt-2.5 leading-relaxed text-slate">{pillar.description}</p>
+                    {pole.description && (
+                      <p className="mt-2.5 leading-relaxed text-slate">{pole.description}</p>
                     )}
-                    {services.length > 0 && (
-                      <p className="mt-3 text-sm text-slate/70">{services.join('  ·  ')}</p>
+                    {highlights.length > 0 && (
+                      <p className="mt-3 text-sm text-slate/70">{highlights.join('  ·  ')}</p>
                     )}
-                    {pillar.link && (
-                      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-terracotta-dark transition-all group-hover:gap-2.5">
-                        En savoir plus
-                        <ArrowUpRight className="h-4 w-4" strokeWidth={2.2} />
-                      </span>
-                    )}
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-terracotta-dark transition-all group-hover:gap-2.5">
+                      En savoir plus
+                      <ArrowUpRight className="h-4 w-4" strokeWidth={2.2} />
+                    </span>
                   </div>
-                </>
-              )
-              return pillar.link ? (
-                <a key={i} href={pillar.link} className={rowClass}>
-                  {inner}
                 </a>
-              ) : (
-                <div key={i} className={rowClass}>
-                  {inner}
-                </div>
               )
             })}
           </div>
