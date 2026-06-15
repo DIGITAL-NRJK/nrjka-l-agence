@@ -107,25 +107,25 @@ export const ContactForm: React.FC<{ poles?: ContactFormPole[] }> = ({ poles = [
           <label htmlFor="name" className={labelClass}>
             Nom <span className="text-terracotta-dark">*</span>
           </label>
-          <input id="name" type="text" required value={form.name} onChange={update('name')} className={fieldClass} placeholder="Votre nom" />
+          <input id="name" type="text" required autoComplete="name" value={form.name} onChange={update('name')} className={fieldClass} placeholder="Votre nom" />
         </div>
         <div>
           <label htmlFor="email" className={labelClass}>
             Email <span className="text-terracotta-dark">*</span>
           </label>
-          <input id="email" type="email" required value={form.email} onChange={update('email')} className={fieldClass} placeholder="vous@exemple.fr" />
+          <input id="email" type="email" required autoComplete="email" value={form.email} onChange={update('email')} className={fieldClass} placeholder="vous@exemple.fr" />
         </div>
         <div>
           <label htmlFor="company" className={labelClass}>
             Entreprise / structure
           </label>
-          <input id="company" type="text" value={form.company} onChange={update('company')} className={fieldClass} placeholder="Nom de votre structure" />
+          <input id="company" type="text" autoComplete="organization" value={form.company} onChange={update('company')} className={fieldClass} placeholder="Nom de votre structure" />
         </div>
         <div>
           <label htmlFor="phone" className={labelClass}>
             Téléphone
           </label>
-          <input id="phone" type="tel" value={form.phone} onChange={update('phone')} className={fieldClass} placeholder="06 00 00 00 00" />
+          <input id="phone" type="tel" autoComplete="tel" value={form.phone} onChange={update('phone')} className={fieldClass} placeholder="06 00 00 00 00" />
         </div>
       </div>
 
