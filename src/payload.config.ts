@@ -86,7 +86,11 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
-    push: true,
+    // push désactivé : init rapide, plus de « pulling schema » lent, et les seeds
+    // (payload run) fonctionnent. La base contient déjà le schéma (synchronisé en mode push).
+    // ⚠️ Tant qu'on n'a pas créé une migration propre (#6), ne PAS ajouter de nouveau
+    // champ sans repasser push:true le temps de l'ajout, sinon erreur « colonne inexistante ».
+    push: false,
   }),
   collections: [
     Pages,

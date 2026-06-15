@@ -1,5 +1,21 @@
 import type { CollectionConfig } from 'payload'
+import {
+  lexicalEditor,
+  HeadingFeature,
+  FixedToolbarFeature,
+  InlineToolbarFeature,
+} from '@payloadcms/richtext-lexical'
 import { publicRead, editorOrAdmin, adminOnly } from '../access'
+
+// Éditeur riche (avec Titres) — nécessaire pour le contenu des services.
+const richEditor = lexicalEditor({
+  features: ({ rootFeatures }) => [
+    ...rootFeatures,
+    HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+    FixedToolbarFeature(),
+    InlineToolbarFeature(),
+  ],
+})
 
 export const Services: CollectionConfig = {
   slug: 'services',
@@ -30,8 +46,13 @@ export const Services: CollectionConfig = {
     },
     { name: 'description', type: 'textarea', required: true, label: 'Description courte' },
     { name: 'description_en', type: 'textarea', label: 'Description courte (EN)' },
-    { name: 'long_description', type: 'richText', label: 'Description longue' },
-    { name: 'long_description_en', type: 'richText', label: 'Description longue (EN)' },
+    { name: 'long_description', type: 'richText', editor: richEditor, label: 'Description longue' },
+    {
+      name: 'long_description_en',
+      type: 'richText',
+      editor: richEditor,
+      label: 'Description longue (EN)',
+    },
     {
       name: 'pole',
       type: 'relationship',
@@ -72,6 +93,24 @@ export const Services: CollectionConfig = {
       fields: [
         { name: 'benefit', type: 'text', required: true },
         { name: 'benefit_en', type: 'text' },
+      ],
+    },
+    {
+      name: 'besoins',
+      type: 'array',
+      label: 'Besoins',
+      admin: {
+        description:
+          'Les besoins précis couverts par ce service (ex. Maintenance préventive, Sécurité…). Proposés en cases à cocher dans le formulaire de contact (3e niveau : Pôle → Service → Besoins).',
+      },
+      fields: [
+        { name: 'label', type: 'text', required: true, localized: true },
+        {
+          name: 'description',
+          type: 'text',
+          localized: true,
+          admin: { description: 'Courte précision (optionnel).' },
+        },
       ],
     },
     {
@@ -116,6 +155,17 @@ export const Services: CollectionConfig = {
       relationTo: 'case-studies',
       hasMany: true,
       label: 'Études de cas associées',
+    },
+    {
+      name: 'related_articles',
+      type: 'relationship',
+      relationTo: 'posts',
+      hasMany: true,
+      label: 'Articles liés (pour approfondir)',
+      admin: {
+        description:
+          'Les articles de blog qui approfondissent ce service. Affichés dans la section « Pour approfondir » de la page service.',
+      },
     },
     {
       name: 'published',

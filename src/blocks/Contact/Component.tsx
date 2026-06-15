@@ -1,4 +1,6 @@
 import React from 'react'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 import {
   Calendar,
   Clock,
@@ -13,7 +15,7 @@ import {
 import type { ContactBlock as ContactBlockProps } from '@/payload-types'
 import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
-import { ContactForm } from './ContactForm'
+import { ContactForm, type ContactFormPole } from './ContactForm'
 
 const iconMap = {
   messageSquare: MessageSquare,
@@ -44,12 +46,53 @@ const defaultSteps = [
   },
 ]
 
-export const ContactBlock: React.FC<ContactBlockProps> = (props) => {
+export const ContactBlock = async (props: ContactBlockProps) => {
   const { eyebrow, title, titleAccent, subtitle, stepsHeading, steps, emailIntro, email } = props
   const a = props.appearance || {}
 
   const stepList = steps && steps.length > 0 ? steps : defaultSteps
   const mail = email || 'contact@nrjka.com'
+
+  // Cascade Pôle → Services → Besoins (depuis l'admin)
+  let formPoles: ContactFormPole[] = []
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const [polesRes, servicesRes] = await Promise.all([
+      payload.find({
+        collection: 'expertises',
+        where: { published: { equals: true } },
+        sort: 'order',
+        limit: 20,
+        depth: 0,
+      }),
+      payload.find({
+        collection: 'services',
+        where: { published: { equals: true } },
+        sort: 'order',
+        limit: 200,
+        depth: 0,
+      }),
+    ])
+    const byPole: Record<string, { id: string; title: string; besoins: string[] }[]> = {}
+    for (const s of servicesRes.docs as {
+      id: unknown
+      title: string
+      pole: unknown
+      besoins?: { label?: string | null }[] | null
+    }[]) {
+      const pid =
+        s.pole && typeof s.pole === 'object' ? String((s.pole as { id: unknown }).id) : String(s.pole)
+      const besoins = (s.besoins || []).map((b) => b.label).filter(Boolean) as string[]
+      ;(byPole[pid] ||= []).push({ id: String(s.id), title: s.title, besoins })
+    }
+    formPoles = (polesRes.docs as { id: unknown; title: string }[]).map((p) => ({
+      id: String(p.id),
+      title: p.title,
+      services: byPole[String(p.id)] || [],
+    }))
+  } catch {
+    formPoles = []
+  }
 
   return (
     <section className="container" style={bgStyle(a.background)}>
@@ -127,7 +170,7 @@ export const ContactBlock: React.FC<ContactBlockProps> = (props) => {
         </div>
 
         {/* Colonne droite : formulaire */}
-        <ContactForm />
+        <ContactForm poles={formPoles} />
       </div>
     </section>
   )

@@ -1,42 +1,76 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
+
+export type ContactFormService = { id: string; title: string; besoins: string[] }
+export type ContactFormPole = { id: string; title: string; services: ContactFormService[] }
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
-const objetOptions = [
-  { value: 'quote', label: 'Demander un audit gratuit' },
-  { value: 'general', label: 'Question générale' },
-  { value: 'partnership', label: 'Partenariat' },
-]
+const fieldClass =
+  'w-full rounded-xl border border-border bg-background px-4 py-3 text-ink outline-none transition-colors placeholder:text-slate/60 focus:border-terracotta focus:ring-2 focus:ring-terracotta/20'
+const labelClass = 'mb-1.5 block text-sm font-medium text-ink'
 
-export const ContactForm: React.FC = () => {
+const CheckRow: React.FC<{ checked: boolean; onChange: () => void; label: string }> = ({
+  checked,
+  onChange,
+  label,
+}) => (
+  <label className="flex cursor-pointer items-start gap-2.5 text-sm text-ink">
+    <input
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      className="mt-0.5 h-4 w-4 shrink-0 rounded border-border text-terracotta accent-terracotta"
+    />
+    <span className="leading-snug">{label}</span>
+  </label>
+)
+
+export const ContactForm: React.FC<{ poles?: ContactFormPole[] }> = ({ poles = [] }) => {
   const [status, setStatus] = useState<Status>('idle')
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    message: '',
-    type: 'quote',
-  })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' })
+  const [poleId, setPoleId] = useState('')
+  const [serviceIds, setServiceIds] = useState<string[]>([])
+  const [besoins, setBesoins] = useState<string[]>([])
+
+  const pole = useMemo(() => poles.find((p) => p.id === poleId) || null, [poles, poleId])
+  const selectedServices = useMemo(
+    () => (pole ? pole.services.filter((s) => serviceIds.includes(s.id)) : []),
+    [pole, serviceIds],
+  )
 
   const update =
     (field: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((prev) => ({ ...prev, [field]: e.target.value }))
+
+  const toggle = (arr: string[], value: string) =>
+    arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value]
+
+  const onPoleChange = (id: string) => {
+    setPoleId(id)
+    setServiceIds([])
+    setBesoins([])
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (status === 'submitting') return
     setStatus('submitting')
-
     try {
       const res = await fetch('/api/contact-messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, source_tool: 'contact' }),
+        body: JSON.stringify({
+          ...form,
+          type: 'quote',
+          source_tool: 'contact',
+          service_type: pole?.title || '',
+          services_needed: selectedServices.map((s) => ({ service: s.title })),
+          priorities: besoins.map((b) => ({ priority: b })),
+        }),
       })
       if (!res.ok) throw new Error('Request failed')
       setStatus('success')
@@ -62,10 +96,6 @@ export const ContactForm: React.FC = () => {
     )
   }
 
-  const fieldClass =
-    'w-full rounded-xl border border-border bg-background px-4 py-3 text-ink outline-none transition-colors placeholder:text-slate/60 focus:border-terracotta focus:ring-2 focus:ring-terracotta/20'
-  const labelClass = 'mb-1.5 block text-sm font-medium text-ink'
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -77,70 +107,80 @@ export const ContactForm: React.FC = () => {
           <label htmlFor="name" className={labelClass}>
             Nom <span className="text-terracotta-dark">*</span>
           </label>
-          <input
-            id="name"
-            type="text"
-            required
-            value={form.name}
-            onChange={update('name')}
-            className={fieldClass}
-            placeholder="Votre nom"
-          />
+          <input id="name" type="text" required value={form.name} onChange={update('name')} className={fieldClass} placeholder="Votre nom" />
         </div>
         <div>
           <label htmlFor="email" className={labelClass}>
             Email <span className="text-terracotta-dark">*</span>
           </label>
-          <input
-            id="email"
-            type="email"
-            required
-            value={form.email}
-            onChange={update('email')}
-            className={fieldClass}
-            placeholder="vous@exemple.fr"
-          />
-        </div>
-        <div>
-          <label htmlFor="phone" className={labelClass}>
-            Téléphone
-          </label>
-          <input
-            id="phone"
-            type="tel"
-            value={form.phone}
-            onChange={update('phone')}
-            className={fieldClass}
-            placeholder="06 00 00 00 00"
-          />
+          <input id="email" type="email" required value={form.email} onChange={update('email')} className={fieldClass} placeholder="vous@exemple.fr" />
         </div>
         <div>
           <label htmlFor="company" className={labelClass}>
             Entreprise / structure
           </label>
-          <input
-            id="company"
-            type="text"
-            value={form.company}
-            onChange={update('company')}
-            className={fieldClass}
-            placeholder="Nom de votre structure"
-          />
+          <input id="company" type="text" value={form.company} onChange={update('company')} className={fieldClass} placeholder="Nom de votre structure" />
+        </div>
+        <div>
+          <label htmlFor="phone" className={labelClass}>
+            Téléphone
+          </label>
+          <input id="phone" type="tel" value={form.phone} onChange={update('phone')} className={fieldClass} placeholder="06 00 00 00 00" />
         </div>
       </div>
 
-      <div className="mt-5">
-        <label htmlFor="type" className={labelClass}>
-          Objet
-        </label>
-        <select id="type" value={form.type} onChange={update('type')} className={fieldClass}>
-          {objetOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Niveau 1 — Pôle */}
+      {poles.length > 0 && (
+        <div className="mt-5">
+          <label htmlFor="pole" className={labelClass}>
+            Quel domaine vous intéresse ?
+          </label>
+          <select id="pole" value={poleId} onChange={(e) => onPoleChange(e.target.value)} className={fieldClass}>
+            <option value="">Sélectionnez un pôle…</option>
+            {poles.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.title}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Niveau 2 — Services du pôle */}
+      {pole && pole.services.length > 0 && (
+        <div className="mt-5">
+          <span className={labelClass}>Quels services ? (plusieurs choix possibles)</span>
+          <div className="mt-2 grid gap-2.5 sm:grid-cols-2">
+            {pole.services.map((s) => (
+              <CheckRow
+                key={s.id}
+                checked={serviceIds.includes(s.id)}
+                onChange={() => setServiceIds((arr) => toggle(arr, s.id))}
+                label={s.title}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Niveau 3 — Besoins par service sélectionné */}
+      {selectedServices.filter((s) => s.besoins.length > 0).map((s) => (
+        <div key={s.id} className="mt-5 rounded-2xl border border-border bg-background p-4">
+          <span className="mb-2 block text-sm font-medium text-ink">
+            {s.title} — vos besoins
+          </span>
+          <div className="grid gap-2.5 sm:grid-cols-2">
+            {s.besoins.map((b) => (
+              <CheckRow
+                key={b}
+                checked={besoins.includes(b)}
+                onChange={() => setBesoins((arr) => toggle(arr, b))}
+                label={b}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
 
       <div className="mt-5">
         <label htmlFor="message" className={labelClass}>
@@ -170,10 +210,7 @@ export const ContactForm: React.FC = () => {
       >
         {status === 'submitting' ? 'Envoi…' : 'Envoyer ma demande'}
         {status !== 'submitting' && (
-          <ArrowRight
-            className="h-4 w-4 transition-transform group-hover:translate-x-1"
-            strokeWidth={2.4}
-          />
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" strokeWidth={2.4} />
         )}
       </button>
 

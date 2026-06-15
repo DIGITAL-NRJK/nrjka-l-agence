@@ -6,9 +6,54 @@
  * Sources : voir le document NRJKA-contenu-services.md (Sucuri, Baymard, Deloitte×Google,
  * Lucidpress/Marq, Backlinko/SEJ, Smartsheet/Formstack).
  */
-import { getPayload } from 'payload'
-import config from '@payload-config'
-import { convertMarkdownToLexical, editorConfigFactory } from '@payloadcms/richtext-lexical'
+// Convertisseur Markdown → Lexical (manuel, sans dépendance fragile)
+const txt = (text: string, bold = false) => ({
+  detail: 0,
+  format: bold ? 1 : 0,
+  mode: 'normal',
+  style: '',
+  text,
+  type: 'text',
+  version: 1,
+})
+const inline = (s: string) =>
+  s
+    .split(/(\*\*[^*]+\*\*)/g)
+    .filter(Boolean)
+    .map((p) => {
+      const b = p.startsWith('**') && p.endsWith('**')
+      return txt(b ? p.slice(2, -2) : p, b)
+    })
+const heading = (tag: string, s: string) => ({
+  children: inline(s),
+  direction: 'ltr',
+  format: '',
+  indent: 0,
+  type: 'heading',
+  version: 1,
+  tag,
+})
+const paragraph = (s: string) => ({
+  children: inline(s),
+  direction: 'ltr',
+  format: '',
+  indent: 0,
+  type: 'paragraph',
+  version: 1,
+  textFormat: 0,
+  textStyle: '',
+})
+const toLexical = (md: string) => {
+  const children: any[] = []
+  for (const raw of md.split('\n')) {
+    const line = raw.trim()
+    if (!line) continue
+    if (line.startsWith('### ')) children.push(heading('h3', line.slice(4)))
+    else if (line.startsWith('## ')) children.push(heading('h2', line.slice(3)))
+    else children.push(paragraph(line))
+  }
+  return { root: { children, direction: 'ltr', format: '', indent: 0, type: 'root', version: 1 } }
+}
 
 type SvcContent = {
   slug: string
@@ -185,42 +230,38 @@ const services: SvcContent[] = [
   },
 ]
 
-const run = async () => {
-  const payload = await getPayload({ config })
-  const editorConfig = await editorConfigFactory.default({ config: payload.config })
-  const toLex = (markdown: string) => convertMarkdownToLexical({ editorConfig, markdown })
+export type SeedResult = { slug: string; ok: boolean; error?: string }
 
-  let done = 0
+// Reçoit une instance Payload déjà initialisée (appelée depuis une route du serveur dev,
+// qui se connecte correctement à la base — contrairement à `payload run` en standalone).
+export async function seedServicesContent(payload: any): Promise<SeedResult[]> {
+  const results: SeedResult[] = []
   for (const s of services) {
-    const existing = await payload.find({
-      collection: 'services',
-      where: { slug: { equals: s.slug } },
-      limit: 1,
-      pagination: false,
-    })
-    if (!existing.docs[0]) {
-      payload.logger.warn(`⚠️ Service introuvable : ${s.slug} (lance d’abord seed-expertises)`)
-      continue
+    try {
+      const existing = await payload.find({
+        collection: 'services',
+        where: { slug: { equals: s.slug } },
+        limit: 1,
+        pagination: false,
+      })
+      if (!existing.docs[0]) {
+        results.push({ slug: s.slug, ok: false, error: 'introuvable (lance seed-expertises)' })
+        continue
+      }
+      const md = `## Pourquoi c'est important\n\n${s.why}\n\n## Notre proposition de partenariat\n\n${s.partenariat}`
+      await payload.update({
+        collection: 'services',
+        id: existing.docs[0].id,
+        data: {
+          long_description: toLexical(md),
+          benefits: s.benefits.map((benefit) => ({ benefit })),
+          faqs: s.faqs,
+        } as any,
+      })
+      results.push({ slug: s.slug, ok: true })
+    } catch (err) {
+      results.push({ slug: s.slug, ok: false, error: err instanceof Error ? err.message : String(err) })
     }
-    const md = `## Pourquoi c'est important\n\n${s.why}\n\n## Notre proposition de partenariat\n\n${s.partenariat}`
-    await payload.update({
-      collection: 'services',
-      id: existing.docs[0].id,
-      data: {
-        long_description: toLex(md),
-        benefits: s.benefits.map((benefit) => ({ benefit })),
-        faqs: s.faqs,
-      } as any,
-    })
-    done += 1
-    payload.logger.info(`✅ Contenu injecté : ${s.slug}`)
   }
-
-  payload.logger.info(`🎉 ${done}/${services.length} services enrichis.`)
-  process.exit(0)
+  return results
 }
-
-run().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})

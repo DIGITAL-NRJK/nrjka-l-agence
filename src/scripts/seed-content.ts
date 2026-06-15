@@ -7,8 +7,6 @@
  * Lancement : pnpm payload run src/scripts/seed-content.ts
  * Idempotent : ne duplique pas les blocs FAQ s'ils existent déjà.
  */
-import { getPayload } from 'payload'
-import config from '@payload-config'
 
 const engagements = {
   eyebrow: 'Nos engagements',
@@ -128,9 +126,7 @@ const findPage = async (payload: any, slug: string) => {
   return res.docs[0] || null
 }
 
-const run = async () => {
-  const payload = await getPayload({ config })
-
+export async function seedContent(payload: any) {
   // --- HOME : Engagements + FAQ ---
   const home = await findPage(payload, 'home')
   if (home && Array.isArray(home.layout)) {
@@ -186,11 +182,5 @@ const run = async () => {
     payload.logger.warn('⚠️ Page contact introuvable (créez-la d’abord).')
   }
 
-  payload.logger.info('🎉 Contenu injecté.')
-  process.exit(0)
+  return { ok: true }
 }
-
-run().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})

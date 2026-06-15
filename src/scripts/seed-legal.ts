@@ -5,9 +5,7 @@
  * Lancement : pnpm payload run src/scripts/seed-legal.ts
  * Tout reste éditable ensuite dans l'admin. Pense à compléter les champs [À COMPLÉTER].
  */
-import { getPayload } from 'payload'
-import config from '@payload-config'
-import { convertMarkdownToLexical, editorConfigFactory } from '@payloadcms/richtext-lexical'
+import { toLexical } from './_md-to-lexical'
 
 // --- Contenus ---
 const mentions = `## Mentions légales
@@ -74,11 +72,7 @@ const pages = [
   { slug: 'confidentialite', title: 'Politique de confidentialité', text: confidentialite },
 ]
 
-const run = async () => {
-  const payload = await getPayload({ config })
-  const editorConfig = await editorConfigFactory.default({ config: payload.config })
-  const toLex = (markdown: string) => convertMarkdownToLexical({ editorConfig, markdown })
-
+export async function seedLegal(payload: any) {
   for (const p of pages) {
     const data: any = {
       title: p.title,
@@ -88,7 +82,7 @@ const run = async () => {
       layout: [
         {
           blockType: 'content',
-          columns: [{ size: 'full', enableLink: false, richText: toLex(p.text) }],
+          columns: [{ size: 'full', enableLink: false, richText: toLexical(p.text) }],
         },
       ],
     }
@@ -102,10 +96,8 @@ const run = async () => {
 
     if (existing.docs[0]) {
       await payload.update({ collection: 'pages', id: existing.docs[0].id, data })
-      payload.logger.info(`↻ Page mise à jour : ${p.slug}`)
     } else {
       await payload.create({ collection: 'pages', data })
-      payload.logger.info(`✅ Page créée : ${p.slug}`)
     }
   }
 
@@ -123,12 +115,6 @@ const run = async () => {
     }
   }
   await payload.updateGlobal({ slug: 'footer', data: { navItems: items } })
-  payload.logger.info('✅ Footer : liens légaux ajoutés.')
 
-  process.exit(0)
+  return { ok: true, pages: pages.length }
 }
-
-run().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})

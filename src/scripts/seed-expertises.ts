@@ -7,9 +7,7 @@
  * et nettoie les anciennes entrées Services en double.
  * Lancement : pnpm payload run src/scripts/seed-expertises.ts
  */
-import { getPayload } from 'payload'
-import config from '@payload-config'
-import { convertMarkdownToLexical, editorConfigFactory } from '@payloadcms/richtext-lexical'
+import { toLexical } from './_md-to-lexical'
 
 type Pole = {
   slug: string
@@ -276,40 +274,43 @@ On documente tout, on forme vos équipes, et on propose des plans de maintenance
 ]
 
 // Services granulaires rattachés à chaque pôle (slug du pôle -> services)
-const servicesByPole: Record<string, { slug: string; title: string; description: string }[]> = {
+type SeedService = { slug: string; title: string; description: string; besoins?: string[] }
+
+const servicesByPole: Record<string, SeedService[]> = {
   'marque-contenu': [
-    { slug: 'branding-identite', title: 'Branding & Identité', description: 'Logo, palette, typographie : un système graphique complet et cohérent.' },
-    { slug: 'strategie-copywriting', title: 'Stratégie & Copywriting', description: 'Positionnement, ton de voix et messages qui résonnent avec votre audience.' },
-    { slug: 'direction-artistique', title: 'Direction artistique', description: 'Supervision créative de vos visuels, pour un impact cohérent partout.' },
-    { slug: 'communication', title: 'Communication', description: 'Plan multi-canal et calendrier éditorial pour toucher la bonne cible au bon moment.' },
+    { slug: 'branding-identite', title: 'Branding & Identité', description: 'Logo, palette, typographie : un système graphique complet et cohérent.', besoins: ['Logo & déclinaisons', 'Charte graphique', 'Brand book complet', "Refonte d'identité"] },
+    { slug: 'strategie-copywriting', title: 'Stratégie & Copywriting', description: 'Positionnement, ton de voix et messages qui résonnent avec votre audience.', besoins: ['Positionnement de marque', 'Tone of voice', 'Messages clés', 'Copywriting web'] },
+    { slug: 'direction-artistique', title: 'Direction artistique', description: 'Supervision créative de vos visuels, pour un impact cohérent partout.', besoins: ['Direction photo', 'Moodboards', 'Guidelines visuels', "Création d'assets"] },
+    { slug: 'communication', title: 'Communication', description: 'Plan multi-canal et calendrier éditorial pour toucher la bonne cible au bon moment.', besoins: ['Audit concurrentiel', 'Plan de communication', 'Calendrier éditorial', 'KPIs & suivi'] },
   ],
   'web-experience': [
-    { slug: 'sites-vitrines', title: 'Sites vitrines', description: 'Des sites sur-mesure, rapides et optimisés SEO, faciles à faire vivre.' },
-    { slug: 'e-commerce', title: 'E-commerce', description: 'Boutiques performantes sur WooCommerce, PrestaShop ou Medusa — que vous possédez.' },
-    { slug: 'sites-institutionnels', title: 'Sites institutionnels', description: "Projets d'envergure : multi-sites, portails, accessibilité RGAA." },
-    { slug: 'headless-sur-mesure', title: 'Headless & sur-mesure', description: 'Architecture découplée (Next.js, Payload) pour les projets ambitieux.' },
+    { slug: 'sites-vitrines', title: 'Sites vitrines', description: 'Des sites sur-mesure, rapides et optimisés SEO, faciles à faire vivre.', besoins: ['Site vitrine sur-mesure', 'Refonte de site', 'Optimisation UX/UI', 'Blog / actualités'] },
+    { slug: 'e-commerce', title: 'E-commerce', description: 'Boutiques performantes sur WooCommerce, PrestaShop ou Medusa — que vous possédez.', besoins: ['Boutique WooCommerce', 'Boutique PrestaShop / Medusa', 'Paiement & livraison', 'Migration e-commerce'] },
+    { slug: 'sites-institutionnels', title: 'Sites institutionnels', description: "Projets d'envergure : multi-sites, portails, accessibilité RGAA.", besoins: ['Multi-sites', 'Intranet / portail', 'Accessibilité RGAA', "Refonte d'envergure"] },
+    { slug: 'headless-sur-mesure', title: 'Headless & sur-mesure', description: 'Architecture découplée (Next.js, Payload) pour les projets ambitieux.', besoins: ['Application web', 'Architecture headless', 'API & intégrations', 'Performance maximale'] },
   ],
   'performance-visibilite': [
-    { slug: 'seo-aio', title: 'SEO & AIO', description: 'Référencement naturel et optimisation pour les moteurs IA (ChatGPT, Perplexity, Claude).' },
-    { slug: 'publicite-digitale', title: 'Publicité digitale', description: 'Campagnes Google Ads et Social Ads orientées ROI, budget maîtrisé.' },
-    { slug: 'social-media', title: 'Social media', description: 'Stratégie éditoriale, création de contenu et community management.' },
-    { slug: 'analytics-data', title: 'Analytics & data', description: 'Tableaux de bord clairs (Matomo, Metabase) pour décider sur des faits.' },
+    { slug: 'seo-aio', title: 'SEO & AIO', description: 'Référencement naturel et optimisation pour les moteurs IA (ChatGPT, Perplexity, Claude).', besoins: ['Audit SEO technique', 'Stratégie de contenu', 'Référencement local', 'Optimisation IA (AIO)'] },
+    { slug: 'publicite-digitale', title: 'Publicité digitale', description: 'Campagnes Google Ads et Social Ads orientées ROI, budget maîtrisé.', besoins: ['Google Ads', 'Meta Ads', 'Remarketing', 'A/B testing'] },
+    { slug: 'social-media', title: 'Social media', description: 'Stratégie éditoriale, création de contenu et community management.', besoins: ['Stratégie éditoriale', 'Création de contenu', 'Community management', 'Analyse de performance'] },
+    { slug: 'analytics-data', title: 'Analytics & data', description: 'Tableaux de bord clairs (Matomo, Metabase) pour décider sur des faits.', besoins: ['Mise en place Matomo', 'Tableaux de bord', 'Suivi des conversions', 'Reporting mensuel'] },
   ],
   'digitalisation-process': [
-    { slug: 'erp-dolibarr', title: 'ERP Dolibarr', description: "Gestion d'entreprise open source : devis, factures, stocks, CRM intégré." },
-    { slug: 'crm-notion', title: 'CRM & Notion', description: 'Écosystèmes de gestion clients et projets, sur-mesure et automatisés.' },
-    { slug: 'automatisation-n8n', title: 'Automatisation n8n', description: 'Connectez vos outils et supprimez la double saisie, en auto-hébergé.' },
-    { slug: 'formation', title: 'Formation', description: 'On vous forme à vos outils pour une autonomie réelle, sans dépendance.' },
-    { slug: 'maintenance-support', title: 'Maintenance & Support', description: 'Mises à jour, sauvegardes, supervision : votre plateforme reste fiable et sûre.' },
+    { slug: 'erp-dolibarr', title: 'ERP Dolibarr', description: "Gestion d'entreprise open source : devis, factures, stocks, CRM intégré.", besoins: ['Installation & configuration', 'Modules sur-mesure', 'Intégration e-commerce', 'Formation équipe'] },
+    { slug: 'crm-notion', title: 'CRM & Notion', description: 'Écosystèmes de gestion clients et projets, sur-mesure et automatisés.', besoins: ['Architecture sur-mesure', 'Bases de données liées', 'Dashboards automatisés', 'Templates métier'] },
+    { slug: 'automatisation-n8n', title: 'Automatisation n8n', description: 'Connectez vos outils et supprimez la double saisie, en auto-hébergé.', besoins: ['Audit des process', "Connexion d'outils", 'Workflows automatisés', 'Migration de données'] },
+    { slug: 'formation', title: 'Formation', description: 'On vous forme à vos outils pour une autonomie réelle, sans dépendance.', besoins: ['WordPress — administration & contenu', 'Dolibarr ERP — facturation, stocks, CRM', 'Notion — CRM & gestion de projet', 'Matomo & analytics', 'Emailing & marketing (Listmonk, Mautic)', 'SEO & rédaction web'] },
+    { slug: 'maintenance-support', title: 'Maintenance & Support', description: 'Mises à jour, sauvegardes, supervision : votre plateforme reste fiable et sûre.', besoins: ['Maintenance préventive', 'Sécurité & monitoring', 'Infogérance / hébergement', 'Sauvegardes & restauration'] },
   ],
 }
 
-const run = async () => {
-  const payload = await getPayload({ config })
-  const editorConfig = await editorConfigFactory.default({ config: payload.config })
-  const toLex = (markdown: string) => convertMarkdownToLexical({ editorConfig, markdown })
-
+// Reçoit une instance Payload (appelée depuis une route du serveur dev).
+// N'écrit PAS long_description/benefits/faqs des services (gérés par seedServicesContent) :
+// ré-exécutable sans écraser le contenu déjà injecté.
+export async function seedExpertises(payload: any) {
   const poleIdBySlug: Record<string, number | string> = {}
+  let polesDone = 0
+  let servicesDone = 0
 
   // 1) Upsert des pôles
   for (let i = 0; i < poles.length; i++) {
@@ -320,7 +321,7 @@ const run = async () => {
       icon: p.icon,
       subtitle: p.subtitle,
       description: p.description,
-      long_description: toLex(p.long),
+      long_description: toLexical(p.long),
       highlights: p.highlights.map((label) => ({ label })),
       benefits: p.benefits.map((benefit) => ({ benefit })),
       process_steps: p.process,
@@ -340,15 +341,14 @@ const run = async () => {
     if (existing.docs[0]) {
       const doc = await payload.update({ collection: 'expertises', id: existing.docs[0].id, data })
       poleIdBySlug[p.slug] = doc.id
-      payload.logger.info(`↻ Pôle mis à jour : ${p.slug}`)
     } else {
       const doc = await payload.create({ collection: 'expertises', data })
       poleIdBySlug[p.slug] = doc.id
-      payload.logger.info(`✅ Pôle créé : ${p.slug}`)
     }
+    polesDone += 1
   }
 
-  // 2) Nettoyage : anciennes entrées Services en double (créées avant le modèle 2 niveaux)
+  // 2) Nettoyage : anciennes entrées Services en double (slug = slug de pôle)
   for (const oldSlug of Object.keys(servicesByPole)) {
     const dup = await payload.find({
       collection: 'services',
@@ -356,17 +356,14 @@ const run = async () => {
       limit: 1,
       pagination: false,
     })
-    if (dup.docs[0]) {
-      await payload.delete({ collection: 'services', id: dup.docs[0].id })
-      payload.logger.info(`🗑️  Ancien service en double supprimé : ${oldSlug}`)
-    }
+    if (dup.docs[0]) await payload.delete({ collection: 'services', id: dup.docs[0].id })
   }
 
   // 3) Upsert des services rattachés
   let order = 0
-  for (const [poleSlug, services] of Object.entries(servicesByPole)) {
+  for (const [poleSlug, list] of Object.entries(servicesByPole)) {
     const poleId = poleIdBySlug[poleSlug]
-    for (const s of services) {
+    for (const s of list) {
       order += 1
       const data: any = {
         title: s.title,
@@ -375,6 +372,7 @@ const run = async () => {
         pole: poleId,
         published: true,
         order,
+        besoins: (s.besoins || []).map((label) => ({ label })),
       }
       const existing = await payload.find({
         collection: 'services',
@@ -382,21 +380,11 @@ const run = async () => {
         limit: 1,
         pagination: false,
       })
-      if (existing.docs[0]) {
-        await payload.update({ collection: 'services', id: existing.docs[0].id, data })
-        payload.logger.info(`↻ Service mis à jour : ${s.slug}`)
-      } else {
-        await payload.create({ collection: 'services', data })
-        payload.logger.info(`✅ Service créé : ${s.slug} (→ ${poleSlug})`)
-      }
+      if (existing.docs[0]) await payload.update({ collection: 'services', id: existing.docs[0].id, data })
+      else await payload.create({ collection: 'services', data })
+      servicesDone += 1
     }
   }
 
-  payload.logger.info('🎉 Pôles + services rattachés en place.')
-  process.exit(0)
+  return { poles: polesDone, services: servicesDone }
 }
-
-run().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})

@@ -183,6 +183,8 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Les pages du site (accueil, contact, réalisations, expertises, pages légales…), composées de blocs réutilisables. Le slug détermine l’URL — « home » correspond à la page d’accueil.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
@@ -323,6 +325,8 @@ export interface Page {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Les articles de blog du site (liste sur /posts).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
@@ -373,6 +377,8 @@ export interface Post {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * La bibliothèque de médias (images, logos, fichiers) utilisés sur le site. Pensez à renseigner le texte alternatif (alt) de chaque image pour le SEO et l’accessibilité.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -492,6 +498,8 @@ export interface FolderInterface {
   createdAt: string;
 }
 /**
+ * Catégories de classement des articles de blog (collection Articles).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
@@ -516,6 +524,8 @@ export interface Category {
   createdAt: string;
 }
 /**
+ * Les comptes qui accèdent au back-office (administrateurs, éditeurs). Réservé aux personnes de l’équipe.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -1566,6 +1576,19 @@ export interface Service {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Les besoins précis couverts par ce service (ex. Maintenance préventive, Sécurité…). Proposés en cases à cocher dans le formulaire de contact (3e niveau : Pôle → Service → Besoins).
+   */
+  besoins?:
+    | {
+        label: string;
+        /**
+         * Courte précision (optionnel).
+         */
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   technologies?:
     | {
         name: string;
@@ -1591,6 +1614,10 @@ export interface Service {
     | null;
   related_services?: (number | Service)[] | null;
   case_studies?: (number | CaseStudy)[] | null;
+  /**
+   * Les articles de blog qui approfondissent ce service. Affichés dans la section « Pour approfondir » de la page service.
+   */
+  related_articles?: (number | Post)[] | null;
   published?: boolean | null;
   order?: number | null;
   seo?: {
@@ -1750,6 +1777,8 @@ export interface CaseStudy {
   createdAt: string;
 }
 /**
+ * Liste des secteurs d’activité (ex. Artisanat, Association, Commerce). Sert à classer et filtrer les études de cas sur la page /realisations.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "case-study-sectors".
  */
@@ -1760,6 +1789,8 @@ export interface CaseStudySector {
   createdAt: string;
 }
 /**
+ * Liste des types de projet (ex. Site vitrine, E-commerce, Refonte, Automatisation). Sert à classer et filtrer les études de cas.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "case-study-types".
  */
@@ -1770,6 +1801,8 @@ export interface CaseStudyType {
   createdAt: string;
 }
 /**
+ * Catalogue de produits (boutique). Non utilisé sur le site vitrine actuel — réservé à une future activité e-commerce.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products".
  */
@@ -1834,6 +1867,8 @@ export interface Product {
   createdAt: string;
 }
 /**
+ * Les messages envoyés via le formulaire de contact du site (source du flux de demandes d’audit). Créés automatiquement ; suivez leur statut (Nouveau, Lu, Répondu…).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-messages".
  */
@@ -1872,6 +1907,8 @@ export interface ContactMessage {
   createdAt: string;
 }
 /**
+ * Les avis laissés par les visiteurs via un formulaire public (différents des Témoignages, que vous sélectionnez vous-même). À approuver avant tout affichage.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "reviews".
  */
@@ -1894,6 +1931,8 @@ export interface Review {
   createdAt: string;
 }
 /**
+ * Les avis clients affichés dans la section « Témoignages » de la page d’accueil. Renseignez l’auteur, son entreprise, le texte et une note ; ajoutez une photo pour plus d’impact.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials".
  */
@@ -1912,6 +1951,8 @@ export interface Testimonial {
   createdAt: string;
 }
 /**
+ * Les offres d’emploi affichées sur la page recrutement. Une offre n’est visible publiquement que si elle est cochée « Publié ».
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "job-offers".
  */
@@ -1983,6 +2024,8 @@ export interface JobOffer {
   createdAt: string;
 }
 /**
+ * Les candidatures reçues via le formulaire de recrutement. Suivez leur statut ici (créées automatiquement, non modifiables par le public).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "job-applications".
  */
@@ -2003,6 +2046,8 @@ export interface JobApplication {
   createdAt: string;
 }
 /**
+ * Les demandes de rendez-vous prises depuis le site. Créées automatiquement par le formulaire ; gérez ici leur statut.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "appointments".
  */
@@ -2030,6 +2075,8 @@ export interface Appointment {
   createdAt: string;
 }
 /**
+ * Les commentaires laissés sur les articles de blog. À modérer (statut) avant publication.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "blog-comments".
  */
@@ -2044,6 +2091,8 @@ export interface BlogComment {
   createdAt: string;
 }
 /**
+ * Les ressources gratuites téléchargeables (guides, modèles, checklists) affichées dans la section « Ressources » de la home. Une ressource n’apparaît que si elle est cochée « Publié ».
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "resources".
  */
@@ -3216,6 +3265,13 @@ export interface ServicesSelect<T extends boolean = true> {
         benefit_en?: T;
         id?: T;
       };
+  besoins?:
+    | T
+    | {
+        label?: T;
+        description?: T;
+        id?: T;
+      };
   technologies?:
     | T
     | {
@@ -3241,6 +3297,7 @@ export interface ServicesSelect<T extends boolean = true> {
       };
   related_services?: T;
   case_studies?: T;
+  related_articles?: T;
   published?: T;
   order?: T;
   seo?:
@@ -3856,6 +3913,8 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * La navigation principale du site. Les liens ajoutés ici apparaissent dans le menu (en haut sur ordinateur, dans le menu burger sur mobile).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header".
  */
@@ -3885,6 +3944,8 @@ export interface Header {
   createdAt?: string | null;
 }
 /**
+ * Le pied de page du site. Les liens ajoutés ici apparaissent dans le footer (accueil, contact, mentions légales, confidentialité…).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer".
  */
