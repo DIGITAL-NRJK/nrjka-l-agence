@@ -8,14 +8,15 @@ import type { Header } from '@/payload-types'
 
 import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
-import type { MegaMenuPole } from './Nav/MegaMenu'
+import type { MegaMenuPole, MegaMenuChrome } from './Nav/MegaMenu'
 
 interface HeaderClientProps {
   data: Header
   menu?: MegaMenuPole[]
+  chrome?: MegaMenuChrome
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome }) => {
   /* Storing the value in a useState to avoid hydration errors */
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
@@ -37,7 +38,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu }) => {
         <Link href="/" className="text-brand">
           <Logo />
         </Link>
-        <HeaderNav data={data} menu={menu} />
+        <HeaderNav data={data} menu={menu} chrome={chrome} />
       </div>
     </header>
   )

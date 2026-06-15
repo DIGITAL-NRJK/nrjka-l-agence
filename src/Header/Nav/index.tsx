@@ -8,12 +8,13 @@ import { ChevronDown, Menu, X } from 'lucide-react'
 import type { Header as HeaderType } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
-import { MegaMenu, type MegaMenuPole } from './MegaMenu'
+import { MegaMenu, type MegaMenuPole, type MegaMenuChrome } from './MegaMenu'
 
-export const HeaderNav: React.FC<{ data: HeaderType; menu?: MegaMenuPole[] }> = ({
-  data,
-  menu = [],
-}) => {
+export const HeaderNav: React.FC<{
+  data: HeaderType
+  menu?: MegaMenuPole[]
+  chrome?: MegaMenuChrome
+}> = ({ data, menu = [], chrome }) => {
   const navItems = data?.navItems || []
   const hasMenu = menu.length > 0
   const [open, setOpen] = useState(false) // burger mobile
@@ -47,7 +48,7 @@ export const HeaderNav: React.FC<{ data: HeaderType; menu?: MegaMenuPole[] }> = 
               aria-expanded={mega}
               className="flex items-center gap-1.5 text-sm font-medium text-slate transition-colors hover:text-ink"
             >
-              Services
+              {chrome?.triggerLabel || 'Services'}
               <ChevronDown
                 className={`h-4 w-4 transition-transform ${mega ? 'rotate-180' : ''}`}
                 strokeWidth={2.2}
@@ -74,7 +75,7 @@ export const HeaderNav: React.FC<{ data: HeaderType; menu?: MegaMenuPole[] }> = 
             mega ? 'pointer-events-auto opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
           } transition-all duration-200`}
         >
-          <MegaMenu poles={menu} onNavigate={() => setMega(false)} />
+          <MegaMenu poles={menu} chrome={chrome} onNavigate={() => setMega(false)} />
         </div>
       )}
 

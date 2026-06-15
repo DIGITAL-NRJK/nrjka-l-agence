@@ -86,10 +86,10 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
-    // push désactivé : init rapide, plus de « pulling schema » lent, et les seeds
-    // (payload run) fonctionnent. La base contient déjà le schéma (synchronisé en mode push).
-    // ⚠️ Tant qu'on n'a pas créé une migration propre (#6), ne PAS ajouter de nouveau
-    // champ sans repasser push:true le temps de l'ajout, sinon erreur « colonne inexistante ».
+    // push désactivé : init rapide, plus de « pulling schema » lent, seeds (via route) fiables.
+    // La base contient déjà tout le schéma (synchronisé en mode push).
+    // ⚠️ Avant la mise en ligne : créer une migration propre (#6) — Netlify ne peut pas tourner en push.
+    // Pour ajouter un champ d'ici là : repasser push:true le temps de la synchro, puis push:false.
     push: false,
   }),
   collections: [

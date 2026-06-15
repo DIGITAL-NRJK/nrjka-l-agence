@@ -27,6 +27,15 @@ export type MegaMenuPole = {
   services: MegaMenuService[]
 }
 
+export type MegaMenuChrome = {
+  triggerLabel?: string | null
+  railLabel?: string | null
+  ctaPrimaryLabel?: string | null
+  ctaPrimaryHref?: string | null
+  ctaSecondaryLabel?: string | null
+  ctaSecondaryHref?: string | null
+}
+
 const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
   Palette,
   Globe,
@@ -34,10 +43,16 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
   Database,
 }
 
-export const MegaMenu: React.FC<{ poles: MegaMenuPole[]; onNavigate?: () => void }> = ({
-  poles,
-  onNavigate,
-}) => {
+export const MegaMenu: React.FC<{
+  poles: MegaMenuPole[]
+  chrome?: MegaMenuChrome
+  onNavigate?: () => void
+}> = ({ poles, chrome, onNavigate }) => {
+  const railLabel = chrome?.railLabel || 'Pôles principaux'
+  const cta1Label = chrome?.ctaPrimaryLabel || 'Démarrer un projet'
+  const cta1Href = chrome?.ctaPrimaryHref || '/contact'
+  const cta2Label = chrome?.ctaSecondaryLabel || 'Parler à un expert'
+  const cta2Href = chrome?.ctaSecondaryHref || '/contact'
   const [active, setActive] = useState(0)
   if (poles.length === 0) return null
   const pole = poles[Math.min(active, poles.length - 1)]
@@ -48,7 +63,7 @@ export const MegaMenu: React.FC<{ poles: MegaMenuPole[]; onNavigate?: () => void
         {/* Rail des pôles */}
         <div className="border-border bg-surface-soft p-3 sm:border-r">
           <div className="px-3 pb-2 pt-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate">
-            Pôles principaux
+            {railLabel}
           </div>
           <ul className="space-y-1">
             {poles.map((p, i) => {
@@ -99,20 +114,20 @@ export const MegaMenu: React.FC<{ poles: MegaMenuPole[]; onNavigate?: () => void
       {/* CTA */}
       <div className="grid gap-3 border-t border-border p-3 sm:grid-cols-2">
         <Link
-          href="/contact"
+          href={cta2Href}
           onClick={onNavigate}
           className="flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-medium text-ink transition-colors hover:bg-surface-soft"
         >
           <MessageSquare className="h-4 w-4 text-slate" strokeWidth={2} />
-          Parler à un expert
+          {cta2Label}
           <ArrowRight className="h-4 w-4 text-slate" strokeWidth={2.2} />
         </Link>
         <Link
-          href="/contact"
+          href={cta1Href}
           onClick={onNavigate}
           className="group flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-2"
         >
-          Démarrer un projet
+          {cta1Label}
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" strokeWidth={2.2} />
         </Link>
       </div>

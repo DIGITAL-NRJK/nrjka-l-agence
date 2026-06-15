@@ -24,10 +24,49 @@ export const Header: GlobalConfig = {
       maxRows: 6,
       admin: {
         initCollapsed: true,
+        description: 'Liens du menu (ex. Blog → /posts). Le « Services » avec méga-menu est ajouté automatiquement.',
         components: {
           RowLabel: '@/Header/RowLabel#RowLabel',
         },
       },
+    },
+    {
+      name: 'megamenu',
+      type: 'group',
+      label: 'Méga-menu « Services »',
+      admin: {
+        description:
+          'Le contenu du méga-menu (pôles et services) vient des collections Pôles & Expertises et Services. Ici, vous gérez seulement les libellés et les boutons.',
+      },
+      fields: [
+        {
+          name: 'triggerLabel',
+          type: 'text',
+          defaultValue: 'Services',
+          label: 'Libellé dans la nav',
+          admin: { description: 'Le mot cliquable dans le menu (ex. « Services », « Nos expertises »).' },
+        },
+        {
+          name: 'railLabel',
+          type: 'text',
+          defaultValue: 'Pôles principaux',
+          label: 'Titre de la colonne des pôles',
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'ctaPrimaryLabel', type: 'text', defaultValue: 'Démarrer un projet', admin: { width: '50%' }, label: 'Bouton principal — libellé' },
+            { name: 'ctaPrimaryHref', type: 'text', defaultValue: '/contact', admin: { width: '50%' }, label: 'Bouton principal — lien' },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'ctaSecondaryLabel', type: 'text', defaultValue: 'Parler à un expert', admin: { width: '50%' }, label: 'Bouton secondaire — libellé' },
+            { name: 'ctaSecondaryHref', type: 'text', defaultValue: '/contact', admin: { width: '50%' }, label: 'Bouton secondaire — lien' },
+          ],
+        },
+      ],
     },
   ],
   hooks: {

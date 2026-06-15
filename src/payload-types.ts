@@ -3920,6 +3920,9 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
+  /**
+   * Liens du menu (ex. Blog → /posts). Le « Services » avec méga-menu est ajouté automatiquement.
+   */
   navItems?:
     | {
         link: {
@@ -3940,6 +3943,20 @@ export interface Header {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Le contenu du méga-menu (pôles et services) vient des collections Pôles & Expertises et Services. Ici, vous gérez seulement les libellés et les boutons.
+   */
+  megamenu?: {
+    /**
+     * Le mot cliquable dans le menu (ex. « Services », « Nos expertises »).
+     */
+    triggerLabel?: string | null;
+    railLabel?: string | null;
+    ctaPrimaryLabel?: string | null;
+    ctaPrimaryHref?: string | null;
+    ctaSecondaryLabel?: string | null;
+    ctaSecondaryHref?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -3992,6 +4009,16 @@ export interface HeaderSelect<T extends boolean = true> {
               label?: T;
             };
         id?: T;
+      };
+  megamenu?:
+    | T
+    | {
+        triggerLabel?: T;
+        railLabel?: T;
+        ctaPrimaryLabel?: T;
+        ctaPrimaryHref?: T;
+        ctaSecondaryLabel?: T;
+        ctaSecondaryHref?: T;
       };
   updatedAt?: T;
   createdAt?: T;

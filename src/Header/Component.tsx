@@ -61,5 +61,7 @@ export async function Header() {
     menu = []
   }
 
-  return <HeaderClient data={headerData} menu={menu} />
+  const chrome = (headerData as { megamenu?: Record<string, unknown> }).megamenu
+
+  return <HeaderClient data={headerData} menu={menu} chrome={chrome} />
 }
