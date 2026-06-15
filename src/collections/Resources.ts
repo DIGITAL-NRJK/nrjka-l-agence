@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { publicRead, editorOrAdmin, adminOnly } from '../access'
+import { publicRead, adminOnly } from '../access'
 
 export const Resources: CollectionConfig = {
   slug: 'resources',
@@ -13,8 +13,8 @@ export const Resources: CollectionConfig = {
   },
   access: {
     read: publicRead,
-    create: editorOrAdmin,
-    update: editorOrAdmin,
+    create: adminOnly,
+    update: adminOnly,
     delete: adminOnly,
   },
   fields: [

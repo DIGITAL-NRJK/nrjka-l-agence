@@ -105,6 +105,16 @@ const services: SvcContent[] = [
       { question: 'Vous gérez la publication ?', answer: 'Au choix : on cadre la stratégie, ou on exécute aussi la publication.' },
     ],
   },
+  {
+    slug: 'studio',
+    why: 'Le contenu visuel ne décore pas : il vend. Des photos et vidéos professionnelles renforcent la confiance, la mémorisation et la cohérence de votre marque — un levier direct de l’image qui pèse jusqu’à **+33 % de revenus** (Lucidpress/Marq). Sur mobile et sur les réseaux, la qualité visuelle fait la différence en une seconde.',
+    partenariat: 'On prend en charge la création visuelle de bout en bout — shooting photo (pro, produit, commercial), captation et montage vidéo — alignés sur votre identité de marque. Vous repartez avec des fichiers exploitables partout (web, print, réseaux), qui vous appartiennent.',
+    benefits: ['Image professionnelle', 'Confiance renforcée', 'Contenus prêts à l’emploi', 'Cohérence de marque'],
+    faqs: [
+      { question: 'Où se passe le shooting ?', answer: 'En studio ou sur site (vos locaux, un lieu adapté) — on s’adapte à votre projet et à vos produits.' },
+      { question: 'Que livrez-vous exactement ?', answer: 'Des fichiers HD retouchés (photo) et montés (vidéo), libres de droits, prêts pour le web, les réseaux et l’impression.' },
+    ],
+  },
   // ——— Web & Expérience ———
   {
     slug: 'sites-vitrines',

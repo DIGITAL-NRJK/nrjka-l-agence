@@ -274,7 +274,13 @@ On documente tout, on forme vos équipes, et on propose des plans de maintenance
 ]
 
 // Services granulaires rattachés à chaque pôle (slug du pôle -> services)
-type SeedService = { slug: string; title: string; description: string; besoins?: string[] }
+type SeedService = {
+  slug: string
+  title: string
+  description: string
+  besoins?: string[]
+  published?: boolean // false = masqué en FR (ex. Studio, réservé au marché Ghana/EN — à scoper au bloc bilingue)
+}
 
 const servicesByPole: Record<string, SeedService[]> = {
   'marque-contenu': [
@@ -282,6 +288,7 @@ const servicesByPole: Record<string, SeedService[]> = {
     { slug: 'strategie-copywriting', title: 'Stratégie & Copywriting', description: 'Positionnement, ton de voix et messages qui résonnent avec votre audience.', besoins: ['Positionnement de marque', 'Tone of voice', 'Messages clés', 'Copywriting web'] },
     { slug: 'direction-artistique', title: 'Direction artistique', description: 'Supervision créative de vos visuels, pour un impact cohérent partout.', besoins: ['Direction photo', 'Moodboards', 'Guidelines visuels', "Création d'assets"] },
     { slug: 'communication', title: 'Communication', description: 'Plan multi-canal et calendrier éditorial pour toucher la bonne cible au bon moment.', besoins: ['Audit concurrentiel', 'Plan de communication', 'Calendrier éditorial', 'KPIs & suivi'] },
+    { slug: 'studio', title: 'Studio photo & vidéo', description: 'Photo et vidéo professionnelles : shooting, captation, montage — des contenus qui valorisent votre marque.', besoins: ['Shooting photo pro', 'Photo commerciale / produit', 'Filmage (captation)', 'Montage vidéo', 'Vidéo de marque / réseaux'], published: false },
   ],
   'web-experience': [
     { slug: 'sites-vitrines', title: 'Sites vitrines', description: 'Des sites sur-mesure, rapides et optimisés SEO, faciles à faire vivre.', besoins: ['Site vitrine sur-mesure', 'Refonte de site', 'Optimisation UX/UI', 'Blog / actualités'] },
@@ -370,7 +377,7 @@ export async function seedExpertises(payload: any) {
         slug: s.slug,
         description: s.description,
         pole: poleId,
-        published: true,
+        published: s.published !== false,
         order,
         besoins: (s.besoins || []).map((label) => ({ label })),
       }

@@ -5,7 +5,7 @@ import {
   FixedToolbarFeature,
   InlineToolbarFeature,
 } from '@payloadcms/richtext-lexical'
-import { publicRead, editorOrAdmin, adminOnly } from '../access'
+import { publicRead, adminOnly } from '../access'
 
 const richEditor = lexicalEditor({
   features: ({ rootFeatures }) => [
@@ -28,8 +28,8 @@ export const Expertises: CollectionConfig = {
   },
   access: {
     read: publicRead,
-    create: editorOrAdmin,
-    update: editorOrAdmin,
+    create: adminOnly,
+    update: adminOnly,
     delete: adminOnly,
   },
   fields: [

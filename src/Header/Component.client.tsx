@@ -33,12 +33,17 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome }
   }, [headerTheme])
 
   return (
-    <header className="container relative z-20   " {...(theme ? { 'data-theme': theme } : {})}>
-      <div className="flex items-center justify-between py-6">
-        <Link href="/" className="text-brand">
-          <Logo />
-        </Link>
-        <HeaderNav data={data} menu={menu} chrome={chrome} />
+    <header
+      className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md"
+      {...(theme ? { 'data-theme': theme } : {})}
+    >
+      <div className="container relative">
+        <div className="flex items-center justify-between py-4">
+          <Link href="/" className="text-brand">
+            <Logo />
+          </Link>
+          <HeaderNav data={data} menu={menu} chrome={chrome} />
+        </div>
       </div>
     </header>
   )

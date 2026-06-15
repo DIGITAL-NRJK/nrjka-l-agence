@@ -71,7 +71,7 @@ export const HeaderNav: React.FC<{
         <div
           onMouseEnter={openMega}
           onMouseLeave={scheduleClose}
-          className={`fixed left-1/2 top-[4.5rem] z-50 hidden w-[min(60rem,calc(100vw-1.5rem))] -translate-x-1/2 md:block ${
+          className={`fixed left-1/2 top-[4rem] z-50 hidden w-[min(60rem,calc(100vw-1.5rem))] -translate-x-1/2 md:block ${
             mega ? 'pointer-events-auto opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
           } transition-all duration-200`}
         >

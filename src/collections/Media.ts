@@ -9,7 +9,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
+import { adminOnly, contributorOrAbove, editorOrAdmin } from '../access'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -22,10 +22,11 @@ export const Media: CollectionConfig = {
       'La bibliothèque de médias (images, logos, fichiers) utilisés sur le site. Pensez à renseigner le texte alternatif (alt) de chaque image pour le SEO et l’accessibilité.',
   },
   access: {
-    create: authenticated,
-    delete: authenticated,
+    // Tout rédacteur peut téléverser (besoin pour les articles) ; suppression réservée aux admins.
+    create: contributorOrAbove,
+    delete: adminOnly,
     read: anyone,
-    update: authenticated,
+    update: editorOrAdmin,
   },
   fields: [
     {
