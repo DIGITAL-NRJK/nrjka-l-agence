@@ -49,6 +49,26 @@ export default async function Post({ params: paramsPromise }: Args) {
     (p): p is Post => typeof p === 'object',
   )
 
+  // CTA contextuel : le service dont cet article est un « article lié »
+  let relatedService: { title: string; slug: string } | null = null
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const svc = await payload.find({
+      collection: 'services',
+      where: { related_articles: { equals: post.id } },
+      limit: 1,
+      depth: 0,
+    })
+    if (svc.docs[0]) {
+      relatedService = {
+        title: svc.docs[0].title as string,
+        slug: svc.docs[0].slug as string,
+      }
+    }
+  } catch {
+    relatedService = null
+  }
+
   return (
     <article className="pt-28 pb-24 sm:pt-32">
       <PayloadRedirects disableNotFound url={url} />
@@ -115,22 +135,36 @@ export default async function Post({ params: paramsPromise }: Args) {
         </div>
       )}
 
-      {/* CTA */}
+      {/* CTA contextuel (selon le service traité) */}
       <div className="container mt-20">
-        <div className="flex flex-col items-start gap-4 rounded-3xl bg-brand px-8 py-10 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col items-start gap-5 rounded-3xl bg-brand px-8 py-10 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="font-display text-2xl font-bold tracking-tight text-white">
-              Un projet en tête ?
+              {relatedService ? `Un besoin en ${relatedService.title} ?` : 'Un projet en tête ?'}
             </h2>
-            <p className="mt-1 text-white/70">Le premier échange est gratuit, et sans engagement.</p>
+            <p className="mt-1 text-white/70">
+              {relatedService
+                ? 'Parlons-en — le premier échange est gratuit, et sans engagement.'
+                : 'Le premier échange est gratuit, et sans engagement.'}
+            </p>
           </div>
-          <Link
-            href="/contact"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-terracotta px-6 py-3 font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark"
-          >
-            Demander un audit
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" strokeWidth={2.4} />
-          </Link>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            {relatedService && (
+              <Link
+                href={`/services/${relatedService.slug}`}
+                className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/20 px-6 py-3 font-medium text-white transition-colors hover:border-white/40 hover:bg-white/5"
+              >
+                Découvrir le service
+              </Link>
+            )}
+            <Link
+              href="/contact"
+              className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-terracotta px-6 py-3 font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark"
+            >
+              Demander un audit
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" strokeWidth={2.4} />
+            </Link>
+          </div>
         </div>
       </div>
     </article>
