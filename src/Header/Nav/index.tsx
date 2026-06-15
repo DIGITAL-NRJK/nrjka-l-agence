@@ -38,32 +38,44 @@ export const HeaderNav: React.FC<{
 
   return (
     <nav className="flex items-center gap-7">
-      {/* Liens — desktop */}
+      {/* Liens — desktop. Le déclencheur « Services » est inséré à la position choisie en admin. */}
       <div className="hidden items-center gap-7 md:flex">
-        {hasMenu && (
-          <div onMouseEnter={openMega} onMouseLeave={scheduleClose}>
-            <button
-              type="button"
-              onClick={() => setMega((v) => !v)}
-              aria-expanded={mega}
-              className="flex items-center gap-1.5 text-sm font-medium text-slate transition-colors hover:text-ink"
-            >
-              {chrome?.triggerLabel || 'Services'}
-              <ChevronDown
-                className={`h-4 w-4 transition-transform ${mega ? 'rotate-180' : ''}`}
-                strokeWidth={2.2}
-              />
-            </button>
-          </div>
-        )}
-        {navItems.map(({ link }, i) => (
-          <CMSLink
-            key={i}
-            {...link}
-            appearance="link"
-            className="text-sm font-medium text-slate transition-colors hover:text-ink"
-          />
-        ))}
+        {(() => {
+          const links = navItems.map(({ link }, i) => (
+            <CMSLink
+              key={`nav-${i}`}
+              {...link}
+              appearance="link"
+              className="text-sm font-medium text-slate transition-colors hover:text-ink"
+            />
+          ))
+
+          if (hasMenu) {
+            const trigger = (
+              <div key="services" onMouseEnter={openMega} onMouseLeave={scheduleClose}>
+                <button
+                  type="button"
+                  onClick={() => setMega((v) => !v)}
+                  aria-expanded={mega}
+                  className="flex items-center gap-1.5 text-sm font-medium text-slate transition-colors hover:text-ink"
+                >
+                  {chrome?.triggerLabel || 'Services'}
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform ${mega ? 'rotate-180' : ''}`}
+                    strokeWidth={2.2}
+                  />
+                </button>
+              </div>
+            )
+            const navPosition =
+              (data?.megamenu as { navPosition?: number | null } | null | undefined)?.navPosition ||
+              1
+            const pos = Math.min(Math.max(navPosition - 1, 0), links.length)
+            links.splice(pos, 0, trigger)
+          }
+
+          return links
+        })()}
       </div>
 
       {/* Panneau mégamenu — desktop, positionné sous le header, centré */}

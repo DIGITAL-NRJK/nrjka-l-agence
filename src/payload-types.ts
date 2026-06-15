@@ -304,6 +304,11 @@ export interface Page {
         | PresenceBlock
         | CaseStudiesIndexBlock
         | FaqBlock
+        | AboutHeroBlock
+        | D4CardsBlock
+        | DistinctionsBlock
+        | StatsBandBlock
+        | TeamBlock
       )[]
     | null;
   meta?: {
@@ -1385,6 +1390,228 @@ export interface FaqBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutHeroBlock".
+ */
+export interface AboutHeroBlock {
+  /**
+   * Petit libellé (eyebrow) affiché avec un trait au-dessus du titre.
+   */
+  badge?: string | null;
+  /**
+   * Titre principal (H1).
+   */
+  title: string;
+  /**
+   * Segment affiché en terracotta, sur une 2e ligne. Optionnel.
+   */
+  titleAccent?: string | null;
+  /**
+   * Chapô sous le titre.
+   */
+  subtitle?: string | null;
+  /**
+   * Petites cartes de repère (valeur + libellé), ex. « 100% / open source ».
+   */
+  chips?:
+    | {
+        /**
+         * La valeur en gros (ex. 100%).
+         */
+        value?: string | null;
+        /**
+         * Le libellé sous la valeur.
+         */
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aboutHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "D4CardsBlock".
+ */
+export interface D4CardsBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Les dimensions de la méthode. Numérotées automatiquement (01–04).
+   */
+  cards?:
+    | {
+        /**
+         * Ex. Diagnostic.
+         */
+        title?: string | null;
+        /**
+         * Courte accroche (une ligne).
+         */
+        tagline?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'd4Cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DistinctionsBlock".
+ */
+export interface DistinctionsBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Ce qui vous distingue (icône + titre + courte explication).
+   */
+  items?:
+    | {
+        icon?:
+          | (
+              | 'userCheck'
+              | 'layers'
+              | 'shield'
+              | 'zap'
+              | 'heart'
+              | 'target'
+              | 'rocket'
+              | 'lightbulb'
+              | 'handshake'
+              | 'lock'
+              | 'globe'
+              | 'barChart'
+              | 'messageCircle'
+              | 'clock'
+              | 'leaf'
+              | 'award'
+              | 'wrench'
+              | 'search'
+              | 'trendingUp'
+              | 'sparkles'
+            )
+          | null;
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'distinctions';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBandBlock".
+ */
+export interface StatsBandBlock {
+  /**
+   * Chiffres clés (valeur + libellé). Affichés sur une bande claire.
+   */
+  items?:
+    | {
+        /**
+         * Ex. +33%, 0, D4™.
+         */
+        value?: string | null;
+        /**
+         * Ce que représente la valeur.
+         */
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statsBand';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock".
+ */
+export interface TeamBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Les membres de l’agence (photo + nom + rôle). Sans photo : initiales sur fond navy.
+   */
+  members?:
+    | {
+        /**
+         * Photo carrée idéalement.
+         */
+        photo?: (number | null) | Media;
+        /**
+         * Prénom Nom.
+         */
+        name: string;
+        /**
+         * Rôle / fonction.
+         */
+        role?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'team';
 }
 /**
  * Les grands domaines d'expertise de l'agence (les « pôles »). Chaque pôle a sa propre page /expertises/[slug] et peut être mis en avant comme pilier sur la page d'accueil. Les services granulaires (collection Services) se rattachent à un pôle.
@@ -2546,6 +2773,11 @@ export interface PagesSelect<T extends boolean = true> {
         presence?: T | PresenceBlockSelect<T>;
         caseStudiesIndex?: T | CaseStudiesIndexBlockSelect<T>;
         faq?: T | FaqBlockSelect<T>;
+        aboutHero?: T | AboutHeroBlockSelect<T>;
+        d4Cards?: T | D4CardsBlockSelect<T>;
+        distinctions?: T | DistinctionsBlockSelect<T>;
+        statsBand?: T | StatsBandBlockSelect<T>;
+        team?: T | TeamBlockSelect<T>;
       };
   meta?:
     | T
@@ -2993,6 +3225,141 @@ export interface FaqBlockSelect<T extends boolean = true> {
     | {
         question?: T;
         answer?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutHeroBlock_select".
+ */
+export interface AboutHeroBlockSelect<T extends boolean = true> {
+  badge?: T;
+  title?: T;
+  titleAccent?: T;
+  subtitle?: T;
+  chips?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "D4CardsBlock_select".
+ */
+export interface D4CardsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        tagline?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DistinctionsBlock_select".
+ */
+export interface DistinctionsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  items?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBandBlock_select".
+ */
+export interface StatsBandBlockSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock_select".
+ */
+export interface TeamBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  members?:
+    | T
+    | {
+        photo?: T;
+        name?: T;
+        role?: T;
         id?: T;
       };
   appearance?:
@@ -3951,6 +4318,10 @@ export interface Header {
      * Le mot cliquable dans le menu (ex. « Services », « Nos expertises »).
      */
     triggerLabel?: string | null;
+    /**
+     * Place le « Services » parmi les autres liens. 1 = en premier. Ex. avec Accueil, L’Agence, Réalisations… mettre 3 pour l’afficher après « L’Agence ».
+     */
+    navPosition?: number | null;
     railLabel?: string | null;
     ctaPrimaryLabel?: string | null;
     ctaPrimaryHref?: string | null;
@@ -4014,6 +4385,7 @@ export interface HeaderSelect<T extends boolean = true> {
     | T
     | {
         triggerLabel?: T;
+        navPosition?: T;
         railLabel?: T;
         ctaPrimaryLabel?: T;
         ctaPrimaryHref?: T;

@@ -20,6 +20,11 @@ import { ContactBlock } from '@/blocks/Contact/Component'
 import { PresenceBlock } from '@/blocks/Presence/Component'
 import { CaseStudiesIndexBlock } from '@/blocks/CaseStudiesIndex/Component'
 import { FaqBlock } from '@/blocks/Faq/Component'
+import { AboutHeroBlock } from '@/blocks/AboutHero/Component'
+import { D4CardsBlock } from '@/blocks/D4Cards/Component'
+import { DistinctionsBlock } from '@/blocks/Distinctions/Component'
+import { StatsBandBlock } from '@/blocks/StatsBand/Component'
+import { TeamBlock } from '@/blocks/Team/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -40,11 +45,21 @@ const blockComponents = {
   presence: PresenceBlock,
   caseStudiesIndex: CaseStudiesIndexBlock,
   faq: FaqBlock,
+  aboutHero: AboutHeroBlock,
+  d4Cards: D4CardsBlock,
+  distinctions: DistinctionsBlock,
+  statsBand: StatsBandBlock,
+  team: TeamBlock,
 }
 // Rythme vertical de la home : les sections liées sont rapprochées,
 // chaque nouveau « mouvement » respire davantage.
 // Les blocs absents de cette liste (pages standard) gardent my-16.
 const blockSpacing: Record<string, string> = {
+  aboutHero: 'mb-12 lg:mb-16',
+  d4Cards: 'mt-16 lg:mt-20',
+  distinctions: 'mt-16 lg:mt-20',
+  team: 'mt-16 lg:mt-20',
+  statsBand: 'mt-16 lg:mt-20',
   promise: 'mt-16 lg:mt-20',
   pillars: 'mt-28 lg:mt-40',
   method: 'mt-20 lg:mt-24',

@@ -20,6 +20,11 @@ import { Contact } from '../../blocks/Contact/config'
 import { Presence } from '../../blocks/Presence/config'
 import { CaseStudiesIndex } from '../../blocks/CaseStudiesIndex/config'
 import { Faq } from '../../blocks/Faq/config'
+import { AboutHero } from '../../blocks/AboutHero/config'
+import { D4Cards } from '../../blocks/D4Cards/config'
+import { Distinctions } from '../../blocks/Distinctions/config'
+import { StatsBand } from '../../blocks/StatsBand/config'
+import { Team } from '../../blocks/Team/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -107,6 +112,11 @@ export const Pages: CollectionConfig<'pages'> = {
                 Presence,
                 CaseStudiesIndex,
                 Faq,
+                AboutHero,
+                D4Cards,
+                Distinctions,
+                StatsBand,
+                Team,
               ],
               admin: {
                 initCollapsed: true,

@@ -47,6 +47,17 @@ export const Header: GlobalConfig = {
           admin: { description: 'Le mot cliquable dans le menu (ex. « Services », « Nos expertises »).' },
         },
         {
+          name: 'navPosition',
+          type: 'number',
+          defaultValue: 1,
+          min: 1,
+          label: 'Position dans le menu',
+          admin: {
+            description:
+              'Place le « Services » parmi les autres liens. 1 = en premier. Ex. avec Accueil, L’Agence, Réalisations… mettre 3 pour l’afficher après « L’Agence ».',
+          },
+        },
+        {
           name: 'railLabel',
           type: 'text',
           defaultValue: 'Pôles principaux',
