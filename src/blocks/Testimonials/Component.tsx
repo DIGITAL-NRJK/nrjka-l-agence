@@ -9,6 +9,7 @@ import type {
   Media,
 } from '@/payload-types'
 import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
+import { TestimonialsCarousel, type CarouselItem } from './Carousel'
 
 function initials(name?: string | null) {
   if (!name) return '•'
@@ -30,7 +31,7 @@ export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
     const res = await payload.find({
       collection: 'testimonials',
       sort: 'order',
-      limit: limit || 6,
+      limit: limit || 12,
       depth: 1,
     })
     items = res.docs
@@ -125,53 +126,19 @@ export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
               </figcaption>
             </figure>
           ) : (
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {items.map((t) => {
+            <TestimonialsCarousel
+              items={items.map((t): CarouselItem => {
                 const avatar = t.avatar && typeof t.avatar === 'object' ? (t.avatar as Media) : null
-                const avatarSrc = avatar?.url || t.avatar_url || null
-                const role = [t.author_role, t.company].filter(Boolean).join(' · ')
-                return (
-                  <figure
-                    key={t.id}
-                    className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/5 p-6 transition-colors hover:border-white/25 hover:bg-white/10"
-                  >
-                    {t.rating ? (
-                      <div className="mb-4 flex gap-0.5">
-                        {Array.from({ length: t.rating }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className="h-4 w-4 fill-terracotta text-terracotta"
-                            strokeWidth={0}
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <Quote className="mb-4 h-6 w-6 text-terracotta/60" strokeWidth={2} />
-                    )}
-                    <blockquote className="flex-1 break-words leading-relaxed text-white/90">
-                      {t.content}
-                    </blockquote>
-                    <figcaption className="mt-6 flex items-center gap-3">
-                      {avatarSrc ? (
-                        <img
-                          src={avatarSrc}
-                          alt={t.author_name}
-                          className="h-10 w-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-semibold text-terracotta">
-                          {initials(t.author_name)}
-                        </span>
-                      )}
-                      <div>
-                        <div className="font-semibold text-white">{t.author_name}</div>
-                        {role && <div className="text-sm text-white/55">{role}</div>}
-                      </div>
-                    </figcaption>
-                  </figure>
-                )
+                return {
+                  id: String(t.id),
+                  content: t.content,
+                  authorName: t.author_name,
+                  role: [t.author_role, t.company].filter(Boolean).join(' · ') || null,
+                  rating: t.rating ?? null,
+                  avatarSrc: avatar?.url || t.avatar_url || null,
+                }
               })}
-            </div>
+            />
           )}
         </div>
       </div>

@@ -9,6 +9,8 @@ import { seedBlog } from '@/scripts/seed-blog'
 import { seedAbout } from '@/scripts/seed-about'
 import { seedLegal } from '@/scripts/seed-legal'
 import { seedContent } from '@/scripts/seed-content'
+import { seedResources } from '@/scripts/seed-resources'
+import { seedMegamenu } from '@/scripts/seed-megamenu'
 
 // Route TEMPORAIRE de seed global (dev uniquement). Idempotente.
 export const dynamic = 'force-dynamic'
@@ -27,6 +29,8 @@ export async function GET() {
     out.about = await seedAbout(payload) // page À propos
     out.legal = await seedLegal(payload) // pages légales
     out.content = await seedContent(payload) // engagements + FAQ home/contact
+    out.resources = await seedResources(payload) // ressources gratuites + produits (page /ressources)
+    out.megamenu = await seedMegamenu(payload) // pré-remplit le méga-menu manuel (si vide)
     return NextResponse.json({ ok: true, ...out })
   } catch (err) {
     return NextResponse.json(

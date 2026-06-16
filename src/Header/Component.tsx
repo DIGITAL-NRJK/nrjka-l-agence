@@ -1,64 +1,48 @@
 import { HeaderClient } from './Component.client'
 import { getCachedGlobal } from '@/utilities/getGlobals'
 import React from 'react'
-import { getPayload } from 'payload'
-import configPromise from '@payload-config'
 
 import type { Header } from '@/payload-types'
-import type { MegaMenuPole } from './Nav/MegaMenu'
+import type { MegaMenuPole, MegaMenuService } from './Nav/MegaMenu'
+
+type PoleRow = {
+  pole?: unknown
+  labelOverride?: string | null
+  services?: { service?: unknown; labelOverride?: string | null }[] | null
+}
+
+const asDoc = (v: unknown): { id?: unknown; title?: string; slug?: string; icon?: string | null; description?: string | null } | null =>
+  v && typeof v === 'object' ? (v as any) : null
 
 export async function Header() {
-  const headerData: Header = await getCachedGlobal('header', 1)()
+  // depth 2 : peuple les relations pôle/service du méga-menu (pour récupérer titre, slug, icône…).
+  const headerData: Header = await getCachedGlobal('header', 2)()
 
-  let menu: MegaMenuPole[] = []
-  try {
-    const payload = await getPayload({ config: configPromise })
-    const [polesRes, servicesRes] = await Promise.all([
-      payload.find({
-        collection: 'expertises',
-        where: { published: { equals: true } },
-        sort: 'order',
-        limit: 20,
-        depth: 0,
-      }),
-      payload.find({
-        collection: 'services',
-        where: { published: { equals: true } },
-        sort: 'order',
-        limit: 200,
-        depth: 0,
-      }),
-    ])
-
-    const servicesByPole: Record<string, { title: string; slug: string; description?: string | null }[]> =
-      {}
-    for (const s of servicesRes.docs as {
-      title: string
-      slug: string
-      description?: string | null
-      pole: unknown
-    }[]) {
-      const pid =
-        s.pole && typeof s.pole === 'object' ? String((s.pole as { id: unknown }).id) : String(s.pole)
-      ;(servicesByPole[pid] ||= []).push({ title: s.title, slug: s.slug, description: s.description })
+  // Le méga-menu est piloté depuis le global Header : on choisit des pôles/services
+  // existants (relations) + un renommage optionnel ; lien/icône/description sont dérivés.
+  const mm = (headerData as { megamenu?: { poles?: PoleRow[] } }).megamenu
+  const menu: MegaMenuPole[] = []
+  for (const [i, row] of (mm?.poles || []).entries()) {
+    const pole = asDoc(row?.pole)
+    if (!pole) continue
+    const services: MegaMenuService[] = []
+    for (const sRow of row?.services || []) {
+      const svc = asDoc(sRow?.service)
+      if (!svc) continue
+      services.push({
+        title: sRow.labelOverride || svc.title || '',
+        description: svc.description ?? null,
+        href: svc.slug ? `/services/${svc.slug}` : '#',
+      })
     }
-
-    menu = (polesRes.docs as { id: unknown; title: string; subtitle?: string | null; icon?: string | null; slug: string }[]).map(
-      (p) => ({
-        id: String(p.id),
-        title: p.title,
-        subtitle: p.subtitle ?? null,
-        icon: p.icon ?? null,
-        href: `/expertises/${p.slug}`,
-        services: (servicesByPole[String(p.id)] || []).map((s) => ({
-          title: s.title,
-          description: s.description ?? null,
-          href: `/services/${s.slug}`,
-        })),
-      }),
-    )
-  } catch {
-    menu = []
+    menu.push({
+      id: String(pole.id ?? i),
+      title: row.labelOverride || pole.title || '',
+      subtitle: null,
+      icon: pole.icon ?? null,
+      href: pole.slug ? `/expertises/${pole.slug}` : '#',
+      services,
+    })
   }
 
   const chrome = (headerData as { megamenu?: Record<string, unknown> }).megamenu

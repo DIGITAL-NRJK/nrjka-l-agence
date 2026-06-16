@@ -64,6 +64,58 @@ export const Header: GlobalConfig = {
           label: 'Titre de la colonne des pôles',
         },
         {
+          name: 'poles',
+          type: 'array',
+          label: 'Pôles du méga-menu',
+          admin: {
+            initCollapsed: true,
+            description:
+              'Choisissez les pôles à afficher et leur ordre (glisser-déposer). Le nom, le lien et l’icône viennent du pôle sélectionné — vous pouvez juste le renommer si besoin.',
+          },
+          fields: [
+            {
+              name: 'pole',
+              type: 'relationship',
+              relationTo: 'expertises',
+              required: true,
+              label: 'Pôle',
+              admin: { description: 'Choisissez un pôle existant (collection Pôles & Expertises).' },
+            },
+            {
+              name: 'labelOverride',
+              type: 'text',
+              label: 'Renommer (optionnel)',
+              admin: { description: 'Laisser vide = le nom du pôle.' },
+            },
+            {
+              name: 'services',
+              type: 'array',
+              label: 'Services du pôle',
+              admin: {
+                initCollapsed: true,
+                description:
+                  'Choisissez les services à lister sous ce pôle et leur ordre (glisser-déposer).',
+              },
+              fields: [
+                {
+                  name: 'service',
+                  type: 'relationship',
+                  relationTo: 'services',
+                  required: true,
+                  label: 'Service',
+                  admin: { description: 'Choisissez un service existant (collection Services).' },
+                },
+                {
+                  name: 'labelOverride',
+                  type: 'text',
+                  label: 'Renommer (optionnel)',
+                  admin: { description: 'Laisser vide = le nom du service.' },
+                },
+              ],
+            },
+          ],
+        },
+        {
           type: 'row',
           fields: [
             { name: 'ctaPrimaryLabel', type: 'text', defaultValue: 'Démarrer un projet', admin: { width: '50%' }, label: 'Bouton principal — libellé' },

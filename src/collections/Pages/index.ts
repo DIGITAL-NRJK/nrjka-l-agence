@@ -25,6 +25,7 @@ import { D4Cards } from '../../blocks/D4Cards/config'
 import { Distinctions } from '../../blocks/Distinctions/config'
 import { StatsBand } from '../../blocks/StatsBand/config'
 import { Team } from '../../blocks/Team/config'
+import { ResourcesCatalog } from '../../blocks/ResourcesCatalog/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -117,6 +118,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 Distinctions,
                 StatsBand,
                 Team,
+                ResourcesCatalog,
               ],
               admin: {
                 initCollapsed: true,

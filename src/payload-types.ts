@@ -309,6 +309,7 @@ export interface Page {
         | DistinctionsBlock
         | StatsBandBlock
         | TeamBlock
+        | ResourcesCatalogBlock
       )[]
     | null;
   meta?: {
@@ -1614,6 +1615,37 @@ export interface TeamBlock {
   blockType: 'team';
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourcesCatalogBlock".
+ */
+export interface ResourcesCatalogBlock {
+  /**
+   * Petit libellé avec trait (ex. « Ressources »).
+   */
+  eyebrow?: string | null;
+  /**
+   * Titre principal de la page (H1).
+   */
+  title: string;
+  /**
+   * Chapô sous le titre.
+   */
+  subtitle?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'resourcesCatalog';
+}
+/**
  * Les grands domaines d'expertise de l'agence (les « pôles »). Chaque pôle a sa propre page /expertises/[slug] et peut être mis en avant comme pilier sur la page d'accueil. Les services granulaires (collection Services) se rattachent à un pôle.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2778,6 +2810,7 @@ export interface PagesSelect<T extends boolean = true> {
         distinctions?: T | DistinctionsBlockSelect<T>;
         statsBand?: T | StatsBandBlockSelect<T>;
         team?: T | TeamBlockSelect<T>;
+        resourcesCatalog?: T | ResourcesCatalogBlockSelect<T>;
       };
   meta?:
     | T
@@ -3362,6 +3395,26 @@ export interface TeamBlockSelect<T extends boolean = true> {
         role?: T;
         id?: T;
       };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourcesCatalogBlock_select".
+ */
+export interface ResourcesCatalogBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  subtitle?: T;
   appearance?:
     | T
     | {
@@ -4323,6 +4376,38 @@ export interface Header {
      */
     navPosition?: number | null;
     railLabel?: string | null;
+    /**
+     * Choisissez les pôles à afficher et leur ordre (glisser-déposer). Le nom, le lien et l’icône viennent du pôle sélectionné — vous pouvez juste le renommer si besoin.
+     */
+    poles?:
+      | {
+          /**
+           * Choisissez un pôle existant (collection Pôles & Expertises).
+           */
+          pole: number | Expertise;
+          /**
+           * Laisser vide = le nom du pôle.
+           */
+          labelOverride?: string | null;
+          /**
+           * Choisissez les services à lister sous ce pôle et leur ordre (glisser-déposer).
+           */
+          services?:
+            | {
+                /**
+                 * Choisissez un service existant (collection Services).
+                 */
+                service: number | Service;
+                /**
+                 * Laisser vide = le nom du service.
+                 */
+                labelOverride?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
     ctaPrimaryLabel?: string | null;
     ctaPrimaryHref?: string | null;
     ctaSecondaryLabel?: string | null;
@@ -4387,6 +4472,20 @@ export interface HeaderSelect<T extends boolean = true> {
         triggerLabel?: T;
         navPosition?: T;
         railLabel?: T;
+        poles?:
+          | T
+          | {
+              pole?: T;
+              labelOverride?: T;
+              services?:
+                | T
+                | {
+                    service?: T;
+                    labelOverride?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
         ctaPrimaryLabel?: T;
         ctaPrimaryHref?: T;
         ctaSecondaryLabel?: T;
