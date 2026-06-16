@@ -39,7 +39,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome }
     >
       <div className="container relative">
         <div className="flex items-center justify-between py-4">
-          <Link href="/" className="text-brand">
+          <Link href="/" className="text-brand dark:text-white">
             <Logo />
           </Link>
           <HeaderNav data={data} menu={menu} chrome={chrome} />

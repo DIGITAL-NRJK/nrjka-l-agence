@@ -8,6 +8,7 @@ import { ChevronDown, Menu, X } from 'lucide-react'
 import type { Header as HeaderType } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { MegaMenu, type MegaMenuPole, type MegaMenuChrome } from './MegaMenu'
 
 export const HeaderNav: React.FC<{
@@ -91,6 +92,9 @@ export const HeaderNav: React.FC<{
         </div>
       )}
 
+      {/* Bascule thème — desktop */}
+      <ThemeToggle className="hidden md:flex" />
+
       {/* CTA — toujours visible */}
       <a
         href="/contact"
@@ -155,6 +159,11 @@ export const HeaderNav: React.FC<{
                 ))}
               </ul>
             )}
+            {/* Bascule thème — mobile */}
+            <div className="flex items-center justify-between border-t border-border px-4 py-2">
+              <span className="text-sm font-medium text-slate">Apparence</span>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       )}

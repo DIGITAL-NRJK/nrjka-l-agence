@@ -140,25 +140,28 @@
 }
 
 [data-theme='dark'] {
-  --background: oklch(14.5% 0 0deg);
-  --foreground: oklch(98.5% 0 0deg);
-  --card: oklch(17% 0 0deg);
-  --card-foreground: oklch(98.5% 0 0deg);
-  --popover: oklch(14.5% 0 0deg);
-  --popover-foreground: oklch(98.5% 0 0deg);
-  --primary: oklch(98.5% 0 0deg);
-  --primary-foreground: oklch(20.5% 0 0deg);
-  --secondary: oklch(26.9% 0 0deg);
-  --secondary-foreground: oklch(98.5% 0 0deg);
-  --muted: oklch(26.9% 0 0deg);
-  --muted-foreground: oklch(70.8% 0 0deg);
-  --accent: oklch(26.9% 0 0deg);
-  --accent-foreground: oklch(98.5% 0 0deg);
+  /* Dark navy premium NRJKA. Échelle d'élévation : background < surface-soft < card < brand.
+     Le navy de marque devient le bloc le plus clair → les panneaux « moments sombres »
+     (Promesse, Témoignages, CTA) ressortent comme des sections en relief. */
+  --background: #0d1320;
+  --foreground: #e7ecf4;
+  --card: #18223a;
+  --card-foreground: #e7ecf4;
+  --popover: #18223a;
+  --popover-foreground: #e7ecf4;
+  --primary: #e7ecf4;
+  --primary-foreground: #0d1320;
+  --secondary: #1b2740;
+  --secondary-foreground: #e7ecf4;
+  --muted: #1b2740;
+  --muted-foreground: #94a2bb;
+  --accent: #1b2740;
+  --accent-foreground: #e7ecf4;
   --destructive: oklch(39.6% 0.141 25.723deg);
   --destructive-foreground: oklch(63.7% 0.237 25.331deg);
-  --border: oklch(26.9% 0 0deg);
-  --input: oklch(26.9% 0 0deg);
-  --ring: oklch(43.9% 0 0deg);
+  --border: #25324d;
+  --input: #25324d;
+  --ring: #3a4a6b;
   --chart-1: oklch(48.8% 0.243 264.376deg);
   --chart-2: oklch(69.6% 0.17 162.48deg);
   --chart-3: oklch(76.9% 0.188 70.08deg);
@@ -172,9 +175,21 @@
   --sidebar-accent-foreground: oklch(98.5% 0 0deg);
   --sidebar-border: oklch(26.9% 0 0deg);
   --sidebar-ring: oklch(43.9% 0 0deg);
-  --success: oklch(28% 0.1 200deg);
-  --warning: oklch(35% 0.08 70deg);
-  --error: oklch(45% 0.1 25deg);
+  --success: oklch(78% 0.08 200deg);
+  --warning: oklch(85% 0.1 75deg);
+  --error: oklch(72% 0.15 25deg);
+
+  /* Marque — surcharge dark (sinon --ink resterait noir = texte invisible,
+     --surface-soft resterait blanc, etc.) */
+  --brand: #1f2a44;
+  --brand-2: #2d3e5f;
+  --brand-foreground: #ffffff;
+  --terracotta: #f4a261;
+  --terracotta-dark: #e89251;
+  --terracotta-foreground: #1f2a44;
+  --ink: #e7ecf4;
+  --slate: #94a2bb;
+  --surface-soft: #131c2e;
 }
 
 @theme inline {
@@ -262,9 +277,16 @@ html[data-theme='light'] {
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid color-mix(in oklab, white 45%, transparent);
   }
+  [data-theme='dark'] .glass-card {
+    background-color: color-mix(in oklab, #18223a 80%, transparent);
+    border-color: color-mix(in oklab, white 12%, transparent);
+  }
   /* Ombre douce teintée navy */
   .shadow-soft {
     box-shadow: 0 18px 40px -16px color-mix(in oklab, #1f2a44 35%, transparent);
+  }
+  [data-theme='dark'] .shadow-soft {
+    box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.5);
   }
 }
 /* --- Micro-interactions home --- */
