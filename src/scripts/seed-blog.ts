@@ -1,24 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Crée les catégories de blog alignées sur les pôles + assigne la bonne catégorie aux articles.
-// Appelé depuis une route (le serveur dev se connecte bien à la base).
+// Crée les catégories de blog (pôles de 1er niveau + sous-catégories avec parent)
+// et assigne la bonne catégorie aux articles. Appelé depuis une route (dev).
 
-const categories = [
+type CatSeed = { title: string; slug: string; parentSlug?: string }
+
+const categories: CatSeed[] = [
+  // Pôles — 1er niveau (sans parent)
   { title: 'Marque & Contenu', slug: 'marque-contenu' },
   { title: 'Web & Expérience', slug: 'web-experience' },
   { title: 'Performance & Visibilité', slug: 'performance-visibilite' },
   { title: 'Digitalisation & Process', slug: 'digitalisation-process' },
+  // Sous-catégories — 2e niveau (exemple ; parent = un pôle)
+  { title: 'Maintenance & Support', slug: 'maintenance-support', parentSlug: 'digitalisation-process' },
 ]
 
-// Slug d'article → slug de catégorie (les 3 articles pilotes parlent de maintenance → Process)
+// Slug d'article → slug de catégorie assignée (ici la sous-catégorie Maintenance,
+// qui porte son pôle parent « Digitalisation & Process »).
 const articleCategory: Record<string, string> = {
-  'site-non-maintenu-piratage': 'digitalisation-process',
-  'cout-panne-site-web': 'digitalisation-process',
-  'maintenance-preventive-vs-curative': 'digitalisation-process',
+  'site-non-maintenu-piratage': 'maintenance-support',
+  'cout-panne-site-web': 'maintenance-support',
+  'maintenance-preventive-vs-curative': 'maintenance-support',
 }
 
 export async function seedBlog(payload: any) {
   const catIdBySlug: Record<string, number | string> = {}
-  for (const c of categories) {
+
+  const upsertCat = async (c: CatSeed) => {
+    const data: any = { title: c.title, slug: c.slug }
+    if (c.parentSlug && catIdBySlug[c.parentSlug]) data.parent = catIdBySlug[c.parentSlug]
     const existing = await payload.find({
       collection: 'categories',
       where: { slug: { equals: c.slug } },
@@ -26,13 +35,17 @@ export async function seedBlog(payload: any) {
       pagination: false,
     })
     if (existing.docs[0]) {
-      const d = await payload.update({ collection: 'categories', id: existing.docs[0].id, data: c })
+      const d = await payload.update({ collection: 'categories', id: existing.docs[0].id, data })
       catIdBySlug[c.slug] = d.id
     } else {
-      const d = await payload.create({ collection: 'categories', data: c })
+      const d = await payload.create({ collection: 'categories', data })
       catIdBySlug[c.slug] = d.id
     }
   }
+
+  // 1) Parents d'abord, 2) enfants ensuite (pour résoudre les parentSlug)
+  for (const c of categories.filter((c) => !c.parentSlug)) await upsertCat(c)
+  for (const c of categories.filter((c) => c.parentSlug)) await upsertCat(c)
 
   let assigned = 0
   for (const [postSlug, catSlug] of Object.entries(articleCategory)) {

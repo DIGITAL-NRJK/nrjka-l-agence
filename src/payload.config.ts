@@ -90,8 +90,8 @@ export default buildConfig({
     // La base contient déjà tout le schéma (synchronisé en mode push).
     // ⚠️ Avant la mise en ligne : créer une migration propre (#6) — Netlify ne peut pas tourner en push.
     // Pour ajouter un champ d'ici là : repasser push:true le temps de la synchro, puis push:false.
-    // ⚠️ TEMPORAIRE : push:true pour créer les tables megamenu.poles (+services)
-    //    et retirer la colonne services.showInMenu. → re-basculer false après synchro dev.
+    // ⚠️ TEMPORAIRE : push:true pour ajouter le champ posts.services (filtre blog 2 niveaux).
+    //    → re-basculer false après synchro dev.
     push: true,
   }),
   collections: [

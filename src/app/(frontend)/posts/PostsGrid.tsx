@@ -4,16 +4,19 @@ import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
+export type BlogCategory = { slug: string; title: string }
+export type PostSub = { slug: string; title: string; parentSlug: string }
+
 export type PostItem = {
   id: string
   slug: string
   title: string
   excerpt?: string | null
   date: string
-  categorySlug?: string | null
   categoryTitle?: string | null
+  poles: BlogCategory[]
+  subs: PostSub[]
 }
-export type BlogCategory = { slug: string; title: string }
 
 const chip = (active: boolean) =>
   `rounded-full border px-4 py-1.5 text-sm transition-colors ${
@@ -26,30 +29,73 @@ export const PostsGrid: React.FC<{ posts: PostItem[]; categories: BlogCategory[]
   posts,
   categories,
 }) => {
-  const [selected, setSelected] = useState<string | null>(null)
+  const [selectedCat, setSelectedCat] = useState<string | null>(null)
+  const [selectedService, setSelectedService] = useState<string | null>(null)
 
-  const filtered = useMemo(
-    () => (selected ? posts.filter((p) => p.categorySlug === selected) : posts),
-    [posts, selected],
-  )
+  const selectCategory = (slug: string | null) => {
+    setSelectedCat(slug)
+    setSelectedService(null) // on repart de zéro au changement de pôle
+  }
+
+  // Sous-catégories du pôle sélectionné (2e niveau), dédupliquées
+  const subServices = useMemo<BlogCategory[]>(() => {
+    if (!selectedCat) return []
+    const map = new Map<string, string>()
+    for (const p of posts) {
+      if (!p.poles.some((pole) => pole.slug === selectedCat)) continue
+      for (const s of p.subs) if (s.parentSlug === selectedCat) map.set(s.slug, s.title)
+    }
+    return Array.from(map.entries()).map(([slug, title]) => ({ slug, title }))
+  }, [posts, selectedCat])
+
+  const filtered = useMemo(() => {
+    let list = posts
+    if (selectedCat) list = list.filter((p) => p.poles.some((pole) => pole.slug === selectedCat))
+    if (selectedService) list = list.filter((p) => p.subs.some((s) => s.slug === selectedService))
+    return list
+  }, [posts, selectedCat, selectedService])
+
   const [featured, ...rest] = filtered
 
   return (
     <div>
-      {/* Filtres */}
+      {/* Filtres — niveau 1 : pôles */}
       {categories.length > 0 && (
         <div className="mt-12 flex flex-wrap items-center gap-2">
-          <button type="button" onClick={() => setSelected(null)} className={chip(!selected)}>
+          <button type="button" onClick={() => selectCategory(null)} className={chip(!selectedCat)}>
             Tous
           </button>
           {categories.map((c) => (
             <button
               key={c.slug}
               type="button"
-              onClick={() => setSelected(c.slug)}
-              className={chip(selected === c.slug)}
+              onClick={() => selectCategory(c.slug)}
+              className={chip(selectedCat === c.slug)}
             >
               {c.title}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Filtres — niveau 2 : services du pôle sélectionné */}
+      {selectedCat && subServices.length > 0 && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-l-2 border-terracotta/30 pl-4">
+          <button
+            type="button"
+            onClick={() => setSelectedService(null)}
+            className={chip(!selectedService)}
+          >
+            Tout le pôle
+          </button>
+          {subServices.map((s) => (
+            <button
+              key={s.slug}
+              type="button"
+              onClick={() => setSelectedService(s.slug)}
+              className={chip(selectedService === s.slug)}
+            >
+              {s.title}
             </button>
           ))}
         </div>

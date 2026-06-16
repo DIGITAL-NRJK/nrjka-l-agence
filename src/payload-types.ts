@@ -356,7 +356,6 @@ export interface Post {
     [k: string]: unknown;
   };
   relatedPosts?: (number | Post)[] | null;
-  categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
     /**
@@ -366,6 +365,10 @@ export interface Post {
     description?: string | null;
   };
   publishedAt?: string | null;
+  /**
+   * Classement de l’article. Choisissez un pôle, ou une sous-catégorie (qui a un pôle parent) — le blog filtre alors sur 2 niveaux (pôle → sous-catégorie).
+   */
+  categories?: (number | Category)[] | null;
   authors?: (number | User)[] | null;
   populatedAuthors?:
     | {
@@ -513,11 +516,14 @@ export interface Category {
   id: number;
   title: string;
   /**
+   * Laisser vide pour un pôle de 1er niveau. Choisir un pôle ici pour en faire une sous-catégorie (2e niveau du filtre blog).
+   */
+  parent?: (number | null) | Category;
+  /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  parent?: (number | null) | Category;
   breadcrumbs?:
     | {
         doc?: (number | null) | Category;
@@ -3436,7 +3442,6 @@ export interface PostsSelect<T extends boolean = true> {
   heroImage?: T;
   content?: T;
   relatedPosts?: T;
-  categories?: T;
   meta?:
     | T
     | {
@@ -3445,6 +3450,7 @@ export interface PostsSelect<T extends boolean = true> {
         description?: T;
       };
   publishedAt?: T;
+  categories?: T;
   authors?: T;
   populatedAuthors?:
     | T
@@ -3558,9 +3564,9 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
+  parent?: T;
   generateSlug?: T;
   slug?: T;
-  parent?: T;
   breadcrumbs?:
     | T
     | {

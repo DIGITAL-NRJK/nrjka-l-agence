@@ -130,15 +130,6 @@ export const Posts: CollectionConfig<'posts'> = {
               hasMany: true,
               relationTo: 'posts',
             },
-            {
-              name: 'categories',
-              type: 'relationship',
-              admin: {
-                position: 'sidebar',
-              },
-              hasMany: true,
-              relationTo: 'categories',
-            },
           ],
           label: 'Meta',
         },
@@ -189,6 +180,17 @@ export const Posts: CollectionConfig<'posts'> = {
             return value
           },
         ],
+      },
+    },
+    {
+      name: 'categories',
+      type: 'relationship',
+      relationTo: 'categories',
+      hasMany: true,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Classement de l’article. Choisissez un pôle, ou une sous-catégorie (qui a un pôle parent) — le blog filtre alors sur 2 niveaux (pôle → sous-catégorie).',
       },
     },
     {

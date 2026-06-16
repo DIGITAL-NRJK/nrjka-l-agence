@@ -4,7 +4,7 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 import type { Post, Category } from '@/payload-types'
-import { PostsGrid, type PostItem, type BlogCategory } from './PostsGrid'
+import { PostsGrid, type PostItem, type BlogCategory, type PostSub } from './PostsGrid'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
@@ -12,13 +12,29 @@ export const revalidate = 600
 const formatDate = (d?: string | null) =>
   d ? new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
 
-const firstCategory = (post: Post): { slug?: string; title?: string } => {
-  const c = post.categories?.[0]
-  if (c && typeof c === 'object' && 'title' in c) {
-    const cat = c as Category
-    return { slug: cat.slug ?? undefined, title: cat.title }
+const asCategory = (c: unknown): Category | null =>
+  c && typeof c === 'object' && 'title' in c ? (c as Category) : null
+
+// Pour un article : niveau 1 = pôles (parent de la catégorie, ou la catégorie si racine),
+// niveau 2 = sous-catégories (les catégories qui ont un parent).
+const postTaxonomy = (post: Post): { poles: BlogCategory[]; subs: PostSub[] } => {
+  const poles = new Map<string, string>()
+  const subs = new Map<string, PostSub>()
+  for (const raw of post.categories || []) {
+    const cat = asCategory(raw)
+    if (!cat?.slug) continue
+    const parent = asCategory((cat as Category & { parent?: unknown }).parent)
+    if (parent?.slug) {
+      poles.set(parent.slug, parent.title)
+      subs.set(cat.slug, { slug: cat.slug, title: cat.title, parentSlug: parent.slug })
+    } else {
+      poles.set(cat.slug, cat.title)
+    }
   }
-  return {}
+  return {
+    poles: Array.from(poles.entries()).map(([slug, title]) => ({ slug, title })),
+    subs: Array.from(subs.values()),
+  }
 }
 
 export default async function Page() {
@@ -26,29 +42,36 @@ export default async function Page() {
 
   const posts = await payload.find({
     collection: 'posts',
-    depth: 1,
+    depth: 2, // peuple categories[].parent (pour le 2e niveau)
     limit: 50,
     overrideAccess: false,
     sort: '-publishedAt',
-    select: { title: true, slug: true, categories: true, meta: true, publishedAt: true },
+    select: {
+      title: true,
+      slug: true,
+      categories: true,
+      meta: true,
+      publishedAt: true,
+    },
   })
 
   const items: PostItem[] = (posts.docs as Post[]).map((p) => {
-    const cat = firstCategory(p)
+    const { poles, subs } = postTaxonomy(p)
     return {
       id: String(p.id),
       slug: p.slug as string,
       title: p.title,
       excerpt: p.meta?.description,
       date: formatDate(p.publishedAt),
-      categorySlug: cat.slug ?? null,
-      categoryTitle: cat.title ?? null,
+      categoryTitle: poles[0]?.title ?? null,
+      poles,
+      subs,
     }
   })
 
-  // Catégories réellement présentes dans les articles
+  // Pôles (niveau 1) réellement présents dans les articles
   const seen = new Map<string, string>()
-  for (const it of items) if (it.categorySlug && it.categoryTitle) seen.set(it.categorySlug, it.categoryTitle)
+  for (const it of items) for (const pole of it.poles) seen.set(pole.slug, pole.title)
   const categories: BlogCategory[] = Array.from(seen.entries()).map(([slug, title]) => ({ slug, title }))
 
   return (
