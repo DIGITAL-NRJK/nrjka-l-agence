@@ -47,6 +47,17 @@ export async function seedBlog(payload: any) {
   for (const c of categories.filter((c) => !c.parentSlug)) await upsertCat(c)
   for (const c of categories.filter((c) => c.parentSlug)) await upsertCat(c)
 
+  // Backfill : recalcule l'intitulé-chemin (pathTitle) de TOUTES les catégories,
+  // y compris celles créées à la main (déclenche le hook beforeChange).
+  const all = await payload.find({ collection: 'categories', limit: 500, depth: 0, pagination: false })
+  for (const c of all.docs as any[]) {
+    await payload.update({
+      collection: 'categories',
+      id: c.id,
+      data: { title: c.title, parent: c.parent ?? null },
+    })
+  }
+
   let assigned = 0
   for (const [postSlug, catSlug] of Object.entries(articleCategory)) {
     const post = await payload.find({

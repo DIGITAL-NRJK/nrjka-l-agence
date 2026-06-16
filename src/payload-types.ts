@@ -507,7 +507,7 @@ export interface FolderInterface {
   createdAt: string;
 }
 /**
- * Catégories de classement des articles de blog (collection Articles).
+ * Catégories de classement des articles. Un pôle = sans parent ; une sous-catégorie = avec un pôle parent (2e niveau du filtre blog).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
@@ -519,6 +519,10 @@ export interface Category {
    * Laisser vide pour un pôle de 1er niveau. Choisir un pôle ici pour en faire une sous-catégorie (2e niveau du filtre blog).
    */
   parent?: (number | null) | Category;
+  /**
+   * Calculé automatiquement : « Pôle › Sous-catégorie ».
+   */
+  pathTitle?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -3565,6 +3569,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
   parent?: T;
+  pathTitle?: T;
   generateSlug?: T;
   slug?: T;
   breadcrumbs?:

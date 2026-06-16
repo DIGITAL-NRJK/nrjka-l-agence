@@ -4,7 +4,7 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 import type { Post, Category } from '@/payload-types'
-import { PostsGrid, type PostItem, type BlogCategory, type PostSub } from './PostsGrid'
+import { PostsGrid, type PostItem, type BlogCategory, type PostSub, type CategoryNode } from './PostsGrid'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
@@ -57,22 +57,44 @@ export default async function Page() {
 
   const items: PostItem[] = (posts.docs as Post[]).map((p) => {
     const { poles, subs } = postTaxonomy(p)
+    // Chemin lisible : « Pôle › Sous-catégorie » si une sous-catégorie existe, sinon le pôle seul.
+    let categoryPath = poles[0]?.title ?? null
+    if (subs[0]) {
+      const parentTitle = poles.find((pole) => pole.slug === subs[0].parentSlug)?.title
+      categoryPath = parentTitle ? `${parentTitle} › ${subs[0].title}` : subs[0].title
+    }
     return {
       id: String(p.id),
       slug: p.slug as string,
       title: p.title,
       excerpt: p.meta?.description,
       date: formatDate(p.publishedAt),
-      categoryTitle: poles[0]?.title ?? null,
+      categoryPath,
       poles,
       subs,
     }
   })
 
-  // Pôles (niveau 1) réellement présents dans les articles
-  const seen = new Map<string, string>()
-  for (const it of items) for (const pole of it.poles) seen.set(pole.slug, pole.title)
-  const categories: BlogCategory[] = Array.from(seen.entries()).map(([slug, title]) => ({ slug, title }))
+  // Arbre des catégories réellement présentes : pôles (niveau 1) + leurs sous-catégories (niveau 2)
+  const treeMap = new Map<string, { title: string; subs: Map<string, string> }>()
+  for (const it of items) {
+    for (const pole of it.poles) {
+      if (!treeMap.has(pole.slug)) treeMap.set(pole.slug, { title: pole.title, subs: new Map() })
+    }
+    for (const sub of it.subs) {
+      const node = treeMap.get(sub.parentSlug)
+      if (node) node.subs.set(sub.slug, sub.title)
+    }
+  }
+  const tree: CategoryNode[] = Array.from(treeMap.entries())
+    .map(([slug, v]) => ({
+      slug,
+      title: v.title,
+      subs: Array.from(v.subs.entries())
+        .map(([s, t]) => ({ slug: s, title: t }))
+        .sort((a, b) => a.title.localeCompare(b.title)),
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title))
 
   return (
     <section className="container pt-28 pb-24 sm:pt-32">
@@ -94,7 +116,7 @@ export default async function Page() {
           Les premiers articles arrivent bientôt.
         </p>
       ) : (
-        <PostsGrid posts={items} categories={categories} />
+        <PostsGrid posts={items} tree={tree} />
       )}
     </section>
   )
