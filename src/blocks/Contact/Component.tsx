@@ -53,7 +53,8 @@ export const ContactBlock = async (props: ContactBlockProps) => {
   const stepList = steps && steps.length > 0 ? steps : defaultSteps
   const mail = email || 'contact@nrjka.com'
 
-  // Cascade Pôle → Services → Besoins (depuis l'admin)
+  // Cascade Pôle → Services → Besoins, alimentée par les collections (éditable dans l'admin :
+  // pôles = « Pôles & Expertises », services = « Services », besoins = champ « Besoins » du service).
   let formPoles: ContactFormPole[] = []
   try {
     const payload = await getPayload({ config: configPromise })
@@ -169,7 +170,7 @@ export const ContactBlock = async (props: ContactBlockProps) => {
           </div>
         </div>
 
-        {/* Colonne droite : formulaire */}
+        {/* Colonne droite : formulaire en cascade (Pôle → Services → Besoins) */}
         <ContactForm poles={formPoles} />
       </div>
     </section>

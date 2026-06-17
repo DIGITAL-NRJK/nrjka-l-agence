@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useRef } from 'react'
+import Image from 'next/image'
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react'
 
 export type CarouselItem = {
@@ -56,11 +57,13 @@ export const TestimonialsCarousel: React.FC<{ items: CarouselItem[] }> = ({ item
             </blockquote>
             <figcaption className="mt-6 flex items-center gap-3">
               {t.avatarSrc ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={t.avatarSrc}
                   alt={t.authorName}
-                  className="h-10 w-10 rounded-full object-cover"
+                  width={40}
+                  height={40}
+                  unoptimized
+                  className="rounded-full object-cover"
                 />
               ) : (
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-semibold text-terracotta">
@@ -69,7 +72,7 @@ export const TestimonialsCarousel: React.FC<{ items: CarouselItem[] }> = ({ item
               )}
               <div>
                 <div className="font-semibold text-white">{t.authorName}</div>
-                {t.role && <div className="text-sm text-white/55">{t.role}</div>}
+                {t.role && <div className="text-sm text-white/70">{t.role}</div>}
               </div>
             </figcaption>
           </figure>

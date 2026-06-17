@@ -393,7 +393,10 @@ export interface Post {
  */
 export interface Media {
   id: number;
-  alt?: string | null;
+  /**
+   * Décrit l’image pour les personnes utilisant un lecteur d’écran et pour le SEO. Pour une image purement décorative, résumez brièvement le contexte.
+   */
+  alt: string;
   caption?: {
     root: {
       type: string;
@@ -2171,7 +2174,6 @@ export interface ContactMessage {
   status?: ('new' | 'reading' | 'in-progress' | 'answered' | 'archived') | null;
   has_appointment?: boolean | null;
   appointment_id?: string | null;
-  notion_id?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -3894,7 +3896,6 @@ export interface ContactMessagesSelect<T extends boolean = true> {
   status?: T;
   has_appointment?: T;
   appointment_id?: T;
-  notion_id?: T;
   updatedAt?: T;
   createdAt?: T;
 }

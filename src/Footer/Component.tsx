@@ -20,7 +20,7 @@ export async function Footer() {
             <Link href="/" className="text-white">
               <Logo />
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-white/60">
+            <p className="mt-4 text-sm leading-relaxed text-white/70">
               Agence digitale humaine — sites web, SEO, automatisation et CRM, pour une croissance
               durable.
             </p>
@@ -39,7 +39,7 @@ export async function Footer() {
           )}
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-white/50 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between">
           <span>© {year} NRJKA. Tous droits réservés.</span>
           <div className="flex gap-6">
             <Link href="/mentions-legales" className="transition-colors hover:text-white/80">

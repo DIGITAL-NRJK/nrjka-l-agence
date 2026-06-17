@@ -36,7 +36,7 @@ export const PromiseBlock: React.FC<PromiseBlockProps> = ({
           {/* Colonne gauche — le discours */}
           <div>
             {eyebrow && (
-              <span className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
+              <span className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/70">
                 <span className="h-px w-8 bg-terracotta" />
                 {eyebrow}
               </span>
@@ -79,7 +79,7 @@ export const PromiseBlock: React.FC<PromiseBlockProps> = ({
                     />
                     <div>
                       <h3 className="font-semibold text-white">{feature.title}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-white/60">
+                      <p className="mt-1 text-sm leading-relaxed text-white/70">
                         {feature.description}
                       </p>
                     </div>

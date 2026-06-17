@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
+import Image from 'next/image'
 import type { Expertise, Service, CaseStudy, Media } from '@/payload-types'
 import RichText from '@/components/RichText'
 
@@ -203,11 +204,12 @@ export default async function ExpertisePage({ params }: Args) {
                 >
                   <div className="relative aspect-16/10 overflow-hidden bg-brand">
                     {img?.url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={img.url}
                         alt={img.alt || p.client_name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        fill
+                        unoptimized
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center font-display text-2xl font-bold text-white/30">
@@ -244,6 +246,22 @@ export default async function ExpertisePage({ params }: Args) {
       {/* FAQ */}
       {faqs.length > 0 && (
         <div className="container mt-20 max-w-3xl">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                mainEntity: faqs
+                  .filter((f) => f.question)
+                  .map((f) => ({
+                    '@type': 'Question',
+                    name: f.question,
+                    acceptedAnswer: { '@type': 'Answer', text: f.answer },
+                  })),
+              }),
+            }}
+          />
           <h2 className="mb-6 font-display text-2xl font-bold tracking-tight text-ink">
             Questions fréquentes
           </h2>

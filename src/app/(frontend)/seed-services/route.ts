@@ -6,6 +6,7 @@ import { seedExpertises } from '@/scripts/seed-expertises'
 import { seedServicesContent } from '@/scripts/seed-services-content'
 import { seedPilotMaintenance } from '@/scripts/seed-pilot-maintenance'
 import { seedBlog } from '@/scripts/seed-blog'
+import { seedBlogArticles } from '@/scripts/seed-blog-articles'
 import { seedAbout } from '@/scripts/seed-about'
 import { seedLegal } from '@/scripts/seed-legal'
 import { seedContent } from '@/scripts/seed-content'
@@ -26,6 +27,7 @@ export async function GET() {
     out.servicesContent = await seedServicesContent(payload) // contenu des services
     out.pilotMaintenance = await seedPilotMaintenance(payload) // maintenance + articles
     out.blog = await seedBlog(payload) // catégories + assignation
+    out.blogArticles = await seedBlogArticles(payload) // articles approfondis sourcés + sous-cats
     out.about = await seedAbout(payload) // page À propos
     out.legal = await seedLegal(payload) // pages légales
     out.content = await seedContent(payload) // engagements + FAQ home/contact

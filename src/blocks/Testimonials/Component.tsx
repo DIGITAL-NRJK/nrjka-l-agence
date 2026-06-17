@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { Star, Quote } from 'lucide-react'
@@ -65,7 +66,7 @@ export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
         <div className="relative">
           <div className="mx-auto max-w-2xl text-center">
             {eyebrow && (
-              <span className="mb-5 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
+              <span className="mb-5 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/70">
                 <span className="h-px w-8 bg-terracotta" />
                 {eyebrow}
                 <span className="h-px w-8 bg-terracotta" />
@@ -109,10 +110,13 @@ export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
               </blockquote>
               <figcaption className="mt-8 flex items-center justify-center gap-3">
                 {singleAvatarSrc ? (
-                  <img
+                  <Image
                     src={singleAvatarSrc}
                     alt={single.author_name}
-                    className="h-11 w-11 rounded-full object-cover"
+                    width={44}
+                    height={44}
+                    unoptimized
+                    className="rounded-full object-cover"
                   />
                 ) : (
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-sm font-semibold text-terracotta">
@@ -121,7 +125,7 @@ export const TestimonialsBlock = async (props: TestimonialsBlockProps) => {
                 )}
                 <div className="text-left">
                   <div className="font-semibold text-white">{single.author_name}</div>
-                  {singleRole && <div className="text-sm text-white/55">{singleRole}</div>}
+                  {singleRole && <div className="text-sm text-white/70">{singleRole}</div>}
                 </div>
               </figcaption>
             </figure>

@@ -8,9 +8,11 @@ import { draftMode } from 'next/headers'
 
 import type { Post, Media, Category } from '@/payload-types'
 import RichText from '@/components/RichText'
+import { ShareButtons } from '@/components/ShareButtons'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { generateMeta } from '@/utilities/generateMeta'
+import { getServerSideURL } from '@/utilities/getURL'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -45,9 +47,32 @@ export default async function Post({ params: paramsPromise }: Args) {
   if (!post) return <PayloadRedirects url={url} />
 
   const img = post.heroImage && typeof post.heroImage === 'object' ? (post.heroImage as Media) : null
-  const related = (post.relatedPosts || []).filter(
-    (p): p is Post => typeof p === 'object',
-  )
+  const absoluteUrl = `${getServerSideURL()}${url}`
+
+  // Suggestions de la colonne de gauche : les articles liés (pilotables dans l'admin),
+  // complétés par les plus récents si besoin.
+  const suggestions = (post.relatedPosts || []).filter((p): p is Post => typeof p === 'object')
+  if (suggestions.length < 3) {
+    try {
+      const payload = await getPayload({ config: configPromise })
+      const recent = await payload.find({
+        collection: 'posts',
+        where: { slug: { not_equals: post.slug } },
+        sort: '-publishedAt',
+        limit: 4,
+        depth: 0,
+        overrideAccess: false,
+        select: { title: true, slug: true },
+      })
+      const have = new Set(suggestions.map((p) => p.id))
+      for (const r of recent.docs as Post[]) {
+        if (suggestions.length >= 4) break
+        if (!have.has(r.id)) suggestions.push(r)
+      }
+    } catch {
+      /* fallback silencieux */
+    }
+  }
 
   // CTA contextuel : le service dont cet article est un « article lié »
   let relatedService: { title: string; slug: string } | null = null
@@ -105,35 +130,41 @@ export default async function Post({ params: paramsPromise }: Args) {
         )}
       </header>
 
-      {/* Contenu */}
-      <div className="container mt-12">
-        <RichText className="mx-auto max-w-2xl" data={post.content} enableGutter={false} />
-      </div>
-
-      {/* Articles liés */}
-      {related.length > 0 && (
-        <div className="container mt-20">
-          <h2 className="font-display text-2xl font-bold tracking-tight text-ink">À lire aussi</h2>
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {related.slice(0, 3).map((p) => (
-              <Link
-                key={p.id}
-                href={`/posts/${p.slug}`}
-                className="group flex flex-col rounded-2xl border border-border bg-surface-soft p-6 transition-all hover:-translate-y-1 hover:border-terracotta/40"
-              >
-                <h3 className="font-display text-lg font-semibold leading-snug text-ink transition-colors group-hover:text-terracotta-dark">
-                  {p.title}
-                </h3>
-                {p.meta?.description && (
-                  <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">
-                    {p.meta.description}
-                  </p>
-                )}
-              </Link>
-            ))}
-          </div>
+      {/* Corps : contenu (gauche, aligné au titre) + colonne droite (partage + suggestions) */}
+      <div className="container mt-12 lg:grid lg:grid-cols-[1fr_15rem] lg:gap-14">
+        {/* Contenu — aligné à gauche (mx-0 écrase le mx-auto interne de RichText) */}
+        <div>
+          <RichText className="mx-0 max-w-2xl" data={post.content} enableGutter={false} />
         </div>
-      )}
+
+        {/* Colonne droite */}
+        <aside className="mt-12 lg:mt-0">
+          <div className="space-y-10 lg:sticky lg:top-24">
+            <ShareButtons url={absoluteUrl} title={post.title} />
+
+            {suggestions.length > 0 && (
+              <div>
+                <h2 className="mb-3 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate">
+                  <span className="h-px w-6 bg-terracotta" />
+                  À lire aussi
+                </h2>
+                <ul className="space-y-4">
+                  {suggestions.slice(0, 4).map((p) => (
+                    <li key={p.id}>
+                      <Link
+                        href={`/posts/${p.slug}`}
+                        className="group block text-sm font-medium leading-snug text-ink transition-colors hover:text-terracotta-dark"
+                      >
+                        {p.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </aside>
+      </div>
 
       {/* CTA contextuel (selon le service traité) */}
       <div className="container mt-20">

@@ -128,7 +128,7 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
             <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-terracotta/20 blur-3xl" />
 
             <div className="relative">
-              <div className="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-white/50">
+              <div className="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-white/70">
                 {panelEyebrow || 'Architecture D4™'}
               </div>
               <div className="mb-7 text-lg font-semibold text-white">
@@ -146,7 +146,7 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
                     </span>
                     <div>
                       <div className="font-semibold text-white">{dim.title}</div>
-                      <div className="text-sm text-white/55">{dim.tag}</div>
+                      <div className="text-sm text-white/70">{dim.tag}</div>
                     </div>
                   </li>
                 ))}

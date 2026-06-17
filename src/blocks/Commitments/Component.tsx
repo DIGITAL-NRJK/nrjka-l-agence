@@ -58,7 +58,7 @@ export const CommitmentsBlock: React.FC<CommitmentsBlockProps> = ({
           )}
           {intro && (
             <p
-              className={`${textClass(a, 'text-lg')} mt-5 leading-relaxed text-white/65`}
+              className={`${textClass(a, 'text-lg')} mt-5 leading-relaxed text-white/70`}
               style={colorStyle(a.textColor)}
             >
               {intro}
@@ -79,7 +79,7 @@ export const CommitmentsBlock: React.FC<CommitmentsBlockProps> = ({
                     {`0${i + 1}`}
                   </span>
                   {item.keyword && (
-                    <span className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.22em] text-white/40">
+                    <span className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.22em] text-white/70">
                       {item.keyword}
                     </span>
                   )}
@@ -88,7 +88,7 @@ export const CommitmentsBlock: React.FC<CommitmentsBlockProps> = ({
                   {item.title}
                 </h3>
                 {item.description && (
-                  <p className="mt-3 text-sm leading-relaxed text-white/60">{item.description}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-white/70">{item.description}</p>
                 )}
               </div>
             ))}

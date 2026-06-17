@@ -21,12 +21,37 @@ export const HeaderNav: React.FC<{
   const [open, setOpen] = useState(false) // burger mobile
   const [mega, setMega] = useState(false) // mégamenu desktop
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
 
   useEffect(() => {
     setOpen(false)
     setMega(false)
   }, [pathname])
+
+  // Accessibilité clavier du mégamenu : Échap ferme (et rend le focus au déclencheur),
+  // un clic ou un focus en dehors le ferme aussi.
+  useEffect(() => {
+    if (!mega) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMega(false)
+        triggerRef.current?.focus()
+      }
+    }
+    const onOutside = (e: Event) => {
+      const t = e.target as HTMLElement | null
+      if (t && !t.closest('[data-mega]')) setMega(false)
+    }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('mousedown', onOutside)
+    document.addEventListener('focusin', onOutside)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('mousedown', onOutside)
+      document.removeEventListener('focusin', onOutside)
+    }
+  }, [mega])
 
   const openMega = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current)
@@ -53,11 +78,14 @@ export const HeaderNav: React.FC<{
 
           if (hasMenu) {
             const trigger = (
-              <div key="services" onMouseEnter={openMega} onMouseLeave={scheduleClose}>
+              <div key="services" data-mega onMouseEnter={openMega} onMouseLeave={scheduleClose}>
                 <button
+                  ref={triggerRef}
                   type="button"
                   onClick={() => setMega((v) => !v)}
                   aria-expanded={mega}
+                  aria-haspopup="true"
+                  aria-controls="mega-panel"
                   className="flex items-center gap-1.5 text-sm font-medium text-slate transition-colors hover:text-ink"
                 >
                   {chrome?.triggerLabel || 'Services'}
@@ -82,10 +110,14 @@ export const HeaderNav: React.FC<{
       {/* Panneau mégamenu — desktop, positionné sous le header, centré */}
       {hasMenu && (
         <div
+          id="mega-panel"
+          data-mega
           onMouseEnter={openMega}
           onMouseLeave={scheduleClose}
           className={`fixed left-1/2 top-[4rem] z-50 hidden w-[min(60rem,calc(100vw-1.5rem))] -translate-x-1/2 md:block ${
-            mega ? 'pointer-events-auto opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
+            mega
+              ? 'visible pointer-events-auto opacity-100'
+              : 'invisible pointer-events-none -translate-y-1 opacity-0'
           } transition-all duration-200`}
         >
           <MegaMenu poles={menu} chrome={chrome} onNavigate={() => setMega(false)} />
@@ -122,7 +154,9 @@ export const HeaderNav: React.FC<{
         <div
           id="mobile-nav"
           className={`absolute left-0 right-0 top-full md:hidden ${
-            open ? 'pointer-events-auto opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
+            open
+              ? 'visible pointer-events-auto opacity-100'
+              : 'invisible pointer-events-none -translate-y-2 opacity-0'
           } transition-all duration-200`}
         >
           <div className="mt-2 overflow-hidden rounded-2xl border border-border bg-background shadow-soft">

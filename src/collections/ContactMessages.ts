@@ -79,11 +79,5 @@ export const ContactMessages: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
     { name: 'appointment_id', type: 'text', label: 'ID du RDV', admin: { position: 'sidebar' } },
-    {
-      name: 'notion_id',
-      type: 'text',
-      label: 'ID Notion',
-      admin: { readOnly: true, position: 'sidebar' },
-    },
   ],
 }

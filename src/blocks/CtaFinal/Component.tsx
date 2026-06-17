@@ -34,7 +34,7 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
       <div className="container">
         <div className="relative mx-auto max-w-3xl">
           {eyebrow && (
-            <span className="mb-5 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
+            <span className="mb-5 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/70">
               <span className="h-px w-8 bg-terracotta" />
               {eyebrow}
               <span className="h-px w-8 bg-terracotta" />
@@ -81,7 +81,7 @@ export const CtaFinalBlock: React.FC<CtaFinalBlockProps> = ({
           </div>
 
           {note && (
-            <div className="mt-6 inline-flex items-center gap-2 text-sm text-white/60">
+            <div className="mt-6 inline-flex items-center gap-2 text-sm text-white/70">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
               {note}
             </div>

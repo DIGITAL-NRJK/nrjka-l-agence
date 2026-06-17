@@ -32,7 +32,12 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      //required: true,
+      required: true,
+      label: 'Texte alternatif',
+      admin: {
+        description:
+          'Décrit l’image pour les personnes utilisant un lecteur d’écran et pour le SEO. Pour une image purement décorative, résumez brièvement le contexte.',
+      },
     },
     {
       name: 'caption',

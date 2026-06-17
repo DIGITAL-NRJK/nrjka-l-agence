@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 export type BlogCategory = { slug: string; title: string }
 export type PostSub = { slug: string; title: string; parentSlug: string }
@@ -19,19 +19,26 @@ export type PostItem = {
   subs: PostSub[]
 }
 
-type Selection =
-  | { type: 'all' }
-  | { type: 'pole'; slug: string }
-  | { type: 'sub'; slug: string }
+type Selection = { type: 'all' } | { type: 'pole'; slug: string } | { type: 'sub'; slug: string }
+
+const PER_PAGE = 6
 
 export const PostsGrid: React.FC<{ posts: PostItem[]; tree: CategoryNode[] }> = ({
   posts,
   tree,
 }) => {
   const [sel, setSel] = useState<Selection>({ type: 'all' })
+  const [page, setPage] = useState(1)
+
+  // changer de filtre = revenir à la page 1
+  const select = (s: Selection) => {
+    setSel(s)
+    setPage(1)
+  }
 
   const isActive = (s: Selection) =>
-    s.type === sel.type && (s.type === 'all' || ('slug' in sel && sel.slug === (s as { slug: string }).slug))
+    s.type === sel.type &&
+    (s.type === 'all' || ('slug' in sel && sel.slug === (s as { slug: string }).slug))
 
   const filtered = useMemo(() => {
     if (sel.type === 'all') return posts
@@ -39,9 +46,10 @@ export const PostsGrid: React.FC<{ posts: PostItem[]; tree: CategoryNode[] }> = 
     return posts.filter((p) => p.subs.some((x) => x.slug === sel.slug))
   }, [posts, sel])
 
-  const [featured, ...rest] = filtered
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PER_PAGE))
+  const current = Math.min(page, pageCount)
+  const paged = filtered.slice((current - 1) * PER_PAGE, current * PER_PAGE)
 
-  // Lien de l'arbre : bouton pleine largeur, état actif terracotta
   const node = (active: boolean, isSub = false) =>
     [
       'block w-full rounded-lg px-3 py-1.5 text-left transition-colors',
@@ -63,53 +71,71 @@ export const PostsGrid: React.FC<{ posts: PostItem[]; tree: CategoryNode[] }> = 
           </p>
         ) : (
           <>
-            {featured && (
-              <Link
-                href={`/posts/${featured.slug}`}
-                className="group block rounded-3xl border border-border bg-surface-soft p-8 transition-all hover:border-terracotta/40 sm:p-10"
-              >
-                <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.14em] text-terracotta-dark">
-                  {featured.categoryPath && <span>{featured.categoryPath}</span>}
-                  <span className="text-slate">{featured.date}</span>
-                </div>
-                <h2 className="mt-3 max-w-3xl font-display text-2xl font-bold leading-tight tracking-tight text-ink transition-colors group-hover:text-terracotta-dark sm:text-3xl">
-                  {featured.title}
-                </h2>
-                {featured.excerpt && (
-                  <p className="mt-3 max-w-2xl leading-relaxed text-slate">{featured.excerpt}</p>
-                )}
-                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-all group-hover:gap-2.5">
-                  Lire l’article
-                  <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
-                </span>
-              </Link>
-            )}
+            <div className="grid gap-6 sm:grid-cols-2">
+              {paged.map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/posts/${post.slug}`}
+                  className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-terracotta/40"
+                >
+                  {post.categoryPath && (
+                    <span className="text-xs font-medium uppercase tracking-[0.12em] text-terracotta-dark">
+                      {post.categoryPath}
+                    </span>
+                  )}
+                  <h3 className="mt-2 font-display text-lg font-semibold leading-snug text-ink transition-colors group-hover:text-terracotta-dark">
+                    {post.title}
+                  </h3>
+                  {post.excerpt && (
+                    <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">
+                      {post.excerpt}
+                    </p>
+                  )}
+                  <span className="mt-auto pt-4 text-xs text-slate">{post.date}</span>
+                </Link>
+              ))}
+            </div>
 
-            {rest.length > 0 && (
-              <div className="mt-6 grid gap-6 sm:grid-cols-2">
-                {rest.map((post) => (
-                  <Link
-                    key={post.id}
-                    href={`/posts/${post.slug}`}
-                    className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-terracotta/40"
+            {/* Pagination */}
+            {pageCount > 1 && (
+              <nav
+                className="mt-10 flex items-center justify-center gap-2"
+                aria-label="Pagination des articles"
+              >
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={current === 1}
+                  aria-label="Page précédente"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-slate transition-colors hover:border-brand/30 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <ChevronLeft className="h-4 w-4" strokeWidth={2.2} />
+                </button>
+                {Array.from({ length: pageCount }, (_, i) => i + 1).map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setPage(n)}
+                    aria-current={current === n ? 'page' : undefined}
+                    className={`flex h-9 min-w-9 items-center justify-center rounded-full border px-3 text-sm font-medium transition-colors ${
+                      current === n
+                        ? 'border-terracotta bg-terracotta/10 text-ink'
+                        : 'border-border text-slate hover:border-brand/30 hover:text-ink'
+                    }`}
                   >
-                    {post.categoryPath && (
-                      <span className="text-xs font-medium uppercase tracking-[0.12em] text-terracotta-dark">
-                        {post.categoryPath}
-                      </span>
-                    )}
-                    <h3 className="mt-2 font-display text-lg font-semibold leading-snug text-ink transition-colors group-hover:text-terracotta-dark">
-                      {post.title}
-                    </h3>
-                    {post.excerpt && (
-                      <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">
-                        {post.excerpt}
-                      </p>
-                    )}
-                    <span className="mt-auto pt-4 text-xs text-slate">{post.date}</span>
-                  </Link>
+                    {n}
+                  </button>
                 ))}
-              </div>
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                  disabled={current === pageCount}
+                  aria-label="Page suivante"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-slate transition-colors hover:border-brand/30 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <ChevronRight className="h-4 w-4" strokeWidth={2.2} />
+                </button>
+              </nav>
             )}
           </>
         )}
@@ -127,7 +153,7 @@ export const PostsGrid: React.FC<{ posts: PostItem[]; tree: CategoryNode[] }> = 
               <li>
                 <button
                   type="button"
-                  onClick={() => setSel({ type: 'all' })}
+                  onClick={() => select({ type: 'all' })}
                   className={node(isActive({ type: 'all' }))}
                 >
                   Tous les articles
@@ -137,7 +163,7 @@ export const PostsGrid: React.FC<{ posts: PostItem[]; tree: CategoryNode[] }> = 
                 <li key={n.slug}>
                   <button
                     type="button"
-                    onClick={() => setSel({ type: 'pole', slug: n.slug })}
+                    onClick={() => select({ type: 'pole', slug: n.slug })}
                     className={node(isActive({ type: 'pole', slug: n.slug }))}
                   >
                     {n.title}
@@ -148,7 +174,7 @@ export const PostsGrid: React.FC<{ posts: PostItem[]; tree: CategoryNode[] }> = 
                         <li key={s.slug}>
                           <button
                             type="button"
-                            onClick={() => setSel({ type: 'sub', slug: s.slug })}
+                            onClick={() => select({ type: 'sub', slug: s.slug })}
                             className={node(isActive({ type: 'sub', slug: s.slug }), true)}
                           >
                             {s.title}
