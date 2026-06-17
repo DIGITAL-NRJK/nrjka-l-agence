@@ -2,14 +2,20 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       PAYLOAD_SECRET: string
-      DATABASE_URL: string
+      DATABASE_URI: string
       NEXT_PUBLIC_SERVER_URL: string
       URL: string
       DEPLOY_PRIME_URL: string
+      NEXT_PUBLIC_UMAMI_WEBSITE_ID: string
+      NEXT_PUBLIC_UMAMI_SCRIPT_URL: string
+    }
+  }
+
+  interface Window {
+    umami?: {
+      track: (event: string, data?: Record<string, string | number | boolean>) => void
     }
   }
 }
 
-// If this file has no import/export statements (i.e. is a script)
-// convert it into a module by adding an empty export statement.
 export {}

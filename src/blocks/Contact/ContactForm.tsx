@@ -73,6 +73,11 @@ export const ContactForm: React.FC<{ poles?: ContactFormPole[] }> = ({ poles = [
         }),
       })
       if (!res.ok) throw new Error('Request failed')
+      window.umami?.track('contact_direct_submit', {
+        pole: pole?.title || '',
+        services_count: selectedServices.length,
+        besoins_count: besoins.length,
+      })
       setStatus('success')
     } catch {
       setStatus('error')
