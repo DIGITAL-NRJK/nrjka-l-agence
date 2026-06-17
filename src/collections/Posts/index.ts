@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionBeforeChangeHook, CollectionConfig } from 'payload'
 
 import {
   BlocksFeature,
@@ -9,7 +9,7 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
-import { authenticated } from '../../access/authenticated'
+import { contributorOrAbove, editorOrAdmin } from '../../access'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { Banner } from '../../blocks/Banner/config'
 import { Code } from '../../blocks/Code/config'
@@ -27,13 +27,22 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { slugField } from 'payload'
 
+// Un contributeur ne peut enregistrer qu'en brouillon : on force _status à 'draft'.
+const enforceContributorDraft: CollectionBeforeChangeHook = ({ data, req }) => {
+  if ((req.user?.role as string) === 'contributor') {
+    return { ...data, _status: 'draft' }
+  }
+  return data
+}
+
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
   access: {
-    create: authenticated,
-    delete: authenticated,
+    // Éditeur + admin gèrent et publient ; contributeur crée/édite (brouillon, voir hook) ; suppression = éditeur+.
+    create: contributorOrAbove,
+    delete: editorOrAdmin,
     read: authenticatedOrPublished,
-    update: authenticated,
+    update: contributorOrAbove,
   },
   // This config controls what's populated by default when a post is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property
@@ -48,6 +57,7 @@ export const Posts: CollectionConfig<'posts'> = {
     },
   },
   admin: {
+    description: 'Les articles de blog du site (liste sur /posts).',
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>
@@ -120,15 +130,6 @@ export const Posts: CollectionConfig<'posts'> = {
               hasMany: true,
               relationTo: 'posts',
             },
-            {
-              name: 'categories',
-              type: 'relationship',
-              admin: {
-                position: 'sidebar',
-              },
-              hasMany: true,
-              relationTo: 'categories',
-            },
           ],
           label: 'Meta',
         },
@@ -182,6 +183,17 @@ export const Posts: CollectionConfig<'posts'> = {
       },
     },
     {
+      name: 'categories',
+      type: 'relationship',
+      relationTo: 'categories',
+      hasMany: true,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Classement de l’article. Choisissez un pôle, ou une sous-catégorie (qui a un pôle parent) — le blog filtre alors sur 2 niveaux (pôle → sous-catégorie).',
+      },
+    },
+    {
       name: 'authors',
       type: 'relationship',
       admin: {
@@ -217,6 +229,7 @@ export const Posts: CollectionConfig<'posts'> = {
     slugField(),
   ],
   hooks: {
+    beforeChange: [enforceContributorDraft],
     afterChange: [revalidatePost],
     afterRead: [populateAuthors],
     afterDelete: [revalidateDelete],

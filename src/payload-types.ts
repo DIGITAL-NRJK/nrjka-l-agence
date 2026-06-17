@@ -72,8 +72,11 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    expertises: Expertise;
     services: Service;
     'case-studies': CaseStudy;
+    'case-study-sectors': CaseStudySector;
+    'case-study-types': CaseStudyType;
     products: Product;
     'contact-messages': ContactMessage;
     reviews: Review;
@@ -95,6 +98,9 @@ export interface Config {
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
+    expertises: {
+      services: 'services';
+    };
     'payload-folders': {
       documentsAndFolders: 'payload-folders' | 'media';
     };
@@ -105,8 +111,11 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    expertises: ExpertisesSelect<false> | ExpertisesSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
+    'case-study-sectors': CaseStudySectorsSelect<false> | CaseStudySectorsSelect<true>;
+    'case-study-types': CaseStudyTypesSelect<false> | CaseStudyTypesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
@@ -130,7 +139,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('fr' | 'en') | ('fr' | 'en')[];
   globals: {
     header: Header;
     footer: Footer;
@@ -139,7 +148,7 @@ export interface Config {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
   };
-  locale: null;
+  locale: 'fr' | 'en';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -174,6 +183,8 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Les pages du site (accueil, contact, réalisations, expertises, pages légales…), composées de blocs réutilisables. Le slug détermine l’URL — « home » correspond à la page d’accueil.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
@@ -181,7 +192,7 @@ export interface Page {
   id: number;
   title: string;
   hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'homeNRJKA';
     richText?: {
       root: {
         type: string;
@@ -222,8 +233,85 @@ export interface Page {
         }[]
       | null;
     media?: (number | null) | Media;
+    badge?: string | null;
+    headline?: string | null;
+    /**
+     * Segment affiché en dégradé, à la suite du titre.
+     */
+    headlineAccent?: string | null;
+    subtitle?: string | null;
+    primaryCtaLabel?: string | null;
+    primaryCtaHref?: string | null;
+    secondaryCtaLabel?: string | null;
+    secondaryCtaHref?: string | null;
+    trustBadges?:
+      | {
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    stats?:
+      | {
+          value?: string | null;
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Petit texte en haut du panneau de droite (ex. Architecture D4™).
+     */
+    panelEyebrow?: string | null;
+    panelTitle?: string | null;
+    /**
+     * Les 4 dimensions (titre + accroche). Laisser vide = valeurs par défaut conservées.
+     */
+    panelDimensions?:
+      | {
+          title?: string | null;
+          tag?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    panelAvailability?: string | null;
+    /**
+     * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+     */
+    appearance?: {
+      titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+      textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+      titleColor?: string | null;
+      textColor?: string | null;
+      background?: string | null;
+    };
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout?:
+    | (
+        | CallToActionBlock
+        | ContentBlock
+        | MediaBlock
+        | ArchiveBlock
+        | FormBlock
+        | PromiseBlock
+        | PillarsBlock
+        | MethodBlock
+        | LabBlock
+        | CommitmentsBlock
+        | PartnersBlock
+        | TestimonialsBlock
+        | ResourcesBlock
+        | CtaFinalBlock
+        | ContactBlock
+        | PresenceBlock
+        | CaseStudiesIndexBlock
+        | FaqBlock
+        | AboutHeroBlock
+        | D4CardsBlock
+        | DistinctionsBlock
+        | StatsBandBlock
+        | TeamBlock
+        | ResourcesCatalogBlock
+      )[]
+    | null;
   meta?: {
     title?: string | null;
     /**
@@ -243,6 +331,8 @@ export interface Page {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Les articles de blog du site (liste sur /posts).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
@@ -266,7 +356,6 @@ export interface Post {
     [k: string]: unknown;
   };
   relatedPosts?: (number | Post)[] | null;
-  categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
     /**
@@ -276,6 +365,10 @@ export interface Post {
     description?: string | null;
   };
   publishedAt?: string | null;
+  /**
+   * Classement de l’article. Choisissez un pôle, ou une sous-catégorie (qui a un pôle parent) — le blog filtre alors sur 2 niveaux (pôle → sous-catégorie).
+   */
+  categories?: (number | Category)[] | null;
   authors?: (number | User)[] | null;
   populatedAuthors?:
     | {
@@ -293,12 +386,17 @@ export interface Post {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * La bibliothèque de médias (images, logos, fichiers) utilisés sur le site. Pensez à renseigner le texte alternatif (alt) de chaque image pour le SEO et l’accessibilité.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: number;
-  alt?: string | null;
+  /**
+   * Décrit l’image pour les personnes utilisant un lecteur d’écran et pour le SEO. Pour une image purement décorative, résumez brièvement le contexte.
+   */
+  alt: string;
   caption?: {
     root: {
       type: string;
@@ -412,6 +510,8 @@ export interface FolderInterface {
   createdAt: string;
 }
 /**
+ * Catégories de classement des articles. Un pôle = sans parent ; une sous-catégorie = avec un pôle parent (2e niveau du filtre blog).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
@@ -419,11 +519,18 @@ export interface Category {
   id: number;
   title: string;
   /**
+   * Laisser vide pour un pôle de 1er niveau. Choisir un pôle ici pour en faire une sous-catégorie (2e niveau du filtre blog).
+   */
+  parent?: (number | null) | Category;
+  /**
+   * Calculé automatiquement : « Pôle › Sous-catégorie ».
+   */
+  pathTitle?: string | null;
+  /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  parent?: (number | null) | Category;
   breadcrumbs?:
     | {
         doc?: (number | null) | Category;
@@ -436,6 +543,8 @@ export interface Category {
   createdAt: string;
 }
 /**
+ * Les comptes qui accèdent au back-office (administrateurs, éditeurs). Réservé aux personnes de l’équipe.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -809,6 +918,873 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PromiseBlock".
+ */
+export interface PromiseBlock {
+  eyebrow?: string | null;
+  title: string;
+  subtitle?: string | null;
+  description?: string | null;
+  features?:
+    | {
+        icon?:
+          | (
+              | 'userCheck'
+              | 'layers'
+              | 'shield'
+              | 'zap'
+              | 'heart'
+              | 'target'
+              | 'rocket'
+              | 'lightbulb'
+              | 'handshake'
+              | 'lock'
+              | 'globe'
+              | 'barChart'
+              | 'messageCircle'
+              | 'clock'
+              | 'leaf'
+              | 'award'
+              | 'wrench'
+              | 'search'
+              | 'trendingUp'
+              | 'sparkles'
+            )
+          | null;
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  commitment?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'promise';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PillarsBlock".
+ */
+export interface PillarsBlock {
+  /**
+   * Petit libellé au-dessus du titre (ex. « Nos expertises »).
+   */
+  eyebrow?: string | null;
+  /**
+   * Titre de la section.
+   */
+  title: string;
+  /**
+   * Texte d’introduction. Les cartes de piliers sont générées automatiquement à partir des pôles « mis en avant sur la home » (collection Pôles & Expertises).
+   */
+  intro?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pillars';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MethodBlock".
+ */
+export interface MethodBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  steps?:
+    | {
+        title?: string | null;
+        tagline?: string | null;
+        activities?:
+          | {
+              label?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'method';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LabBlock".
+ */
+export interface LabBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  demos?:
+    | {
+        sector?: string | null;
+        stack?:
+          | {
+              label?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        title?: string | null;
+        description?: string | null;
+        status?: ('live' | 'soon') | null;
+        /**
+         * Animation d'aperçu (utilisée si aucune capture n'est uploadée).
+         */
+        previewType?: ('sync' | 'dashboard' | 'calendar' | 'chat' | 'form' | 'content' | 'security') | null;
+        /**
+         * Optionnel : vraie capture animée (GIF/MP4) ou image — remplace l'animation.
+         */
+        media?: (number | null) | Media;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  ctaLabel?: string | null;
+  ctaHref?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'lab';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CommitmentsBlock".
+ */
+export interface CommitmentsBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Vos principes / engagements. Affichés en manifeste (mot-clé + énoncé + explication).
+   */
+  commitments?:
+    | {
+        /**
+         * Mot-clé en un mot (ex. RÉSULTAT, HUMAIN, PROPRIÉTÉ).
+         */
+        keyword?: string | null;
+        /**
+         * L’énoncé du principe.
+         */
+        title?: string | null;
+        /**
+         * Courte explication.
+         */
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'commitments';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnersBlock".
+ */
+export interface PartnersBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Nombre de projets « Mis en avant » à afficher (cochés dans Études de cas).
+   */
+  projectsLimit?: number | null;
+  /**
+   * Petit titre au-dessus des technologies (ex. « Les technologies derrière nos projets »).
+   */
+  techLabel?: string | null;
+  technologies?:
+    | {
+        name?: string | null;
+        category?: ('web' | 'data' | 'automation' | 'ai' | 'security' | 'other') | null;
+        logo?: (number | null) | Media;
+        openSource?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  ctaLabel?: string | null;
+  ctaHref?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'partners';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock".
+ */
+export interface TestimonialsBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Nombre de témoignages à afficher (triés par « Ordre d'affichage »).
+   */
+  limit?: number | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonialsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourcesBlock".
+ */
+export interface ResourcesBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  limit?: number | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'resourcesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaFinalBlock".
+ */
+export interface CtaFinalBlock {
+  eyebrow?: string | null;
+  title: string;
+  body?: string | null;
+  note?: string | null;
+  primaryCtaLabel?: string | null;
+  primaryCtaHref?: string | null;
+  secondaryCtaLabel?: string | null;
+  secondaryCtaHref?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ctaFinal';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock".
+ */
+export interface ContactBlock {
+  eyebrow?: string | null;
+  title?: string | null;
+  /**
+   * Dernier mot du titre, affiché en terracotta (ex. « projet. »).
+   */
+  titleAccent?: string | null;
+  subtitle?: string | null;
+  /**
+   * Titre de la colonne gauche (ex. « Ce qui se passe ensuite »).
+   */
+  stepsHeading?: string | null;
+  /**
+   * Les étapes après l’envoi. Laisser vide = valeurs par défaut.
+   */
+  steps?:
+    | {
+        /**
+         * Icône : messageSquare, clock, shieldCheck, mail, phone, calendar, fileText ou sparkles.
+         */
+        icon?: string | null;
+        title?: string | null;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Phrase au-dessus de l’email de repli.
+   */
+  emailIntro?: string | null;
+  /**
+   * Adresse email de repli affichée et cliquable.
+   */
+  email?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contact';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PresenceBlock".
+ */
+export interface PresenceBlock {
+  eyebrow?: string | null;
+  title?: string | null;
+  intro?: string | null;
+  /**
+   * Les implantations de l’agence. La carte se recadre automatiquement sur l’ensemble des points.
+   */
+  locations?:
+    | {
+        city: string;
+        country: string;
+        /**
+         * Laisser vide affiche « Adresse à venir ».
+         */
+        address?: string | null;
+        phone?: string | null;
+        /**
+         * Latitude (ex. Paris = 48.8566).
+         */
+        lat: number;
+        /**
+         * Longitude (ex. Paris = 2.3522).
+         */
+        lng: number;
+        isHeadquarters?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'presence';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CaseStudiesIndexBlock".
+ */
+export interface CaseStudiesIndexBlock {
+  eyebrow?: string | null;
+  title?: string | null;
+  intro?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'caseStudiesIndex';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlock".
+ */
+export interface FaqBlock {
+  /**
+   * Petit libellé au-dessus du titre (ex. « Questions fréquentes »).
+   */
+  eyebrow?: string | null;
+  /**
+   * Titre de la section.
+   */
+  title?: string | null;
+  /**
+   * Texte d’introduction (optionnel).
+   */
+  intro?: string | null;
+  /**
+   * Les questions / réponses, affichées en accordéon dépliable.
+   */
+  items?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutHeroBlock".
+ */
+export interface AboutHeroBlock {
+  /**
+   * Petit libellé (eyebrow) affiché avec un trait au-dessus du titre.
+   */
+  badge?: string | null;
+  /**
+   * Titre principal (H1).
+   */
+  title: string;
+  /**
+   * Segment affiché en terracotta, sur une 2e ligne. Optionnel.
+   */
+  titleAccent?: string | null;
+  /**
+   * Chapô sous le titre.
+   */
+  subtitle?: string | null;
+  /**
+   * Petites cartes de repère (valeur + libellé), ex. « 100% / open source ».
+   */
+  chips?:
+    | {
+        /**
+         * La valeur en gros (ex. 100%).
+         */
+        value?: string | null;
+        /**
+         * Le libellé sous la valeur.
+         */
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aboutHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "D4CardsBlock".
+ */
+export interface D4CardsBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Les dimensions de la méthode. Numérotées automatiquement (01–04).
+   */
+  cards?:
+    | {
+        /**
+         * Ex. Diagnostic.
+         */
+        title?: string | null;
+        /**
+         * Courte accroche (une ligne).
+         */
+        tagline?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'd4Cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DistinctionsBlock".
+ */
+export interface DistinctionsBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Ce qui vous distingue (icône + titre + courte explication).
+   */
+  items?:
+    | {
+        icon?:
+          | (
+              | 'userCheck'
+              | 'layers'
+              | 'shield'
+              | 'zap'
+              | 'heart'
+              | 'target'
+              | 'rocket'
+              | 'lightbulb'
+              | 'handshake'
+              | 'lock'
+              | 'globe'
+              | 'barChart'
+              | 'messageCircle'
+              | 'clock'
+              | 'leaf'
+              | 'award'
+              | 'wrench'
+              | 'search'
+              | 'trendingUp'
+              | 'sparkles'
+            )
+          | null;
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'distinctions';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBandBlock".
+ */
+export interface StatsBandBlock {
+  /**
+   * Chiffres clés (valeur + libellé). Affichés sur une bande claire.
+   */
+  items?:
+    | {
+        /**
+         * Ex. +33%, 0, D4™.
+         */
+        value?: string | null;
+        /**
+         * Ce que représente la valeur.
+         */
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statsBand';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock".
+ */
+export interface TeamBlock {
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  /**
+   * Les membres de l’agence (photo + nom + rôle). Sans photo : initiales sur fond navy.
+   */
+  members?:
+    | {
+        /**
+         * Photo carrée idéalement.
+         */
+        photo?: (number | null) | Media;
+        /**
+         * Prénom Nom.
+         */
+        name: string;
+        /**
+         * Rôle / fonction.
+         */
+        role?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'team';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourcesCatalogBlock".
+ */
+export interface ResourcesCatalogBlock {
+  /**
+   * Petit libellé avec trait (ex. « Ressources »).
+   */
+  eyebrow?: string | null;
+  /**
+   * Titre principal de la page (H1).
+   */
+  title: string;
+  /**
+   * Chapô sous le titre.
+   */
+  subtitle?: string | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'resourcesCatalog';
+}
+/**
+ * Les grands domaines d'expertise de l'agence (les « pôles »). Chaque pôle a sa propre page /expertises/[slug] et peut être mis en avant comme pilier sur la page d'accueil. Les services granulaires (collection Services) se rattachent à un pôle.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expertises".
+ */
+export interface Expertise {
+  id: number;
+  /**
+   * Ex. « Web & Expérience ». S’affiche en titre de la carte et de la page.
+   */
+  title: string;
+  /**
+   * Identifiant dans l’URL : /expertises/<slug>. Ex. « web-experience ». Sans espaces ni accents.
+   */
+  slug: string;
+  /**
+   * Nom d’une icône Lucide (ex. Palette, Globe, TrendingUp, Database).
+   */
+  icon?: string | null;
+  /**
+   * Petite ligne sous le titre, ex. « Stratégie, Design, Création ».
+   */
+  subtitle?: string | null;
+  /**
+   * Phrase de présentation, affichée sur la carte de la home et en intro de page.
+   */
+  description: string;
+  /**
+   * Petits libellés affichés sur la carte de la home (ex. Branding, Copywriting…). 3 à 5 idéalement.
+   */
+  highlights?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Le texte développé affiché sur la page du pôle (titres, paragraphes, listes).
+   */
+  long_description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Les bénéfices clés, affichés en bandeau (ex. « Reconnaissance immédiate »).
+   */
+  benefits?:
+    | {
+        benefit: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Les étapes de la méthode pour ce pôle (titre + courte description).
+   */
+  process_steps?:
+    | {
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Les outils mis en avant (ex. WordPress, n8n, Matomo…).
+   */
+  technologies?:
+    | {
+        name: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Questions fréquentes propres à ce pôle, affichées en accordéon sur la page.
+   */
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Les services granulaires rattachés à ce pôle (gérés dans la collection Services).
+   */
+  services?: {
+    docs?: (number | Service)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  /**
+   * Coché = ce pôle apparaît comme pilier sur la page d’accueil.
+   */
+  featured?: boolean | null;
+  /**
+   * Décoché = la page n’est pas visible publiquement.
+   */
+  published?: boolean | null;
+  /**
+   * Plus petit = affiché en premier (home et listes).
+   */
+  order?: number | null;
+  /**
+   * Titre et description pour les moteurs de recherche (optionnel).
+   */
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Les offres granulaires de l’agence (ex. Sites vitrines, SEO, Maintenance, Formation…). Chaque service est rattaché à un pôle (collection Pôles & Expertises) et peut être lié à des études de cas.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
 export interface Service {
@@ -848,7 +1824,10 @@ export interface Service {
     };
     [k: string]: unknown;
   } | null;
-  category: 'web-mobile' | 'ecommerce' | 'seo' | 'automation' | 'maintenance' | 'training' | 'hosting';
+  /**
+   * Le pôle auquel ce service appartient (ex. « Digitalisation & Process » pour la Maintenance ou la Formation).
+   */
+  pole: number | Expertise;
   image?: (number | null) | Media;
   /**
    * Ex: Globe, Code, Search...
@@ -866,6 +1845,19 @@ export interface Service {
     | {
         benefit: string;
         benefit_en?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Les besoins précis couverts par ce service (ex. Maintenance préventive, Sécurité…). Proposés en cases à cocher dans le formulaire de contact (3e niveau : Pôle → Service → Besoins).
+   */
+  besoins?:
+    | {
+        label: string;
+        /**
+         * Courte précision (optionnel).
+         */
+        description?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -894,6 +1886,10 @@ export interface Service {
     | null;
   related_services?: (number | Service)[] | null;
   case_studies?: (number | CaseStudy)[] | null;
+  /**
+   * Les articles de blog qui approfondissent ce service. Affichés dans la section « Pour approfondir » de la page service.
+   */
+  related_articles?: (number | Post)[] | null;
   published?: boolean | null;
   order?: number | null;
   seo?: {
@@ -904,6 +1900,8 @@ export interface Service {
   createdAt: string;
 }
 /**
+ * Vos projets / références clients. Chaque étude de cas alimente la page /realisations (liste filtrable) et sa page détail. Reliez-la à un ou plusieurs pôles pour qu’elle apparaisse aussi sur les pages d’expertise concernées. Cochez « Mis en avant » pour la montrer sur la page d’accueil.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "case-studies".
  */
@@ -913,10 +1911,8 @@ export interface CaseStudy {
   slug: string;
   excerpt?: string | null;
   excerpt_en?: string | null;
-  industry?:
-    | ('ecommerce' | 'services' | 'industry' | 'health' | 'education' | 'real-estate' | 'restaurant' | 'other')
-    | null;
-  category?: ('showcase' | 'ecommerce' | 'webapp' | 'seo' | 'automation') | null;
+  industry?: (number | null) | CaseStudySector;
+  category?: (number | null) | CaseStudyType;
   image?: (number | null) | Media;
   logo?: (number | null) | Media;
   challenge?: {
@@ -1022,12 +2018,28 @@ export interface CaseStudy {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Les services granulaires mobilisés sur ce projet (optionnel).
+   */
   services_used?: (number | Service)[] | null;
+  /**
+   * Les pôles d’expertise dont relève ce projet. Il s’affichera dans la section « Projets » de chaque page de pôle sélectionnée.
+   */
+  expertises?: (number | Expertise)[] | null;
   duration?: string | null;
   team_size?: number | null;
-  testimonial?: string | null;
-  testimonial_en?: string | null;
-  testimonial_author?: string | null;
+  /**
+   * Un ou plusieurs témoignages (différentes personnes / équipes du même projet).
+   */
+  testimonials?:
+    | {
+        quote?: string | null;
+        quote_en?: string | null;
+        author?: string | null;
+        author_role?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   is_featured?: boolean | null;
   seo?: {
     metaTitle?: string | null;
@@ -1037,6 +2049,32 @@ export interface CaseStudy {
   createdAt: string;
 }
 /**
+ * Liste des secteurs d’activité (ex. Artisanat, Association, Commerce). Sert à classer et filtrer les études de cas sur la page /realisations.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-study-sectors".
+ */
+export interface CaseStudySector {
+  id: number;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Liste des types de projet (ex. Site vitrine, E-commerce, Refonte, Automatisation). Sert à classer et filtrer les études de cas.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-study-types".
+ */
+export interface CaseStudyType {
+  id: number;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Catalogue de produits (boutique). Non utilisé sur le site vitrine actuel — réservé à une future activité e-commerce.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products".
  */
@@ -1101,6 +2139,8 @@ export interface Product {
   createdAt: string;
 }
 /**
+ * Les messages envoyés via le formulaire de contact du site (source du flux de demandes d’audit). Créés automatiquement ; suivez leur statut (Nouveau, Lu, Répondu…).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-messages".
  */
@@ -1134,11 +2174,12 @@ export interface ContactMessage {
   status?: ('new' | 'reading' | 'in-progress' | 'answered' | 'archived') | null;
   has_appointment?: boolean | null;
   appointment_id?: string | null;
-  notion_id?: string | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
+ * Les avis laissés par les visiteurs via un formulaire public (différents des Témoignages, que vous sélectionnez vous-même). À approuver avant tout affichage.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "reviews".
  */
@@ -1161,6 +2202,8 @@ export interface Review {
   createdAt: string;
 }
 /**
+ * Les avis clients affichés dans la section « Témoignages » de la page d’accueil. Renseignez l’auteur, son entreprise, le texte et une note ; ajoutez une photo pour plus d’impact.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials".
  */
@@ -1179,6 +2222,8 @@ export interface Testimonial {
   createdAt: string;
 }
 /**
+ * Les offres d’emploi affichées sur la page recrutement. Une offre n’est visible publiquement que si elle est cochée « Publié ».
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "job-offers".
  */
@@ -1250,6 +2295,8 @@ export interface JobOffer {
   createdAt: string;
 }
 /**
+ * Les candidatures reçues via le formulaire de recrutement. Suivez leur statut ici (créées automatiquement, non modifiables par le public).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "job-applications".
  */
@@ -1270,6 +2317,8 @@ export interface JobApplication {
   createdAt: string;
 }
 /**
+ * Les demandes de rendez-vous prises depuis le site. Créées automatiquement par le formulaire ; gérez ici leur statut.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "appointments".
  */
@@ -1297,6 +2346,8 @@ export interface Appointment {
   createdAt: string;
 }
 /**
+ * Les commentaires laissés sur les articles de blog. À modérer (statut) avant publication.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "blog-comments".
  */
@@ -1311,6 +2362,8 @@ export interface BlogComment {
   createdAt: string;
 }
 /**
+ * Les ressources gratuites téléchargeables (guides, modèles, checklists) affichées dans la section « Ressources » de la home. Une ressource n’apparaît que si elle est cochée « Publié ».
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "resources".
  */
@@ -1558,12 +2611,24 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
+        relationTo: 'expertises';
+        value: number | Expertise;
+      } | null)
+    | ({
         relationTo: 'services';
         value: number | Service;
       } | null)
     | ({
         relationTo: 'case-studies';
         value: number | CaseStudy;
+      } | null)
+    | ({
+        relationTo: 'case-study-sectors';
+        value: number | CaseStudySector;
+      } | null)
+    | ({
+        relationTo: 'case-study-types';
+        value: number | CaseStudyType;
       } | null)
     | ({
         relationTo: 'products';
@@ -1690,6 +2755,46 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        badge?: T;
+        headline?: T;
+        headlineAccent?: T;
+        subtitle?: T;
+        primaryCtaLabel?: T;
+        primaryCtaHref?: T;
+        secondaryCtaLabel?: T;
+        secondaryCtaHref?: T;
+        trustBadges?:
+          | T
+          | {
+              label?: T;
+              id?: T;
+            };
+        stats?:
+          | T
+          | {
+              value?: T;
+              label?: T;
+              id?: T;
+            };
+        panelEyebrow?: T;
+        panelTitle?: T;
+        panelDimensions?:
+          | T
+          | {
+              title?: T;
+              tag?: T;
+              id?: T;
+            };
+        panelAvailability?: T;
+        appearance?:
+          | T
+          | {
+              titleSize?: T;
+              textSize?: T;
+              titleColor?: T;
+              textColor?: T;
+              background?: T;
+            };
       };
   layout?:
     | T
@@ -1699,6 +2804,25 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        promise?: T | PromiseBlockSelect<T>;
+        pillars?: T | PillarsBlockSelect<T>;
+        method?: T | MethodBlockSelect<T>;
+        lab?: T | LabBlockSelect<T>;
+        commitments?: T | CommitmentsBlockSelect<T>;
+        partners?: T | PartnersBlockSelect<T>;
+        testimonialsBlock?: T | TestimonialsBlockSelect<T>;
+        resourcesBlock?: T | ResourcesBlockSelect<T>;
+        ctaFinal?: T | CtaFinalBlockSelect<T>;
+        contact?: T | ContactBlockSelect<T>;
+        presence?: T | PresenceBlockSelect<T>;
+        caseStudiesIndex?: T | CaseStudiesIndexBlockSelect<T>;
+        faq?: T | FaqBlockSelect<T>;
+        aboutHero?: T | AboutHeroBlockSelect<T>;
+        d4Cards?: T | D4CardsBlockSelect<T>;
+        distinctions?: T | DistinctionsBlockSelect<T>;
+        statsBand?: T | StatsBandBlockSelect<T>;
+        team?: T | TeamBlockSelect<T>;
+        resourcesCatalog?: T | ResourcesCatalogBlockSelect<T>;
       };
   meta?:
     | T
@@ -1800,6 +2924,523 @@ export interface FormBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PromiseBlock_select".
+ */
+export interface PromiseBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  subtitle?: T;
+  description?: T;
+  features?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  commitment?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PillarsBlock_select".
+ */
+export interface PillarsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MethodBlock_select".
+ */
+export interface MethodBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  steps?:
+    | T
+    | {
+        title?: T;
+        tagline?: T;
+        activities?:
+          | T
+          | {
+              label?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LabBlock_select".
+ */
+export interface LabBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  demos?:
+    | T
+    | {
+        sector?: T;
+        stack?:
+          | T
+          | {
+              label?: T;
+              id?: T;
+            };
+        title?: T;
+        description?: T;
+        status?: T;
+        previewType?: T;
+        media?: T;
+        url?: T;
+        id?: T;
+      };
+  ctaLabel?: T;
+  ctaHref?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CommitmentsBlock_select".
+ */
+export interface CommitmentsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  commitments?:
+    | T
+    | {
+        keyword?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnersBlock_select".
+ */
+export interface PartnersBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  projectsLimit?: T;
+  techLabel?: T;
+  technologies?:
+    | T
+    | {
+        name?: T;
+        category?: T;
+        logo?: T;
+        openSource?: T;
+        id?: T;
+      };
+  ctaLabel?: T;
+  ctaHref?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock_select".
+ */
+export interface TestimonialsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  limit?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourcesBlock_select".
+ */
+export interface ResourcesBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  limit?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaFinalBlock_select".
+ */
+export interface CtaFinalBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  body?: T;
+  note?: T;
+  primaryCtaLabel?: T;
+  primaryCtaHref?: T;
+  secondaryCtaLabel?: T;
+  secondaryCtaHref?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock_select".
+ */
+export interface ContactBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  titleAccent?: T;
+  subtitle?: T;
+  stepsHeading?: T;
+  steps?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  emailIntro?: T;
+  email?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PresenceBlock_select".
+ */
+export interface PresenceBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  locations?:
+    | T
+    | {
+        city?: T;
+        country?: T;
+        address?: T;
+        phone?: T;
+        lat?: T;
+        lng?: T;
+        isHeadquarters?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CaseStudiesIndexBlock_select".
+ */
+export interface CaseStudiesIndexBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlock_select".
+ */
+export interface FaqBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  items?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutHeroBlock_select".
+ */
+export interface AboutHeroBlockSelect<T extends boolean = true> {
+  badge?: T;
+  title?: T;
+  titleAccent?: T;
+  subtitle?: T;
+  chips?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "D4CardsBlock_select".
+ */
+export interface D4CardsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        tagline?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DistinctionsBlock_select".
+ */
+export interface DistinctionsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  items?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBandBlock_select".
+ */
+export interface StatsBandBlockSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock_select".
+ */
+export interface TeamBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  members?:
+    | T
+    | {
+        photo?: T;
+        name?: T;
+        role?: T;
+        id?: T;
+      };
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourcesCatalogBlock_select".
+ */
+export interface ResourcesCatalogBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  subtitle?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -1807,7 +3448,6 @@ export interface PostsSelect<T extends boolean = true> {
   heroImage?: T;
   content?: T;
   relatedPosts?: T;
-  categories?: T;
   meta?:
     | T
     | {
@@ -1816,6 +3456,7 @@ export interface PostsSelect<T extends boolean = true> {
         description?: T;
       };
   publishedAt?: T;
+  categories?: T;
   authors?: T;
   populatedAuthors?:
     | T
@@ -1929,9 +3570,10 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
+  parent?: T;
+  pathTitle?: T;
   generateSlug?: T;
   slug?: T;
-  parent?: T;
   breadcrumbs?:
     | T
     | {
@@ -1972,6 +3614,62 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expertises_select".
+ */
+export interface ExpertisesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  icon?: T;
+  subtitle?: T;
+  description?: T;
+  highlights?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  long_description?: T;
+  benefits?:
+    | T
+    | {
+        benefit?: T;
+        id?: T;
+      };
+  process_steps?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  technologies?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  services?: T;
+  featured?: T;
+  published?: T;
+  order?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
@@ -1982,7 +3680,7 @@ export interface ServicesSelect<T extends boolean = true> {
   description_en?: T;
   long_description?: T;
   long_description_en?: T;
-  category?: T;
+  pole?: T;
   image?: T;
   icon?: T;
   pricing_start?: T;
@@ -1998,6 +3696,13 @@ export interface ServicesSelect<T extends boolean = true> {
     | {
         benefit?: T;
         benefit_en?: T;
+        id?: T;
+      };
+  besoins?:
+    | T
+    | {
+        label?: T;
+        description?: T;
         id?: T;
       };
   technologies?:
@@ -2025,6 +3730,7 @@ export interface ServicesSelect<T extends boolean = true> {
       };
   related_services?: T;
   case_studies?: T;
+  related_articles?: T;
   published?: T;
   order?: T;
   seo?:
@@ -2069,11 +3775,18 @@ export interface CaseStudiesSelect<T extends boolean = true> {
         id?: T;
       };
   services_used?: T;
+  expertises?: T;
   duration?: T;
   team_size?: T;
-  testimonial?: T;
-  testimonial_en?: T;
-  testimonial_author?: T;
+  testimonials?:
+    | T
+    | {
+        quote?: T;
+        quote_en?: T;
+        author?: T;
+        author_role?: T;
+        id?: T;
+      };
   is_featured?: T;
   seo?:
     | T
@@ -2081,6 +3794,24 @@ export interface CaseStudiesSelect<T extends boolean = true> {
         metaTitle?: T;
         metaDescription?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-study-sectors_select".
+ */
+export interface CaseStudySectorsSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-study-types_select".
+ */
+export interface CaseStudyTypesSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2165,7 +3896,6 @@ export interface ContactMessagesSelect<T extends boolean = true> {
   status?: T;
   has_appointment?: T;
   appointment_id?: T;
-  notion_id?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2615,11 +4345,16 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * La navigation principale du site. Les liens ajoutés ici apparaissent dans le menu (en haut sur ordinateur, dans le menu burger sur mobile).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header".
  */
 export interface Header {
   id: number;
+  /**
+   * Liens du menu (ex. Blog → /posts). Le « Services » avec méga-menu est ajouté automatiquement.
+   */
   navItems?:
     | {
         link: {
@@ -2640,10 +4375,62 @@ export interface Header {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Le contenu du méga-menu (pôles et services) vient des collections Pôles & Expertises et Services. Ici, vous gérez seulement les libellés et les boutons.
+   */
+  megamenu?: {
+    /**
+     * Le mot cliquable dans le menu (ex. « Services », « Nos expertises »).
+     */
+    triggerLabel?: string | null;
+    /**
+     * Place le « Services » parmi les autres liens. 1 = en premier. Ex. avec Accueil, L’Agence, Réalisations… mettre 3 pour l’afficher après « L’Agence ».
+     */
+    navPosition?: number | null;
+    railLabel?: string | null;
+    /**
+     * Choisissez les pôles à afficher et leur ordre (glisser-déposer). Le nom, le lien et l’icône viennent du pôle sélectionné — vous pouvez juste le renommer si besoin.
+     */
+    poles?:
+      | {
+          /**
+           * Choisissez un pôle existant (collection Pôles & Expertises).
+           */
+          pole: number | Expertise;
+          /**
+           * Laisser vide = le nom du pôle.
+           */
+          labelOverride?: string | null;
+          /**
+           * Choisissez les services à lister sous ce pôle et leur ordre (glisser-déposer).
+           */
+          services?:
+            | {
+                /**
+                 * Choisissez un service existant (collection Services).
+                 */
+                service: number | Service;
+                /**
+                 * Laisser vide = le nom du service.
+                 */
+                labelOverride?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+    ctaPrimaryLabel?: string | null;
+    ctaPrimaryHref?: string | null;
+    ctaSecondaryLabel?: string | null;
+    ctaSecondaryHref?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
 /**
+ * Le pied de page du site. Les liens ajoutés ici apparaissent dans le footer (accueil, contact, mentions légales, confidentialité…).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer".
  */
@@ -2690,6 +4477,31 @@ export interface HeaderSelect<T extends boolean = true> {
               label?: T;
             };
         id?: T;
+      };
+  megamenu?:
+    | T
+    | {
+        triggerLabel?: T;
+        navPosition?: T;
+        railLabel?: T;
+        poles?:
+          | T
+          | {
+              pole?: T;
+              labelOverride?: T;
+              services?:
+                | T
+                | {
+                    service?: T;
+                    labelOverride?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+        ctaPrimaryLabel?: T;
+        ctaPrimaryHref?: T;
+        ctaSecondaryLabel?: T;
+        ctaSecondaryHref?: T;
       };
   updatedAt?: T;
   createdAt?: T;

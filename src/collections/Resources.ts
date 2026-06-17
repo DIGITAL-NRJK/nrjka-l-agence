@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { publicRead, editorOrAdmin, adminOnly } from '../access'
+import { publicRead, adminOnly } from '../access'
 
 export const Resources: CollectionConfig = {
   slug: 'resources',
@@ -8,11 +8,13 @@ export const Resources: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'format', 'downloads', 'updatedAt'],
     group: 'Contenu',
+    description:
+      'Les ressources gratuites téléchargeables (guides, modèles, checklists) affichées dans la section « Ressources » de la home. Une ressource n’apparaît que si elle est cochée « Publié ».',
   },
   access: {
     read: publicRead,
-    create: editorOrAdmin,
-    update: editorOrAdmin,
+    create: adminOnly,
+    update: adminOnly,
     delete: adminOnly,
   },
   fields: [

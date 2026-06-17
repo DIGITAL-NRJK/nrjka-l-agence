@@ -51,3 +51,10 @@ public/sitemap*.xml
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Types générés par Next.js
+next-env.d.ts
+
+# Dossier de référence Base44 (ne pas versionner)
+/_base44-source/
+/_Base44-source/tsconfig.tsbuildinfo

@@ -8,6 +8,8 @@ export const BlogComments: CollectionConfig = {
     useAsTitle: 'author_name',
     defaultColumns: ['author_name', 'blog_post', 'status', 'createdAt'],
     group: 'Contenu',
+    description:
+      'Les commentaires laissés sur les articles de blog. À modérer (statut) avant publication.',
   },
   access: {
     read: publicRead,

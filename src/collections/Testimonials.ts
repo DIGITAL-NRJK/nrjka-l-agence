@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { publicRead, editorOrAdmin, adminOnly } from '../access'
+import { publicRead, adminOnly } from '../access'
 
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
@@ -8,11 +8,13 @@ export const Testimonials: CollectionConfig = {
     useAsTitle: 'author_name',
     defaultColumns: ['author_name', 'company', 'rating', 'updatedAt'],
     group: 'Contenu',
+    description:
+      'Les avis clients affichés dans la section « Témoignages » de la page d’accueil. Renseignez l’auteur, son entreprise, le texte et une note ; ajoutez une photo pour plus d’impact.',
   },
   access: {
     read: publicRead,
-    create: editorOrAdmin,
-    update: editorOrAdmin,
+    create: adminOnly,
+    update: adminOnly,
     delete: adminOnly,
   },
   fields: [

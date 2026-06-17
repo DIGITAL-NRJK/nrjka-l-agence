@@ -1,19 +1,23 @@
 import type { CollectionConfig } from 'payload'
 
-import { authenticated } from '../../access/authenticated'
+import { adminOnly, adminOrSelf, authenticatedRead } from '../../access'
 
 export const Users: CollectionConfig = {
   slug: 'users',
   access: {
-    admin: authenticated,
-    create: authenticated,
-    delete: authenticated,
-    read: authenticated,
-    update: authenticated,
+    // Visiteur exclu du back-office ; seul un admin gère les comptes ; chacun édite son profil.
+    admin: ({ req: { user } }) =>
+      Boolean(user && ['admin', 'editor', 'contributor'].includes(user.role as string)),
+    create: adminOnly,
+    delete: adminOnly,
+    read: authenticatedRead,
+    update: adminOrSelf,
   },
   admin: {
     defaultColumns: ['name', 'email'],
     useAsTitle: 'name',
+    description:
+      'Les comptes qui accèdent au back-office (administrateurs, éditeurs). Réservé aux personnes de l’équipe.',
   },
   auth: true,
   fields: [

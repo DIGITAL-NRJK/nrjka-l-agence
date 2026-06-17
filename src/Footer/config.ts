@@ -5,6 +5,10 @@ import { revalidateFooter } from './hooks/revalidateFooter'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
+  admin: {
+    description:
+      'Le pied de page du site. Les liens ajoutés ici apparaissent dans le footer (accueil, contact, mentions légales, confidentialité…).',
+  },
   access: {
     read: () => true,
   },

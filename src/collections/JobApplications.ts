@@ -8,6 +8,8 @@ export const JobApplications: CollectionConfig = {
     useAsTitle: 'email',
     defaultColumns: ['first_name', 'last_name', 'email', 'job_offer', 'status', 'createdAt'],
     group: 'RH',
+    description:
+      'Les candidatures reçues via le formulaire de recrutement. Suivez leur statut ici (créées automatiquement, non modifiables par le public).',
   },
   access: {
     read: authenticatedRead,

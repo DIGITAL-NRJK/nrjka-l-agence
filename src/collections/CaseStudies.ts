@@ -1,5 +1,20 @@
 import type { CollectionConfig } from 'payload'
-import { publicRead, editorOrAdmin, adminOnly } from '../access'
+import {
+  lexicalEditor,
+  HeadingFeature,
+  FixedToolbarFeature,
+  InlineToolbarFeature,
+} from '@payloadcms/richtext-lexical'
+import { publicRead, adminOnly } from '../access'
+
+const richEditor = lexicalEditor({
+  features: ({ rootFeatures }) => [
+    ...rootFeatures,
+    HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+    FixedToolbarFeature(),
+    InlineToolbarFeature(),
+  ],
+})
 
 export const CaseStudies: CollectionConfig = {
   slug: 'case-studies',
@@ -8,11 +23,13 @@ export const CaseStudies: CollectionConfig = {
     useAsTitle: 'client_name',
     defaultColumns: ['client_name', 'industry', 'is_featured', 'updatedAt'],
     group: 'Contenu',
+    description:
+      'Vos projets / références clients. Chaque étude de cas alimente la page /realisations (liste filtrable) et sa page détail. Reliez-la à un ou plusieurs pôles pour qu’elle apparaisse aussi sur les pages d’expertise concernées. Cochez « Mis en avant » pour la montrer sur la page d’accueil.',
   },
   access: {
     read: publicRead,
-    create: editorOrAdmin,
-    update: editorOrAdmin,
+    create: adminOnly,
+    update: adminOnly,
     delete: adminOnly,
   },
   fields: [
@@ -29,39 +46,24 @@ export const CaseStudies: CollectionConfig = {
     { name: 'excerpt_en', type: 'textarea', label: 'Résumé court (EN)' },
     {
       name: 'industry',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'case-study-sectors',
       label: 'Secteur',
-      options: [
-        { label: 'E-commerce', value: 'ecommerce' },
-        { label: 'Services', value: 'services' },
-        { label: 'Industrie', value: 'industry' },
-        { label: 'Santé', value: 'health' },
-        { label: 'Éducation', value: 'education' },
-        { label: 'Immobilier', value: 'real-estate' },
-        { label: 'Restauration', value: 'restaurant' },
-        { label: 'Autre', value: 'other' },
-      ],
     },
     {
       name: 'category',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'case-study-types',
       label: 'Type de projet',
-      options: [
-        { label: 'Site vitrine', value: 'showcase' },
-        { label: 'E-commerce', value: 'ecommerce' },
-        { label: 'Application web', value: 'webapp' },
-        { label: 'SEO', value: 'seo' },
-        { label: 'Automation', value: 'automation' },
-      ],
     },
     { name: 'image', type: 'upload', relationTo: 'media', label: 'Image principale' },
     { name: 'logo', type: 'upload', relationTo: 'media', label: 'Logo du client' },
-    { name: 'challenge', type: 'richText', label: 'Défi / Problématique' },
-    { name: 'challenge_en', type: 'richText', label: 'Défi (EN)' },
-    { name: 'solution', type: 'richText', label: 'Solution apportée' },
-    { name: 'solution_en', type: 'richText', label: 'Solution (EN)' },
-    { name: 'results', type: 'richText', label: 'Résultats obtenus' },
-    { name: 'results_en', type: 'richText', label: 'Résultats (EN)' },
+    { name: 'challenge', type: 'richText', editor: richEditor, label: 'Défi / Problématique' },
+    { name: 'challenge_en', type: 'richText', editor: richEditor, label: 'Défi (EN)' },
+    { name: 'solution', type: 'richText', editor: richEditor, label: 'Solution apportée' },
+    { name: 'solution_en', type: 'richText', editor: richEditor, label: 'Solution (EN)' },
+    { name: 'results', type: 'richText', editor: richEditor, label: 'Résultats obtenus' },
+    { name: 'results_en', type: 'richText', editor: richEditor, label: 'Résultats (EN)' },
     {
       name: 'metrics',
       type: 'array',
@@ -83,12 +85,36 @@ export const CaseStudies: CollectionConfig = {
       relationTo: 'services',
       hasMany: true,
       label: 'Services utilisés',
+      admin: { description: 'Les services granulaires mobilisés sur ce projet (optionnel).' },
+    },
+    {
+      name: 'expertises',
+      type: 'relationship',
+      relationTo: 'expertises',
+      hasMany: true,
+      label: 'Pôles concernés',
+      admin: {
+        description:
+          'Les pôles d’expertise dont relève ce projet. Il s’affichera dans la section « Projets » de chaque page de pôle sélectionnée.',
+      },
     },
     { name: 'duration', type: 'text', label: 'Durée du projet' },
     { name: 'team_size', type: 'number', label: "Taille de l'équipe" },
-    { name: 'testimonial', type: 'textarea', label: 'Témoignage client' },
-    { name: 'testimonial_en', type: 'textarea', label: 'Témoignage client (EN)' },
-    { name: 'testimonial_author', type: 'text', label: 'Auteur du témoignage' },
+    {
+      name: 'testimonials',
+      type: 'array',
+      label: 'Témoignages clients',
+      admin: {
+        description:
+          'Un ou plusieurs témoignages (différentes personnes / équipes du même projet).',
+      },
+      fields: [
+        { name: 'quote', type: 'textarea', label: 'Témoignage' },
+        { name: 'quote_en', type: 'textarea', label: 'Témoignage (EN)' },
+        { name: 'author', type: 'text', label: 'Auteur' },
+        { name: 'author_role', type: 'text', label: "Fonction de l'auteur" },
+      ],
+    },
     {
       name: 'is_featured',
       type: 'checkbox',

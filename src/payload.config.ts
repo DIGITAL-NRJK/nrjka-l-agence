@@ -17,8 +17,11 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { s3Storage } from '@payloadcms/storage-s3'
 
+import { Expertises } from './collections/Expertises'
 import { Services } from './collections/Services'
 import { CaseStudies } from './collections/CaseStudies'
+import { CaseStudySectors } from './collections/CaseStudySectors'
+import { CaseStudyTypes } from './collections/CaseStudyTypes'
 import { Products } from './collections/Products'
 import { ContactMessages } from './collections/ContactMessages'
 import { Reviews } from './collections/Reviews'
@@ -71,10 +74,22 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
+  localization: {
+    locales: [
+      { label: 'Français', code: 'fr' },
+      { label: 'English', code: 'en' },
+    ],
+    defaultLocale: 'fr',
+    fallback: true,
+  },
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    // push désactivé : init rapide, plus de « pulling schema » lent, seeds (via route) fiables.
+    // La base contient déjà tout le schéma (synchronisé en mode push).
+    // ⚠️ Avant la mise en ligne : créer une migration propre (#6) — Netlify ne peut pas tourner en push.
+    // Pour ajouter un champ d'ici là : repasser push:true le temps de la synchro, puis push:false.
     push: false,
   }),
   collections: [
@@ -83,8 +98,11 @@ export default buildConfig({
     Media,
     Categories,
     Users,
+    Expertises,
     Services,
     CaseStudies,
+    CaseStudySectors,
+    CaseStudyTypes,
     Products,
     ContactMessages,
     Reviews,

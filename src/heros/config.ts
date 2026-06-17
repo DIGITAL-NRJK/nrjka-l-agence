@@ -8,6 +8,7 @@ import {
 } from '@payloadcms/richtext-lexical'
 
 import { linkGroup } from '@/fields/linkGroup'
+import { appearance } from '@/fields/appearance'
 
 export const hero: Field = {
   name: 'hero',
@@ -34,6 +35,10 @@ export const hero: Field = {
         {
           label: 'Low Impact',
           value: 'lowImpact',
+        },
+        {
+          label: 'Accueil NRJKA',
+          value: 'homeNRJKA',
         },
       ],
       required: true,
@@ -67,6 +72,109 @@ export const hero: Field = {
       relationTo: 'media',
       required: true,
     },
+    {
+      name: 'badge',
+      type: 'text',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    {
+      name: 'headline',
+      type: 'text',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    {
+      name: 'headlineAccent',
+      type: 'text',
+      localized: true,
+      admin: {
+        condition: (_, { type } = {}) => type === 'homeNRJKA',
+        description: 'Segment affiché en dégradé, à la suite du titre.',
+      },
+    },
+    {
+      name: 'subtitle',
+      type: 'textarea',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    {
+      name: 'primaryCtaLabel',
+      type: 'text',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    {
+      name: 'primaryCtaHref',
+      type: 'text',
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    {
+      name: 'secondaryCtaLabel',
+      type: 'text',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    {
+      name: 'secondaryCtaHref',
+      type: 'text',
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    {
+      name: 'trustBadges',
+      type: 'array',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+      fields: [{ name: 'label', type: 'text' }],
+    },
+    {
+      name: 'stats',
+      type: 'array',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+      fields: [
+        { name: 'value', type: 'text' },
+        { name: 'label', type: 'text' },
+      ],
+    },
+    {
+      name: 'panelEyebrow',
+      type: 'text',
+      localized: true,
+      admin: {
+        condition: (_, { type } = {}) => type === 'homeNRJKA',
+        description: 'Petit texte en haut du panneau de droite (ex. Architecture D4™).',
+      },
+    },
+    {
+      name: 'panelTitle',
+      type: 'text',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    {
+      name: 'panelDimensions',
+      type: 'array',
+      localized: true,
+      maxRows: 4,
+      admin: {
+        condition: (_, { type } = {}) => type === 'homeNRJKA',
+        description:
+          'Les 4 dimensions (titre + accroche). Laisser vide = valeurs par défaut conservées.',
+      },
+      fields: [
+        { name: 'title', type: 'text' },
+        { name: 'tag', type: 'text' },
+      ],
+    },
+    {
+      name: 'panelAvailability',
+      type: 'text',
+      localized: true,
+      admin: { condition: (_, { type } = {}) => type === 'homeNRJKA' },
+    },
+    appearance,
   ],
   label: false,
 }

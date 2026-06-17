@@ -8,6 +8,8 @@ export const Appointments: CollectionConfig = {
     useAsTitle: 'client_name',
     defaultColumns: ['client_name', 'client_email', 'appointment_date', 'status', 'createdAt'],
     group: 'CRM',
+    description:
+      'Les demandes de rendez-vous prises depuis le site. Créées automatiquement par le formulaire ; gérez ici leur statut.',
   },
   access: {
     read: authenticatedRead,

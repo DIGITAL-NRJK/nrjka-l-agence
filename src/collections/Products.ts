@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { publicRead, editorOrAdmin, adminOnly } from '../access'
+import { publicRead, adminOnly } from '../access'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -8,11 +8,13 @@ export const Products: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'price', 'category', 'bestseller', 'updatedAt'],
     group: 'E-commerce',
+    description:
+      'Catalogue de produits (boutique). Non utilisé sur le site vitrine actuel — réservé à une future activité e-commerce.',
   },
   access: {
     read: publicRead,
-    create: editorOrAdmin,
-    update: editorOrAdmin,
+    create: adminOnly,
+    update: adminOnly,
     delete: adminOnly,
   },
   fields: [

@@ -1,0 +1,5 @@
+
+> with-vercel-website@1.0.0 payload /Users/khennydemby/Desktop/nrjka-l-agence
+> cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/seed-services-content.ts
+
+⏳ Initialisation de Payload… (en mode push, le « pulling schema » peut prendre 30–60 s, patiente)
