@@ -168,6 +168,16 @@ export const Services: CollectionConfig = {
       },
     },
     {
+      name: 'autoTranslate',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '@/components/admin/TranslateButton',
+        },
+      },
+    },
+    {
       name: 'published',
       type: 'checkbox',
       defaultValue: false,

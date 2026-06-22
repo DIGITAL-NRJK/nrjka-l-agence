@@ -8,15 +8,17 @@ import type { Header } from '@/payload-types'
 
 import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import type { MegaMenuPole, MegaMenuChrome } from './Nav/MegaMenu'
 
 interface HeaderClientProps {
   data: Header
   menu?: MegaMenuPole[]
   chrome?: MegaMenuChrome
+  locale?: string
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome, locale = 'fr' }) => {
   /* Storing the value in a useState to avoid hydration errors */
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
@@ -39,10 +41,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome }
     >
       <div className="container relative">
         <div className="flex items-center justify-between py-4">
-          <Link href="/" className="text-brand dark:text-white">
+          <Link href={`/${locale}`} className="text-brand dark:text-white">
             <Logo />
           </Link>
-          <HeaderNav data={data} menu={menu} chrome={chrome} />
+          <div className="flex items-center gap-3">
+            <HeaderNav data={data} menu={menu} chrome={chrome} locale={locale} />
+            <LanguageSwitcher />
+          </div>
         </div>
       </div>
     </header>

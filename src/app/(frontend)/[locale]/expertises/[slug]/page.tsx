@@ -9,12 +9,13 @@ import configPromise from '@payload-config'
 import Image from 'next/image'
 import type { Expertise, Service, CaseStudy, Media } from '@/payload-types'
 import RichText from '@/components/RichText'
+import { LOCALES } from '@/utilities/i18n'
 
-import { Faq } from './Faq'
+import { Faq } from '../../../expertises/[slug]/Faq'
 
-type Args = { params: Promise<{ slug: string }> }
+type Args = { params: Promise<{ locale: string; slug: string }> }
 
-const queryExpertise = cache(async (slug: string) => {
+const queryExpertise = cache(async (slug: string, locale: string) => {
   const payload = await getPayload({ config: configPromise })
   const res = await payload.find({
     collection: 'expertises',
@@ -22,6 +23,7 @@ const queryExpertise = cache(async (slug: string) => {
     limit: 1,
     depth: 1,
     pagination: false,
+    locale: locale as 'fr' | 'en',
   })
   return (res.docs?.[0] as Expertise) || null
 })
@@ -35,12 +37,14 @@ export async function generateStaticParams() {
     pagination: false,
     select: { slug: true },
   })
-  return res.docs?.map(({ slug }) => ({ slug })) || []
+  return (
+    res.docs?.flatMap(({ slug }) => LOCALES.map((locale) => ({ locale, slug }))) || []
+  )
 }
 
 export default async function ExpertisePage({ params }: Args) {
-  const { slug } = await params
-  const e = await queryExpertise(decodeURIComponent(slug))
+  const { locale, slug } = await params
+  const e = await queryExpertise(decodeURIComponent(slug), locale)
   if (!e) notFound()
 
   const benefits = (e.benefits || []).map((b) => b.benefit).filter(Boolean) as string[]
@@ -60,6 +64,7 @@ export default async function ExpertisePage({ params }: Args) {
       sort: '-is_featured',
       limit: 6,
       depth: 1,
+      locale: locale as 'fr' | 'en',
     })
     projects = res.docs as CaseStudy[]
   } catch {
@@ -71,17 +76,17 @@ export default async function ExpertisePage({ params }: Args) {
       {/* En-tête */}
       <header className="container">
         <Link
-          href="/#expertises"
+          href={`/${locale}/#expertises`}
           className="inline-flex items-center gap-2 text-sm font-medium text-slate transition-colors hover:text-ink"
         >
           <ArrowLeft className="h-4 w-4" strokeWidth={2.2} />
-          Nos expertises
+          {locale === 'en' ? 'Our expertises' : 'Nos expertises'}
         </Link>
 
         <div className="mt-8 max-w-3xl">
           <span className="mb-5 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-slate">
             <span className="h-px w-8 bg-terracotta" />
-            {e.subtitle || 'Notre expertise'}
+            {e.subtitle || (locale === 'en' ? 'Our expertise' : 'Notre expertise')}
           </span>
           <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-6xl">
             {e.title}
@@ -91,10 +96,10 @@ export default async function ExpertisePage({ params }: Args) {
           )}
           <div className="mt-8">
             <Link
-              href="/contact"
+              href={`/${locale}/contact`}
               className="group inline-flex items-center gap-2 rounded-full bg-terracotta px-7 py-3.5 font-medium text-terracotta-foreground shadow-lg shadow-terracotta/25 transition-all hover:-translate-y-0.5 hover:bg-terracotta-dark"
             >
-              Demander un audit gratuit
+              {locale === 'en' ? 'Request a free audit' : 'Demander un audit gratuit'}
               <ArrowRight
                 className="h-4 w-4 transition-transform group-hover:translate-x-1"
                 strokeWidth={2.4}
@@ -127,7 +132,7 @@ export default async function ExpertisePage({ params }: Args) {
       {services.length > 0 && (
         <div className="container mt-16">
           <h2 className="font-display text-2xl font-bold tracking-tight text-ink">
-            Ce que nous faisons
+            {locale === 'en' ? 'What we do' : 'Ce que nous faisons'}
           </h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((s) => (
@@ -145,7 +150,9 @@ export default async function ExpertisePage({ params }: Args) {
       {/* Approche */}
       {steps.length > 0 && (
         <div className="container mt-20">
-          <h2 className="font-display text-2xl font-bold tracking-tight text-ink">Notre approche</h2>
+          <h2 className="font-display text-2xl font-bold tracking-tight text-ink">
+            {locale === 'en' ? 'Our approach' : 'Notre approche'}
+          </h2>
           <ol className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, i) => (
               <li key={step.id || i}>
@@ -164,7 +171,7 @@ export default async function ExpertisePage({ params }: Args) {
       {techs.length > 0 && (
         <div className="container mt-20">
           <h2 className="font-display text-2xl font-bold tracking-tight text-ink">
-            Outils & technologies
+            {locale === 'en' ? 'Tools & technologies' : 'Outils & technologies'}
           </h2>
           <div className="mt-6 flex flex-wrap gap-2.5">
             {techs.map((t, i) => (
@@ -179,14 +186,16 @@ export default async function ExpertisePage({ params }: Args) {
         </div>
       )}
 
-      {/* Projets reliés à ce pôle */}
+      {/* Projets reliés */}
       {projects.length > 0 && (
         <div className="container mt-20">
           <h2 className="font-display text-2xl font-bold tracking-tight text-ink">
-            Des projets qui en témoignent
+            {locale === 'en' ? 'Projects that demonstrate it' : 'Des projets qui en témoignent'}
           </h2>
           <p className="mt-2 max-w-2xl leading-relaxed text-slate">
-            Quelques réalisations où cette expertise a fait la différence.
+            {locale === 'en'
+              ? 'A few case studies where this expertise made the difference.'
+              : 'Quelques réalisations où cette expertise a fait la différence.'}
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((p) => {
@@ -199,7 +208,7 @@ export default async function ExpertisePage({ params }: Args) {
               return (
                 <Link
                   key={p.id}
-                  href={`/realisations/${p.slug}`}
+                  href={`/${locale}/realisations/${p.slug}`}
                   className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-terracotta/40"
                 >
                   <div className="relative aspect-16/10 overflow-hidden bg-brand">
@@ -263,7 +272,7 @@ export default async function ExpertisePage({ params }: Args) {
             }}
           />
           <h2 className="mb-6 font-display text-2xl font-bold tracking-tight text-ink">
-            Questions fréquentes
+            {locale === 'en' ? 'Frequently asked questions' : 'Questions fréquentes'}
           </h2>
           <Faq items={faqs} />
         </div>
@@ -274,15 +283,19 @@ export default async function ExpertisePage({ params }: Args) {
         <div className="flex flex-col items-start gap-4 rounded-3xl bg-brand px-8 py-10 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="font-display text-2xl font-bold tracking-tight text-white">
-              Un projet sur ce périmètre ?
+              {locale === 'en' ? 'A project on this scope?' : 'Un projet sur ce périmètre ?'}
             </h2>
-            <p className="mt-1 text-white/70">Le premier échange est gratuit, et sans engagement.</p>
+            <p className="mt-1 text-white/70">
+              {locale === 'en'
+                ? 'First call is free and non-binding.'
+                : 'Le premier échange est gratuit, et sans engagement.'}
+            </p>
           </div>
           <Link
-            href="/contact"
+            href={`/${locale}/contact`}
             className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-terracotta px-6 py-3 font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark"
           >
-            Demander un audit
+            {locale === 'en' ? 'Request an audit' : 'Demander un audit'}
             <ArrowRight
               className="h-4 w-4 transition-transform group-hover:translate-x-1"
               strokeWidth={2.4}
@@ -295,11 +308,17 @@ export default async function ExpertisePage({ params }: Args) {
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
-  const { slug } = await params
-  const e = await queryExpertise(decodeURIComponent(slug))
+  const { locale, slug } = await params
+  const e = await queryExpertise(decodeURIComponent(slug), locale)
   if (!e) return {}
   return {
-    title: e.seo?.metaTitle || `${e.title} — Expertise NRJKA`,
+    title: e.seo?.metaTitle || `${e.title} — ${locale === 'en' ? 'NRJKA Expertise' : 'Expertise NRJKA'}`,
     description: e.seo?.metaDescription || e.description || undefined,
+    alternates: {
+      languages: {
+        fr: `/fr/expertises/${slug}`,
+        en: `/en/expertises/${slug}`,
+      },
+    },
   }
 }

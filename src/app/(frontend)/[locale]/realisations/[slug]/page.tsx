@@ -8,10 +8,11 @@ import configPromise from '@payload-config'
 
 import type { CaseStudy, Media, Service } from '@/payload-types'
 import RichText from '@/components/RichText'
+import { LOCALES } from '@/utilities/i18n'
 
-type Args = { params: Promise<{ slug: string }> }
+type Args = { params: Promise<{ locale: string; slug: string }> }
 
-const queryCaseStudy = cache(async (slug: string) => {
+const queryCaseStudy = cache(async (slug: string, locale: string) => {
   const payload = await getPayload({ config: configPromise })
   const res = await payload.find({
     collection: 'case-studies',
@@ -19,6 +20,7 @@ const queryCaseStudy = cache(async (slug: string) => {
     limit: 1,
     depth: 2,
     pagination: false,
+    locale: locale as 'fr' | 'en',
   })
   return (res.docs?.[0] as CaseStudy) || null
 })
@@ -31,7 +33,7 @@ export async function generateStaticParams() {
     pagination: false,
     select: { slug: true },
   })
-  return res.docs?.map(({ slug }) => ({ slug })) || []
+  return res.docs?.flatMap(({ slug }) => LOCALES.map((locale) => ({ locale, slug }))) || []
 }
 
 const relName = (rel: unknown): string | undefined =>
@@ -45,8 +47,8 @@ const serviceName = (s: number | Service): string | undefined =>
     : undefined
 
 export default async function CaseStudyPage({ params }: Args) {
-  const { slug } = await params
-  const cs = await queryCaseStudy(decodeURIComponent(slug))
+  const { locale, slug } = await params
+  const cs = await queryCaseStudy(decodeURIComponent(slug), locale)
   if (!cs) notFound()
 
   const img = cs.image && typeof cs.image === 'object' ? (cs.image as Media) : null
@@ -60,11 +62,11 @@ export default async function CaseStudyPage({ params }: Args) {
   return (
     <article className="container pt-28 pb-24 sm:pt-32">
       <Link
-        href="/realisations"
+        href={`/${locale}/realisations`}
         className="inline-flex items-center gap-2 text-sm font-medium text-slate transition-colors hover:text-ink"
       >
         <ArrowLeft className="h-4 w-4" strokeWidth={2.2} />
-        Toutes les réalisations
+        {locale === 'en' ? 'All case studies' : 'Toutes les réalisations'}
       </Link>
 
       {/* En-tête */}
@@ -113,13 +115,13 @@ export default async function CaseStudyPage({ params }: Args) {
         </div>
       )}
 
-      {/* Corps : défi / solution / résultats + aside */}
+      {/* Corps */}
       <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_18rem] lg:gap-16">
         <div className="max-w-2xl space-y-12">
           {cs.challenge && (
             <section>
               <h2 className="mb-4 font-display text-2xl font-bold tracking-tight text-ink">
-                Le défi
+                {locale === 'en' ? 'The challenge' : 'Le défi'}
               </h2>
               <RichText data={cs.challenge} enableGutter={false} />
             </section>
@@ -127,7 +129,7 @@ export default async function CaseStudyPage({ params }: Args) {
           {cs.solution && (
             <section>
               <h2 className="mb-4 font-display text-2xl font-bold tracking-tight text-ink">
-                Notre solution
+                {locale === 'en' ? 'Our solution' : 'Notre solution'}
               </h2>
               <RichText data={cs.solution} enableGutter={false} />
             </section>
@@ -135,7 +137,7 @@ export default async function CaseStudyPage({ params }: Args) {
           {cs.results && (
             <section>
               <h2 className="mb-4 font-display text-2xl font-bold tracking-tight text-ink">
-                Les résultats
+                {locale === 'en' ? 'The results' : 'Les résultats'}
               </h2>
               <RichText data={cs.results} enableGutter={false} />
             </section>
@@ -149,7 +151,7 @@ export default async function CaseStudyPage({ params }: Args) {
               {cs.duration && (
                 <div>
                   <div className="text-xs font-medium uppercase tracking-[0.16em] text-slate">
-                    Durée
+                    {locale === 'en' ? 'Duration' : 'Durée'}
                   </div>
                   <div className="mt-1 text-ink">{cs.duration}</div>
                 </div>
@@ -157,17 +159,17 @@ export default async function CaseStudyPage({ params }: Args) {
               {typeof cs.team_size === 'number' && cs.team_size > 0 && (
                 <div>
                   <div className="text-xs font-medium uppercase tracking-[0.16em] text-slate">
-                    Équipe
+                    {locale === 'en' ? 'Team' : 'Équipe'}
                   </div>
                   <div className="mt-1 text-ink">
-                    {cs.team_size} personne{cs.team_size > 1 ? 's' : ''}
+                    {cs.team_size} {locale === 'en' ? `person${cs.team_size > 1 ? 's' : ''}` : `personne${cs.team_size > 1 ? 's' : ''}`}
                   </div>
                 </div>
               )}
               {services.length > 0 && (
                 <div>
                   <div className="text-xs font-medium uppercase tracking-[0.16em] text-slate">
-                    Services
+                    {locale === 'en' ? 'Services' : 'Services'}
                   </div>
                   <div className="mt-1 text-ink">{services.join(', ')}</div>
                 </div>
@@ -175,7 +177,7 @@ export default async function CaseStudyPage({ params }: Args) {
               {techs.length > 0 && (
                 <div>
                   <div className="text-xs font-medium uppercase tracking-[0.16em] text-slate">
-                    Technologies
+                    {locale === 'en' ? 'Technologies' : 'Technologies'}
                   </div>
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {techs.map((t, i) => (
@@ -200,7 +202,7 @@ export default async function CaseStudyPage({ params }: Args) {
           {testimonials.map((t, i) =>
             t.quote ? (
               <figure key={i} className="rounded-3xl border border-border bg-surface-soft p-7">
-                <blockquote className="text-lg leading-relaxed text-ink">“{t.quote}”</blockquote>
+                <blockquote className="text-lg leading-relaxed text-ink">"{t.quote}"</blockquote>
                 {(t.author || t.author_role) && (
                   <figcaption className="mt-4 text-sm text-slate">
                     <span className="font-semibold text-ink">{t.author}</span>
@@ -217,15 +219,17 @@ export default async function CaseStudyPage({ params }: Args) {
       <div className="mt-16 flex flex-col items-start gap-4 rounded-3xl bg-brand px-8 py-10 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="font-display text-2xl font-bold tracking-tight text-white">
-            Un projet similaire en tête ?
+            {locale === 'en' ? 'A similar project in mind?' : 'Un projet similaire en tête ?'}
           </h2>
-          <p className="mt-1 text-white/70">Parlons-en — le premier échange est gratuit.</p>
+          <p className="mt-1 text-white/70">
+            {locale === 'en' ? "Let's talk — first call is free." : 'Parlons-en — le premier échange est gratuit.'}
+          </p>
         </div>
         <Link
-          href="/contact"
+          href={`/${locale}/contact`}
           className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-terracotta px-6 py-3 font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark"
         >
-          Demander un audit
+          {locale === 'en' ? 'Request an audit' : 'Demander un audit'}
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" strokeWidth={2.4} />
         </Link>
       </div>
@@ -234,10 +238,21 @@ export default async function CaseStudyPage({ params }: Args) {
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
-  const { slug } = await params
-  const cs = await queryCaseStudy(decodeURIComponent(slug))
+  const { locale, slug } = await params
+  const cs = await queryCaseStudy(decodeURIComponent(slug), locale)
   if (!cs) return {}
-  const title = cs.seo?.metaTitle || `${cs.client_name} — Réalisation NRJKA`
+  const title =
+    cs.seo?.metaTitle ||
+    `${cs.client_name} — ${locale === 'en' ? 'NRJKA Case Study' : 'Réalisation NRJKA'}`
   const description = cs.seo?.metaDescription || cs.excerpt || undefined
-  return { title, description }
+  return {
+    title,
+    description,
+    alternates: {
+      languages: {
+        fr: `/fr/realisations/${slug}`,
+        en: `/en/realisations/${slug}`,
+      },
+    },
+  }
 }

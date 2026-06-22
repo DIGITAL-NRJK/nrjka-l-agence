@@ -163,6 +163,16 @@ export const Pages: CollectionConfig<'pages'> = {
         position: 'sidebar',
       },
     },
+    {
+      name: 'autoTranslate',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '@/components/admin/TranslateButton',
+        },
+      },
+    },
     slugField(),
   ],
   hooks: {

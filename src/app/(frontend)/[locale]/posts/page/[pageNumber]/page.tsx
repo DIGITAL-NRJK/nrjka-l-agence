@@ -8,17 +8,19 @@ import { getPayload } from 'payload'
 import React from 'react'
 import PageClient from './page.client'
 import { notFound } from 'next/navigation'
+import { LOCALES } from '@/utilities/i18n'
 
 export const revalidate = 600
 
 type Args = {
   params: Promise<{
+    locale: string
     pageNumber: string
   }>
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const { pageNumber } = await paramsPromise
+  const { locale, pageNumber } = await paramsPromise
   const payload = await getPayload({ config: configPromise })
 
   const sanitizedPageNumber = Number(pageNumber)
@@ -31,6 +33,7 @@ export default async function Page({ params: paramsPromise }: Args) {
     limit: 12,
     page: sanitizedPageNumber,
     overrideAccess: false,
+    locale: locale as 'fr' | 'en',
   })
 
   return (
@@ -65,7 +68,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { pageNumber } = await paramsPromise
   return {
-    title: `Payload Website Template Posts Page ${pageNumber || ''}`,
+    title: `Blog — Page ${pageNumber} | NRJKA`,
   }
 }
 
@@ -76,12 +79,14 @@ export async function generateStaticParams() {
     overrideAccess: false,
   })
 
-  const totalPages = Math.ceil(totalDocs / 10)
+  const totalPages = Math.ceil(totalDocs / 12)
 
-  const pages: { pageNumber: string }[] = []
+  const pages: { locale: string; pageNumber: string }[] = []
 
   for (let i = 1; i <= totalPages; i++) {
-    pages.push({ pageNumber: String(i) })
+    for (const locale of LOCALES) {
+      pages.push({ locale, pageNumber: String(i) })
+    }
   }
 
   return pages

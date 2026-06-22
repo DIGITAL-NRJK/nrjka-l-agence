@@ -139,6 +139,16 @@ export const Expertises: CollectionConfig = {
       },
     },
     {
+      name: 'autoTranslate',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '@/components/admin/TranslateButton',
+        },
+      },
+    },
+    {
       name: 'featured',
       type: 'checkbox',
       defaultValue: false,
