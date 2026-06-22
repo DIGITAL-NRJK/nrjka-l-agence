@@ -66,8 +66,8 @@ export async function POST(req: NextRequest) {
 
   // Revalidation large : les contenus traduits touchent beaucoup de pages.
   try {
-    revalidateTag('global_header')
-    revalidateTag('global_footer')
+    revalidateTag('global_header', 'max')
+    revalidateTag('global_footer', 'max')
     revalidatePath('/', 'layout')
   } catch {
     /* best-effort */

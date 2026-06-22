@@ -11,8 +11,8 @@ export const dynamic = 'force-dynamic'
 // Rafraîchit les vues en cache après écriture des traductions.
 function revalidateAfter(collection: string, slug?: unknown) {
   try {
-    revalidateTag('global_header')
-    revalidateTag('global_footer')
+    revalidateTag('global_header', 'max')
+    revalidateTag('global_footer', 'max')
     const segment =
       collection === 'services'
         ? 'services'
