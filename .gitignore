@@ -55,6 +55,9 @@ public/sitemap*.xml
 # Types générés par Next.js
 next-env.d.ts
 
+# Cache de compilation TypeScript
+tsconfig.tsbuildinfo
+
 # Dossier de référence Base44 (ne pas versionner)
 /_base44-source/
 /_Base44-source/tsconfig.tsbuildinfo

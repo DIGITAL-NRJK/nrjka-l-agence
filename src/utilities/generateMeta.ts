@@ -4,6 +4,7 @@ import type { Media, Page, Post, Config } from '../payload-types'
 
 import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
+import { LOCALES } from './i18n'
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
@@ -21,14 +22,26 @@ const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
 
 export const generateMeta = async (args: {
   doc: Partial<Page> | Partial<Post> | null
+  /** canonical path after the locale prefix, e.g. '' for home, '/contact', '/posts/my-slug' */
+  canonicalPath?: string
 }): Promise<Metadata> => {
-  const { doc } = args
+  const { doc, canonicalPath } = args
 
   const ogImage = getImageURL(doc?.meta?.image)
 
   const title = doc?.meta?.title
     ? doc?.meta?.title + ' | NRJKA Digital'
     : 'NRJKA Digital — Agence web & transformation digitale'
+
+  const serverUrl = getServerSideURL()
+  const alternates =
+    canonicalPath !== undefined
+      ? {
+          languages: Object.fromEntries(
+            LOCALES.map((locale) => [locale, `${serverUrl}/${locale}${canonicalPath}`]),
+          ) as Record<string, string>,
+        }
+      : undefined
 
   return {
     description: doc?.meta?.description,
@@ -45,5 +58,6 @@ export const generateMeta = async (args: {
       url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
     }),
     title,
+    ...(alternates ? { alternates } : {}),
   }
 }

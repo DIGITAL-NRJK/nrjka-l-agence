@@ -143,10 +143,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'site-settings': SiteSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
   locale: 'fr' | 'en';
   widgets: {
@@ -4460,6 +4462,39 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
+ * Mode maintenance / coming soon et réglages globaux.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  maintenanceMode?: {
+    /**
+     * Quand activé, toutes les pages publiques affichent la page de maintenance (admin et prévisualisation restent accessibles).
+     */
+    enabled?: boolean | null;
+    mode?: ('maintenance' | 'coming_soon') | null;
+    title?: string | null;
+    message?: string | null;
+    /**
+     * Affiche un compte à rebours si la date est dans le futur.
+     */
+    countdownDate?: string | null;
+    /**
+     * Ces IPs voient le site normal même en mode maintenance.
+     */
+    allowedIps?:
+      | {
+          ip?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -4525,6 +4560,30 @@ export interface FooterSelect<T extends boolean = true> {
               label?: T;
             };
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  maintenanceMode?:
+    | T
+    | {
+        enabled?: T;
+        mode?: T;
+        title?: T;
+        message?: T;
+        countdownDate?: T;
+        allowedIps?:
+          | T
+          | {
+              ip?: T;
+              id?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;

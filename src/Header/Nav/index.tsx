@@ -15,7 +15,8 @@ export const HeaderNav: React.FC<{
   data: HeaderType
   menu?: MegaMenuPole[]
   chrome?: MegaMenuChrome
-}> = ({ data, menu = [], chrome }) => {
+  locale?: string
+}> = ({ data, menu = [], chrome, locale = 'fr' }) => {
   const navItems = data?.navItems || []
   const hasMenu = menu.length > 0
   const [open, setOpen] = useState(false) // burger mobile
@@ -71,6 +72,7 @@ export const HeaderNav: React.FC<{
             <CMSLink
               key={`nav-${i}`}
               {...link}
+              locale={locale}
               appearance="link"
               className="text-sm font-medium text-slate transition-colors hover:text-ink"
             />
@@ -129,10 +131,10 @@ export const HeaderNav: React.FC<{
 
       {/* CTA — toujours visible */}
       <a
-        href="/contact"
+        href={`/${locale}/contact`}
         className="rounded-full bg-terracotta px-5 py-2 text-sm font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark"
       >
-        Demander un audit
+        {locale === 'en' ? 'Request an audit' : 'Demander un audit'}
       </a>
 
       {/* Burger — mobile */}
@@ -186,6 +188,7 @@ export const HeaderNav: React.FC<{
                   <li key={i}>
                     <CMSLink
                       {...link}
+                      locale={locale}
                       appearance="link"
                       className="block rounded-xl px-4 py-3 text-base font-medium text-ink transition-colors hover:bg-surface-soft"
                     />

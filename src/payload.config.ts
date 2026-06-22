@@ -31,11 +31,13 @@ import { JobApplications } from './collections/JobApplications'
 import { Appointments } from './collections/Appointments'
 import { BlogComments } from './collections/BlogComments'
 import { Resources } from './collections/Resources'
+import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  serverURL: getServerSideURL(),
   admin: {
     components: {
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
@@ -43,7 +45,7 @@ export default buildConfig({
       beforeLogin: ['@/components/BeforeLogin'],
       // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.
-      beforeDashboard: ['@/components/BeforeDashboard'],
+      beforeDashboard: ['@/components/BeforeDashboard', '@/components/TranslateAllPanel'],
     },
     importMap: {
       baseDir: path.resolve(dirname),
@@ -132,7 +134,7 @@ export default buildConfig({
       },
     }),
   ],
-  globals: [Header, Footer],
+  globals: [Header, Footer, SiteSettings],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {

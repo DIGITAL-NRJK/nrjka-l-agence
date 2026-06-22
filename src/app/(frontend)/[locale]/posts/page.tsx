@@ -4,19 +4,25 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 import type { Post, Category } from '@/payload-types'
-import { PostsGrid, type PostItem, type BlogCategory, type PostSub, type CategoryNode } from './PostsGrid'
+import { PostsGrid, type PostItem, type BlogCategory, type PostSub, type CategoryNode } from '../../posts/PostsGrid'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
 
-const formatDate = (d?: string | null) =>
-  d ? new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
+type Args = { params: Promise<{ locale: string }> }
+
+const formatDate = (d?: string | null, locale = 'fr') =>
+  d
+    ? new Date(d).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : ''
 
 const asCategory = (c: unknown): Category | null =>
   c && typeof c === 'object' && 'title' in c ? (c as Category) : null
 
-// Pour un article : niveau 1 = pôles (parent de la catégorie, ou la catégorie si racine),
-// niveau 2 = sous-catégories (les catégories qui ont un parent).
 const postTaxonomy = (post: Post): { poles: BlogCategory[]; subs: PostSub[] } => {
   const poles = new Map<string, string>()
   const subs = new Map<string, PostSub>()
@@ -37,15 +43,17 @@ const postTaxonomy = (post: Post): { poles: BlogCategory[]; subs: PostSub[] } =>
   }
 }
 
-export default async function Page() {
+export default async function Page({ params }: Args) {
+  const { locale } = await params
   const payload = await getPayload({ config: configPromise })
 
   const posts = await payload.find({
     collection: 'posts',
-    depth: 2, // peuple categories[].parent (pour le 2e niveau)
+    depth: 2,
     limit: 50,
     overrideAccess: false,
     sort: '-publishedAt',
+    locale: locale as 'fr' | 'en',
     select: {
       title: true,
       slug: true,
@@ -57,7 +65,6 @@ export default async function Page() {
 
   const items: PostItem[] = (posts.docs as Post[]).map((p) => {
     const { poles, subs } = postTaxonomy(p)
-    // Chemin lisible : « Pôle › Sous-catégorie » si une sous-catégorie existe, sinon le pôle seul.
     let categoryPath = poles[0]?.title ?? null
     if (subs[0]) {
       const parentTitle = poles.find((pole) => pole.slug === subs[0].parentSlug)?.title
@@ -68,14 +75,13 @@ export default async function Page() {
       slug: p.slug as string,
       title: p.title,
       excerpt: p.meta?.description,
-      date: formatDate(p.publishedAt),
+      date: formatDate(p.publishedAt, locale),
       categoryPath,
       poles,
       subs,
     }
   })
 
-  // Arbre des catégories réellement présentes : pôles (niveau 1) + leurs sous-catégories (niveau 2)
   const treeMap = new Map<string, { title: string; subs: Map<string, string> }>()
   for (const it of items) {
     for (const pole of it.poles) {
@@ -101,31 +107,42 @@ export default async function Page() {
       <div className="max-w-2xl">
         <span className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-slate">
           <span className="h-px w-8 bg-terracotta" />
-          Le blog
+          {locale === 'en' ? 'The blog' : 'Le blog'}
         </span>
         <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-6xl">
-          Ressources & conseils
+          {locale === 'en' ? 'Resources & insights' : 'Ressources & conseils'}
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-slate">
-          Nos analyses pour y voir clair dans le digital — sans jargon, avec des sources fiables.
+          {locale === 'en'
+            ? 'Our analyses for clarity in the digital world — no jargon, with reliable sources.'
+            : 'Nos analyses pour y voir clair dans le digital — sans jargon, avec des sources fiables.'}
         </p>
       </div>
 
       {items.length === 0 ? (
         <p className="mt-16 rounded-2xl border border-dashed border-border bg-surface-soft px-6 py-12 text-center text-slate">
-          Les premiers articles arrivent bientôt.
+          {locale === 'en' ? 'First articles coming soon.' : 'Les premiers articles arrivent bientôt.'}
         </p>
       ) : (
-        <PostsGrid posts={items} tree={tree} />
+        <PostsGrid posts={items} tree={tree} locale={locale} />
       )}
     </section>
   )
 }
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata({ params }: Args): Promise<Metadata> {
+  const { locale } = await params
   return {
-    title: 'Blog — Ressources & conseils | NRJKA',
+    title:
+      locale === 'en'
+        ? 'Blog — Resources & insights | NRJKA'
+        : 'Blog — Ressources & conseils | NRJKA',
     description:
-      'Analyses et conseils sur le web, le SEO, l’automatisation et la marque — pour TPE, PME, artisans et associations.',
+      locale === 'en'
+        ? 'Analyses and insights on the web, SEO, automation and branding.'
+        : "Analyses et conseils sur le web, le SEO, l’automatisation et la marque.",
+    alternates: {
+      languages: { fr: '/fr/posts', en: '/en/posts' },
+    },
   }
 }

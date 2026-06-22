@@ -23,9 +23,10 @@ type Selection = { type: 'all' } | { type: 'pole'; slug: string } | { type: 'sub
 
 const PER_PAGE = 6
 
-export const PostsGrid: React.FC<{ posts: PostItem[]; tree: CategoryNode[] }> = ({
+export const PostsGrid: React.FC<{ posts: PostItem[]; tree: CategoryNode[]; locale?: string }> = ({
   posts,
   tree,
+  locale = 'fr',
 }) => {
   const [sel, setSel] = useState<Selection>({ type: 'all' })
   const [page, setPage] = useState(1)
@@ -75,7 +76,7 @@ export const PostsGrid: React.FC<{ posts: PostItem[]; tree: CategoryNode[] }> = 
               {paged.map((post) => (
                 <Link
                   key={post.id}
-                  href={`/posts/${post.slug}`}
+                  href={`/${locale}/posts/${post.slug}`}
                   className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-terracotta/40"
                 >
                   {post.categoryPath && (
