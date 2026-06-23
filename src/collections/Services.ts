@@ -24,6 +24,14 @@ export const Services: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'pole', 'published', 'updatedAt'],
     group: 'Contenu',
+    components: {
+      beforeListTable: [
+        {
+          path: '@/components/admin/TranslateCollectionButton',
+          clientProps: { slug: 'services', label: 'Services' },
+        },
+      ],
+    },
     description:
       'Les offres granulaires de l’agence (ex. Sites vitrines, SEO, Maintenance, Formation…). Chaque service est rattaché à un pôle (collection Pôles & Expertises) et peut être lié à des études de cas.',
   },

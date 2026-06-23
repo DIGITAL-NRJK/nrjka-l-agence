@@ -45,7 +45,9 @@ export default buildConfig({
       beforeLogin: ['@/components/BeforeLogin'],
       // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.
-      beforeDashboard: ['@/components/BeforeDashboard', '@/components/TranslateAllPanel'],
+      // Traduction désormais déclenchée par collection (bouton dans chaque vue liste),
+      // plus de panneau « tout le site » sur le dashboard.
+      beforeDashboard: ['@/components/BeforeDashboard'],
     },
     importMap: {
       baseDir: path.resolve(dirname),

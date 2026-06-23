@@ -8,6 +8,14 @@ export const Resources: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'format', 'downloads', 'updatedAt'],
     group: 'Contenu',
+    components: {
+      beforeListTable: [
+        {
+          path: '@/components/admin/TranslateCollectionButton',
+          clientProps: { slug: 'resources', label: 'Ressources' },
+        },
+      ],
+    },
     description:
       'Les ressources gratuites téléchargeables (guides, modèles, checklists) affichées dans la section « Ressources » de la home. Une ressource n’apparaît que si elle est cochée « Publié ».',
   },

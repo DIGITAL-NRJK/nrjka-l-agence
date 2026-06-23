@@ -59,6 +59,14 @@ export const Posts: CollectionConfig<'posts'> = {
   admin: {
     description: 'Les articles de blog du site (liste sur /posts).',
     defaultColumns: ['title', 'slug', 'updatedAt'],
+    components: {
+      beforeListTable: [
+        {
+          path: '@/components/admin/TranslateCollectionButton',
+          clientProps: { slug: 'posts', label: 'Articles' },
+        },
+      ],
+    },
     livePreview: {
       url: ({ data, req }) =>
         generatePreviewPath({

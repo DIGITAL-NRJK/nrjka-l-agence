@@ -23,6 +23,14 @@ export const Expertises: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'featured', 'order', 'published', 'updatedAt'],
     group: 'Contenu',
+    components: {
+      beforeListTable: [
+        {
+          path: '@/components/admin/TranslateCollectionButton',
+          clientProps: { slug: 'expertises', label: 'Pôles & expertises' },
+        },
+      ],
+    },
     description:
       "Les grands domaines d'expertise de l'agence (les « pôles »). Chaque pôle a sa propre page /expertises/[slug] et peut être mis en avant comme pilier sur la page d'accueil. Les services granulaires (collection Services) se rattachent à un pôle.",
   },
