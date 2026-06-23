@@ -23,6 +23,14 @@ export const CaseStudies: CollectionConfig = {
     useAsTitle: 'client_name',
     defaultColumns: ['client_name', 'industry', 'is_featured', 'updatedAt'],
     group: 'Contenu',
+    components: {
+      beforeListTable: [
+        {
+          path: '@/components/admin/TranslateCollectionButton',
+          clientProps: { slug: 'case-studies', label: 'Réalisations' },
+        },
+      ],
+    },
     description:
       'Vos projets / références clients. Chaque étude de cas alimente la page /realisations (liste filtrable) et sa page détail. Reliez-la à un ou plusieurs pôles pour qu’elle apparaisse aussi sur les pages d’expertise concernées. Cochez « Mis en avant » pour la montrer sur la page d’accueil.',
   },

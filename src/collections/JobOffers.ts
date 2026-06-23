@@ -8,6 +8,14 @@ export const JobOffers: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'contract_type', 'location', 'published', 'createdAt'],
     group: 'RH',
+    components: {
+      beforeListTable: [
+        {
+          path: '@/components/admin/TranslateCollectionButton',
+          clientProps: { slug: 'job-offers', label: 'Offres d’emploi' },
+        },
+      ],
+    },
     description:
       'Les offres d’emploi affichées sur la page recrutement. Une offre n’est visible publiquement que si elle est cochée « Publié ».',
   },

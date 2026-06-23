@@ -8,6 +8,14 @@ export const Testimonials: CollectionConfig = {
     useAsTitle: 'author_name',
     defaultColumns: ['author_name', 'company', 'rating', 'updatedAt'],
     group: 'Contenu',
+    components: {
+      beforeListTable: [
+        {
+          path: '@/components/admin/TranslateCollectionButton',
+          clientProps: { slug: 'testimonials', label: 'Témoignages' },
+        },
+      ],
+    },
     description:
       'Les avis clients affichés dans la section « Témoignages » de la page d’accueil. Renseignez l’auteur, son entreprise, le texte et une note ; ajoutez une photo pour plus d’impact.',
   },

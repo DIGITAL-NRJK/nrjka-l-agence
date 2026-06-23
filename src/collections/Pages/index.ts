@@ -60,6 +60,14 @@ export const Pages: CollectionConfig<'pages'> = {
     description:
       'Les pages du site (accueil, contact, réalisations, expertises, pages légales…), composées de blocs réutilisables. Le slug détermine l’URL — « home » correspond à la page d’accueil.',
     defaultColumns: ['title', 'slug', 'updatedAt'],
+    components: {
+      beforeListTable: [
+        {
+          path: '@/components/admin/TranslateCollectionButton',
+          clientProps: { slug: 'pages', label: 'Pages' },
+        },
+      ],
+    },
     livePreview: {
       url: ({ data, req }) =>
         generatePreviewPath({
