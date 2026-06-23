@@ -4462,13 +4462,83 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
- * Mode maintenance / coming soon et réglages globaux.
+ * Réglages globaux : SEO par défaut, réseaux sociaux, coordonnées, mesure d’audience et mode maintenance.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
   id: number;
+  /**
+   * Valeurs de repli utilisées quand une page n’a pas son propre SEO. Le SEO par page (onglet SEO de chaque contenu) reste prioritaire.
+   */
+  seo?: {
+    /**
+     * Utilisé dans le titre des onglets et les données structurées (ex. « NRJKA »).
+     */
+    siteName?: string | null;
+    /**
+     * Ajouté après le titre de chaque page (ex. « Nos services — NRJKA »). Laisser vide pour aucun suffixe.
+     */
+    titleSuffix?: string | null;
+    /**
+     * Titre affiché pour une page sans titre SEO propre.
+     */
+    defaultMetaTitle?: string | null;
+    /**
+     * Meta description de repli (≈ 150–160 caractères).
+     */
+    defaultMetaDescription?: string | null;
+    /**
+     * Image affichée quand un lien du site est partagé (réseaux sociaux, messageries). Recommandé : 1200 × 630 px.
+     */
+    defaultOgImage?: (number | null) | Media;
+    /**
+     * À n’activer que pour un site en construction : ajoute une directive « noindex » sur l’ensemble du site.
+     */
+    noindex?: boolean | null;
+  };
+  /**
+   * Liens vers vos profils. Utilisés dans le pied de page et les données structurées (sameAs). Laisser un champ vide pour le masquer.
+   */
+  social?: {
+    linkedin?: string | null;
+    instagram?: string | null;
+    facebook?: string | null;
+    twitter?: string | null;
+    youtube?: string | null;
+    tiktok?: string | null;
+  };
+  /**
+   * Coordonnées publiques de l’agence. Utilisées dans le pied de page, la page contact et les données structurées.
+   */
+  contact?: {
+    email?: string | null;
+    phone?: string | null;
+    addressLine?: string | null;
+    postalCode?: string | null;
+    city?: string | null;
+    country?: string | null;
+    /**
+     * Lien « Itinéraire » affiché sur la page contact.
+     */
+    googleMapsUrl?: string | null;
+  };
+  /**
+   * Identifiants de suivi. Laisser vide pour désactiver : un script ne se charge que si son identifiant est renseigné.
+   */
+  analytics?: {
+    /**
+     * Format G-XXXXXXXXXX.
+     */
+    ga4MeasurementId?: string | null;
+    /**
+     * Format GTM-XXXXXXX.
+     */
+    gtmContainerId?: string | null;
+    metaPixelId?: string | null;
+    linkedinPartnerId?: string | null;
+  };
   maintenanceMode?: {
     /**
      * Quand activé, toutes les pages publiques affichent la page de maintenance (admin et prévisualisation restent accessibles).
@@ -4570,6 +4640,45 @@ export interface FooterSelect<T extends boolean = true> {
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
+  seo?:
+    | T
+    | {
+        siteName?: T;
+        titleSuffix?: T;
+        defaultMetaTitle?: T;
+        defaultMetaDescription?: T;
+        defaultOgImage?: T;
+        noindex?: T;
+      };
+  social?:
+    | T
+    | {
+        linkedin?: T;
+        instagram?: T;
+        facebook?: T;
+        twitter?: T;
+        youtube?: T;
+        tiktok?: T;
+      };
+  contact?:
+    | T
+    | {
+        email?: T;
+        phone?: T;
+        addressLine?: T;
+        postalCode?: T;
+        city?: T;
+        country?: T;
+        googleMapsUrl?: T;
+      };
+  analytics?:
+    | T
+    | {
+        ga4MeasurementId?: T;
+        gtmContainerId?: T;
+        metaPixelId?: T;
+        linkedinPartnerId?: T;
+      };
   maintenanceMode?:
     | T
     | {
