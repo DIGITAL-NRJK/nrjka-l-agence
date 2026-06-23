@@ -9,8 +9,10 @@ import configPromise from '@payload-config'
 import Image from 'next/image'
 import type { Service, Expertise, CaseStudy, Post, Media } from '@/payload-types'
 import RichText from '@/components/RichText'
+import { JsonLd } from '@/components/JsonLd'
 import { Accordion } from '@/blocks/Faq/Accordion'
 import { LOCALES } from '@/utilities/i18n'
+import { getServerSideURL } from '@/utilities/getURL'
 
 type Args = { params: Promise<{ locale: string; slug: string }> }
 
@@ -72,8 +74,34 @@ export default async function ServicePage({ params }: Args) {
     (a): a is Post => typeof a === 'object',
   )
 
+  // Fil d'Ariane structuré : Accueil › [Pôle] › Service.
+  const origin = getServerSideURL()
+  const breadcrumbItems: { '@type': 'ListItem'; position: number; name: string; item: string }[] = [
+    { '@type': 'ListItem', position: 1, name: locale === 'en' ? 'Home' : 'Accueil', item: `${origin}/${locale}` },
+  ]
+  if (pole) {
+    breadcrumbItems.push({
+      '@type': 'ListItem',
+      position: breadcrumbItems.length + 1,
+      name: pole.title,
+      item: `${origin}/${locale}/expertises/${pole.slug}`,
+    })
+  }
+  breadcrumbItems.push({
+    '@type': 'ListItem',
+    position: breadcrumbItems.length + 1,
+    name: title as string,
+    item: `${origin}/${locale}/services/${s.slug}`,
+  })
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbItems,
+  }
+
   return (
     <article className="pt-28 pb-24 sm:pt-32">
+      <JsonLd data={breadcrumbJsonLd} />
       {/* En-tête */}
       <header className="container">
         <Link

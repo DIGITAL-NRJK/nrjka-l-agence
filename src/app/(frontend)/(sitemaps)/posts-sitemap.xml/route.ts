@@ -3,6 +3,8 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 
+import { buildLocalizedSitemap, type LocalizedSitemapEntry } from '@/utilities/sitemap'
+
 const getPostsSitemap = unstable_cache(
   async () => {
     const payload = await getPayload({ config })
@@ -26,18 +28,16 @@ const getPostsSitemap = unstable_cache(
       },
     })
 
-    const dateFallback = new Date().toISOString()
-
-    const sitemap = results.docs
+    const entries: LocalizedSitemapEntry[] = results.docs
       ? results.docs
           .filter((post) => Boolean(post?.slug))
           .map((post) => ({
-            loc: `${SITE_URL}/posts/${post?.slug}`,
-            lastmod: post.updatedAt || dateFallback,
+            path: `/posts/${post?.slug}`,
+            lastmod: post.updatedAt || undefined,
           }))
       : []
 
-    return sitemap
+    return buildLocalizedSitemap(SITE_URL, entries)
   },
   ['posts-sitemap'],
   {

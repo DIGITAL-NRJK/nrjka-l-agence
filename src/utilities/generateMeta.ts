@@ -4,7 +4,7 @@ import type { Media, Page, Post, Config } from '../payload-types'
 
 import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
-import { LOCALES } from './i18n'
+import { LOCALES, DEFAULT_LOCALE } from './i18n'
 import { getSiteSettings } from './getSiteSettings'
 
 export const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
@@ -49,12 +49,22 @@ export const generateMeta = async (args: {
     : seo?.defaultMetaTitle?.trim() || `${siteName} — Agence web & transformation digitale`
 
   const serverUrl = getServerSideURL()
+
+  // URL canonique auto-référente de la page courante (préfixée par la locale).
+  const localizedUrl =
+    canonicalPath !== undefined ? `${serverUrl}/${locale}${canonicalPath}` : undefined
+
   const alternates =
     canonicalPath !== undefined
       ? {
-          languages: Object.fromEntries(
-            LOCALES.map((locale) => [locale, `${serverUrl}/${locale}${canonicalPath}`]),
-          ) as Record<string, string>,
+          canonical: localizedUrl,
+          languages: {
+            ...Object.fromEntries(
+              LOCALES.map((l) => [l, `${serverUrl}/${l}${canonicalPath}`]),
+            ),
+            // x-default : version servie quand la langue du visiteur ne correspond à aucune locale.
+            'x-default': `${serverUrl}/${DEFAULT_LOCALE}${canonicalPath}`,
+          } as Record<string, string>,
         }
       : undefined
 
@@ -69,9 +79,10 @@ export const generateMeta = async (args: {
             },
           ]
         : undefined,
+      locale: locale === 'en' ? 'en_US' : 'fr_FR',
       siteName,
       title,
-      url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
+      url: localizedUrl || '/',
     }),
     title,
     ...(alternates ? { alternates } : {}),

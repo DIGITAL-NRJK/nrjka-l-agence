@@ -9,9 +9,10 @@ import { draftMode } from 'next/headers'
 import type { Post, Media, Category } from '@/payload-types'
 import RichText from '@/components/RichText'
 import { ShareButtons } from '@/components/ShareButtons'
+import { JsonLd } from '@/components/JsonLd'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { generateMeta } from '@/utilities/generateMeta'
+import { generateMeta, getImageURL } from '@/utilities/generateMeta'
 import { getServerSideURL } from '@/utilities/getURL'
 import { LOCALES } from '@/utilities/i18n'
 
@@ -54,7 +55,43 @@ export default async function Post({ params: paramsPromise }: Args) {
   if (!post) return <PayloadRedirects url={url} />
 
   const img = post.heroImage && typeof post.heroImage === 'object' ? (post.heroImage as Media) : null
-  const absoluteUrl = `${getServerSideURL()}/${locale}${url}`
+  const origin = getServerSideURL()
+  const absoluteUrl = `${origin}/${locale}${url}`
+
+  const authorNames = (post.populatedAuthors || [])
+    .map((a) => (a && typeof a === 'object' && 'name' in a ? (a as { name?: string }).name : undefined))
+    .filter((n): n is string => Boolean(n))
+
+  // Données structurées : article (BlogPosting) + fil d'Ariane (BreadcrumbList).
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    ...(post.meta?.description ? { description: post.meta.description } : {}),
+    image: getImageURL(post.heroImage),
+    ...(post.publishedAt ? { datePublished: post.publishedAt } : {}),
+    dateModified: post.updatedAt || post.publishedAt || undefined,
+    ...(authorNames.length
+      ? { author: authorNames.map((name) => ({ '@type': 'Person', name })) }
+      : {}),
+    publisher: {
+      '@type': 'Organization',
+      name: 'NRJKA Digital',
+      logo: { '@type': 'ImageObject', url: `${origin}/favicon.svg` },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': absoluteUrl },
+    inLanguage: locale === 'en' ? 'en' : 'fr',
+  }
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: locale === 'en' ? 'Home' : 'Accueil', item: `${origin}/${locale}` },
+      { '@type': 'ListItem', position: 2, name: locale === 'en' ? 'Blog' : 'Le blog', item: `${origin}/${locale}/posts` },
+      { '@type': 'ListItem', position: 3, name: post.title, item: absoluteUrl },
+    ],
+  }
 
   const suggestions = (post.relatedPosts || []).filter((p): p is Post => typeof p === 'object')
   if (suggestions.length < 3) {
@@ -102,6 +139,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 
   return (
     <article className="pt-28 pb-24 sm:pt-32">
+      <JsonLd data={[articleJsonLd, breadcrumbJsonLd]} />
       <PayloadRedirects disableNotFound url={url} />
       {draft && <LivePreviewListener />}
 

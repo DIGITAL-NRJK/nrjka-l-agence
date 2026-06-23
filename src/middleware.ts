@@ -11,7 +11,9 @@ export function middleware(request: NextRequest) {
 
   const url = new URL(`/${DEFAULT_LOCALE}${pathname}`, request.url)
   url.search = request.nextUrl.search
-  return NextResponse.redirect(url, 307)
+  // 308 (permanent) : la redirection vers la locale par défaut est structurelle,
+  // ce qui transmet mieux les signaux SEO qu'un 307 temporaire.
+  return NextResponse.redirect(url, 308)
 }
 
 export const config = {
