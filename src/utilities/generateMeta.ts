@@ -5,8 +5,9 @@ import type { Media, Page, Post, Config } from '../payload-types'
 import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
 import { LOCALES } from './i18n'
+import { getSiteSettings } from './getSiteSettings'
 
-const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
+export const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
 
   let url = serverUrl + '/website-template-OG.webp'
@@ -24,14 +25,28 @@ export const generateMeta = async (args: {
   doc: Partial<Page> | Partial<Post> | null
   /** canonical path after the locale prefix, e.g. '' for home, '/contact', '/posts/my-slug' */
   canonicalPath?: string
+  /** locale active — sert à lire les valeurs SEO par défaut localisées */
+  locale?: string
 }): Promise<Metadata> => {
-  const { doc, canonicalPath } = args
+  const { doc, canonicalPath, locale = 'fr' } = args
 
-  const ogImage = getImageURL(doc?.meta?.image)
+  const settings = await getSiteSettings(locale)
+  const seo = settings?.seo
+
+  const siteName = seo?.siteName?.trim() || 'NRJKA Digital'
+  const suffix = seo?.titleSuffix?.trim()
+
+  // Image OG : celle du document, sinon l'image par défaut des Paramètres, sinon le fallback statique.
+  const ogImage = getImageURL(doc?.meta?.image || seo?.defaultOgImage)
+
+  const description =
+    doc?.meta?.description || seo?.defaultMetaDescription?.trim() || undefined
 
   const title = doc?.meta?.title
-    ? doc?.meta?.title + ' | NRJKA Digital'
-    : 'NRJKA Digital — Agence web & transformation digitale'
+    ? suffix
+      ? `${doc.meta.title} ${suffix}`
+      : doc.meta.title
+    : seo?.defaultMetaTitle?.trim() || `${siteName} — Agence web & transformation digitale`
 
   const serverUrl = getServerSideURL()
   const alternates =
@@ -44,9 +59,9 @@ export const generateMeta = async (args: {
       : undefined
 
   return {
-    description: doc?.meta?.description,
+    description,
     openGraph: mergeOpenGraph({
-      description: doc?.meta?.description || '',
+      description: description || '',
       images: ogImage
         ? [
             {
@@ -54,6 +69,7 @@ export const generateMeta = async (args: {
             },
           ]
         : undefined,
+      siteName,
       title,
       url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
     }),

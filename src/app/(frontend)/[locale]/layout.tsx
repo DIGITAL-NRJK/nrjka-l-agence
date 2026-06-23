@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import type { SiteSetting } from '@/payload-types'
 
 import { cn } from '@/utilities/ui'
 import { GeistMono } from 'geist/font/mono'
@@ -17,7 +18,7 @@ import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
 import { isValidLocale, DEFAULT_LOCALE } from '@/utilities/i18n'
-import { getCachedGlobal } from '@/utilities/getGlobals'
+import { getSiteSettings } from '@/utilities/getSiteSettings'
 
 import '../globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
@@ -33,10 +34,69 @@ type Props = {
   params: Promise<{ locale: string }>
 }
 
+// Données structurées Organization (schema.org) alimentées par les Paramètres du site.
+// Les champs vides sont omis ; replis honnêtes si le global n'existe pas encore.
+function buildOrganizationJsonLd(settings: SiteSetting | null, locale: string) {
+  const seo = settings?.seo
+  const social = settings?.social
+  const contact = settings?.contact
+  const serverUrl = getServerSideURL()
+
+  const sameAs = social
+    ? [
+        social.linkedin,
+        social.instagram,
+        social.facebook,
+        social.twitter,
+        social.youtube,
+        social.tiktok,
+      ].filter((u): u is string => Boolean(u))
+    : []
+
+  const hasAddress = Boolean(
+    contact?.addressLine || contact?.postalCode || contact?.city || contact?.country,
+  )
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: seo?.siteName?.trim() || 'NRJKA Digital',
+    url: serverUrl,
+    logo: `${serverUrl}/favicon.svg`,
+    description:
+      seo?.defaultMetaDescription?.trim() ||
+      (locale === 'en'
+        ? 'Web agency specializing in digital transformation, website creation, SEO and automation. D4™ Architecture — from complexity to clarity.'
+        : 'Agence web spécialisée en transformation digitale, création de sites, SEO et automatisation. Architecture D4™ — de la complexité à la clarté.'),
+    ...(sameAs.length ? { sameAs } : {}),
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      availableLanguage: ['French', 'English'],
+      ...(contact?.email ? { email: contact.email } : {}),
+      ...(contact?.phone ? { telephone: contact.phone } : {}),
+    },
+    ...(hasAddress
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            ...(contact?.addressLine ? { streetAddress: contact.addressLine } : {}),
+            ...(contact?.postalCode ? { postalCode: contact.postalCode } : {}),
+            ...(contact?.city ? { addressLocality: contact.city } : {}),
+            ...(contact?.country ? { addressCountry: contact.country } : {}),
+          },
+        }
+      : {}),
+  }
+}
+
 export default async function LocaleLayout({ children, params }: Props) {
   const { isEnabled } = await draftMode()
   const { locale: rawLocale } = await params
   const locale = isValidLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE
+
+  // Paramètres du site (SEO, social, coordonnées, maintenance). Repli null géré par getSiteSettings.
+  const settings = await getSiteSettings(locale)
 
   // Maintenance / coming soon check — skip for draft/preview mode
   let maintenanceActive = false
@@ -49,21 +109,13 @@ export default async function LocaleLayout({ children, params }: Props) {
   let countdownDate: string | null = null
 
   if (!isEnabled) {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const siteSettings = await getCachedGlobal('site-settings' as any, 1, locale)()
-      const mm = (siteSettings as unknown as Record<string, unknown>)?.maintenanceMode as
-        | Record<string, unknown>
-        | undefined
-      if (mm?.enabled) {
-        maintenanceActive = true
-        maintenanceMode = (mm.mode as 'maintenance' | 'coming_soon') || 'maintenance'
-        maintenanceTitle = (mm.title as string) || maintenanceTitle
-        maintenanceMessage = (mm.message as string) || maintenanceMessage
-        countdownDate = (mm.countdownDate as string) || null
-      }
-    } catch {
-      // Silently fail — site-settings global may not exist yet (needs migration)
+    const mm = settings?.maintenanceMode
+    if (mm?.enabled) {
+      maintenanceActive = true
+      maintenanceMode = mm.mode || 'maintenance'
+      maintenanceTitle = mm.title || maintenanceTitle
+      maintenanceMessage = mm.message || maintenanceMessage
+      countdownDate = mm.countdownDate || null
     }
   }
 
@@ -108,24 +160,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'NRJKA Digital',
-              url: getServerSideURL(),
-              logo: `${getServerSideURL()}/favicon.svg`,
-              description:
-                locale === 'en'
-                  ? 'Web agency specializing in digital transformation, website creation, SEO and automation. D4™ Architecture — from complexity to clarity.'
-                  : 'Agence web spécialisée en transformation digitale, création de sites, SEO et automatisation. Architecture D4™ — de la complexité à la clarté.',
-              contactPoint: {
-                '@type': 'ContactPoint',
-                contactType: 'customer service',
-                availableLanguage: ['French', 'English'],
-              },
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildOrganizationJsonLd(settings, locale)) }}
         />
         <a href="#main" className="skip-link">
           {locale === 'en' ? 'Skip to content' : 'Aller au contenu'}
@@ -158,10 +193,19 @@ export async function generateStaticParams() {
   return [{ locale: 'fr' }, { locale: 'en' }]
 }
 
-export const metadata: Metadata = {
-  metadataBase: new URL(getServerSideURL()),
-  openGraph: mergeOpenGraph(),
-  twitter: {
-    card: 'summary_large_image',
-  },
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale: rawLocale } = await params
+  const locale = isValidLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE
+  const settings = await getSiteSettings(locale)
+
+  return {
+    metadataBase: new URL(getServerSideURL()),
+    openGraph: mergeOpenGraph(),
+    twitter: {
+      card: 'summary_large_image',
+    },
+    // Interrupteur global : « Empêcher l'indexation » dans les Paramètres du site.
+    // Hérité par toutes les pages qui ne définissent pas leur propre robots.
+    ...(settings?.seo?.noindex ? { robots: { index: false, follow: false } } : {}),
+  }
 }

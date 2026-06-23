@@ -211,7 +211,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { locale = 'fr', slug = '' } = await paramsPromise
   const post = await queryPostBySlug({ slug: decodeURIComponent(slug), locale })
-  return generateMeta({ doc: post, canonicalPath: `/posts/${slug}` })
+  return generateMeta({ doc: post, canonicalPath: `/posts/${slug}`, locale })
 }
 
 const queryPostBySlug = cache(async ({ slug, locale }: { slug: string; locale: string }) => {
