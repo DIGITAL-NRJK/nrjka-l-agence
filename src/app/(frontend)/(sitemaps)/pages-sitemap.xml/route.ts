@@ -3,6 +3,8 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 
+import { buildLocalizedSitemap, type LocalizedSitemapEntry } from '@/utilities/sitemap'
+
 const getPagesSitemap = unstable_cache(
   async () => {
     const payload = await getPayload({ config })
@@ -26,31 +28,19 @@ const getPagesSitemap = unstable_cache(
       },
     })
 
-    const dateFallback = new Date().toISOString()
+    // Index du blog (la page de recherche reste hors sitemap : pas d'intérêt à indexer des résultats).
+    const staticEntries: LocalizedSitemapEntry[] = [{ path: '/posts' }]
 
-    const defaultSitemap = [
-      {
-        loc: `${SITE_URL}/search`,
-        lastmod: dateFallback,
-      },
-      {
-        loc: `${SITE_URL}/posts`,
-        lastmod: dateFallback,
-      },
-    ]
-
-    const sitemap = results.docs
+    const pageEntries: LocalizedSitemapEntry[] = results.docs
       ? results.docs
           .filter((page) => Boolean(page?.slug))
-          .map((page) => {
-            return {
-              loc: page?.slug === 'home' ? `${SITE_URL}/` : `${SITE_URL}/${page?.slug}`,
-              lastmod: page.updatedAt || dateFallback,
-            }
-          })
+          .map((page) => ({
+            path: page?.slug === 'home' ? '' : `/${page?.slug}`,
+            lastmod: page.updatedAt || undefined,
+          }))
       : []
 
-    return [...defaultSitemap, ...sitemap]
+    return buildLocalizedSitemap(SITE_URL, [...staticEntries, ...pageEntries])
   },
   ['pages-sitemap'],
   {

@@ -9,7 +9,9 @@ import configPromise from '@payload-config'
 import Image from 'next/image'
 import type { Expertise, Service, CaseStudy, Media } from '@/payload-types'
 import RichText from '@/components/RichText'
+import { JsonLd } from '@/components/JsonLd'
 import { LOCALES } from '@/utilities/i18n'
+import { getServerSideURL } from '@/utilities/getURL'
 
 import { Faq } from '../../../expertises/[slug]/Faq'
 
@@ -71,8 +73,20 @@ export default async function ExpertisePage({ params }: Args) {
     projects = []
   }
 
+  // Fil d'Ariane structuré : Accueil › Expertise.
+  const origin = getServerSideURL()
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: locale === 'en' ? 'Home' : 'Accueil', item: `${origin}/${locale}` },
+      { '@type': 'ListItem', position: 2, name: e.title, item: `${origin}/${locale}/expertises/${e.slug}` },
+    ],
+  }
+
   return (
     <article className="pt-28 pb-24 sm:pt-32">
+      <JsonLd data={breadcrumbJsonLd} />
       {/* En-tête */}
       <header className="container">
         <Link
