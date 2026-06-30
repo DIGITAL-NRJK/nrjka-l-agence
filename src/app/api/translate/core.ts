@@ -14,6 +14,10 @@ type ArrayManualEnField = {
   array: string
   pairs: Array<{ source: string; target: string }>
 }
+// Traduit en profondeur un champ entier (groupe `hero`, tableau de blocs `layout`…) :
+// parcourt récursivement la structure, traduit les textes des clés "texte" + le richtext,
+// et préserve tout le reste (ids, types, URLs, médias, icônes, enums).
+type LocalizedDeepField = { kind: 'localized_deep'; path: string }
 
 export type FieldDescriptor =
   | LocalizedField
@@ -22,6 +26,7 @@ export type FieldDescriptor =
   | ManualEnField
   | RichtextManualEnField
   | ArrayManualEnField
+  | LocalizedDeepField
 
 // ─── Translation config per collection ───────────────────────────────────────
 // Règles : seulement du texte (jamais blocs/medias). Les champs non-localisés sans
@@ -31,6 +36,9 @@ export const TRANSLATABLE_FIELDS: Record<string, FieldDescriptor[]> = {
   pages: [
     { kind: 'localized', path: 'meta.title' },
     { kind: 'localized', path: 'meta.description' },
+    // Contenu visible : en-tête + tous les blocs du layout (titres, sous-titres, textes, richtext…).
+    { kind: 'localized_deep', path: 'hero' },
+    { kind: 'localized_deep', path: 'layout' },
   ],
   posts: [
     { kind: 'localized', path: 'title' },
@@ -140,6 +148,47 @@ export async function translateLexical(node: unknown): Promise<unknown> {
   return obj
 }
 
+// ─── Traduction "profonde" : groupe hero / blocs du layout ────────────────────
+// On traduit les chaînes des clés NON listées ci-dessous (qui couvrent ids, types,
+// URLs, slugs, médias, icônes, enums, valeurs neutres) + le richtext (objets `root`).
+// Les ids de médias/relations sont des nombres → ignorés d'office. Le reste est préservé.
+const DEEP_SKIP_KEYS = new Set(
+  [
+    'id', 'blockType', 'blockName', 'type', 'url', 'href', 'slug', 'icon', 'appearance',
+    'relationTo', 'target', 'rel', 'value', 'name', 'reference', 'linkType', 'size', 'width',
+    'color', 'colorScheme', 'variant', 'mode', 'format', 'email', 'phone', 'telephone', 'date',
+    'image', 'media', 'logo', 'photo', 'avatar', 'file', 'background', 'video', 'poster',
+    'createdAt', 'updatedAt', 'publishedAt', 'position', 'order',
+  ].map((k) => k.toLowerCase()),
+)
+
+export async function translateDeep(value: unknown, key?: string): Promise<unknown> {
+  // Richtext lexical (objet avec `root`) → traducteur dédié.
+  if (
+    value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    'root' in (value as Record<string, unknown>)
+  ) {
+    return translateLexical(value)
+  }
+  if (Array.isArray(value)) {
+    return Promise.all(value.map((item) => translateDeep(item)))
+  }
+  if (value && typeof value === 'object') {
+    const entries = await Promise.all(
+      Object.entries(value as Record<string, unknown>).map(
+        async ([k, v]) => [k, await translateDeep(v, k)] as const,
+      ),
+    )
+    return Object.fromEntries(entries)
+  }
+  if (typeof value === 'string' && key && !DEEP_SKIP_KEYS.has(key.toLowerCase()) && value.trim()) {
+    return translateText(value)
+  }
+  return value
+}
+
 // ─── Helpers chemins pointés ──────────────────────────────────────────────────
 
 function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
@@ -218,6 +267,14 @@ export async function translateDocument(
         const value = getNestedValue(docData, descriptor.path)
         if (value && typeof value === 'object') {
           setNestedValue(localizedData, descriptor.path, await translateLexical(value))
+          translatedKeys.push(descriptor.path)
+        }
+        return
+      }
+      if (descriptor.kind === 'localized_deep') {
+        const value = getNestedValue(docData, descriptor.path)
+        if (value && typeof value === 'object') {
+          setNestedValue(localizedData, descriptor.path, await translateDeep(value))
           translatedKeys.push(descriptor.path)
         }
         return
