@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { generateMeta, getImageURL } from '@/utilities/generateMeta'
+import { getLocalizedPaths } from '@/utilities/localizedSlugs'
 import { getServerSideURL } from '@/utilities/getURL'
 import { LOCALES } from '@/utilities/i18n'
 
@@ -24,9 +25,13 @@ export async function generateStaticParams() {
     limit: 1000,
     overrideAccess: false,
     pagination: false,
+    locale: 'all',
     select: { slug: true },
   })
-  return posts.docs.flatMap(({ slug }) => LOCALES.map((locale) => ({ locale, slug })))
+  return posts.docs.flatMap((doc) => {
+    const slugByLocale = (doc as unknown as { slug?: Record<string, string> }).slug || {}
+    return LOCALES.map((locale) => ({ locale, slug: slugByLocale[locale] })).filter((p) => p.slug)
+  })
 }
 
 type Args = { params: Promise<{ locale: string; slug?: string }> }
@@ -249,7 +254,10 @@ export default async function Post({ params: paramsPromise }: Args) {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { locale = 'fr', slug = '' } = await paramsPromise
   const post = await queryPostBySlug({ slug: decodeURIComponent(slug), locale })
-  return generateMeta({ doc: post, canonicalPath: `/posts/${slug}`, locale })
+  const localizedPaths = post?.id
+    ? await getLocalizedPaths('posts', post.id, (s) => `/posts/${s}`)
+    : undefined
+  return generateMeta({ doc: post, canonicalPath: `/posts/${slug}`, locale, localizedPaths })
 }
 
 const queryPostBySlug = cache(async ({ slug, locale }: { slug: string; locale: string }) => {

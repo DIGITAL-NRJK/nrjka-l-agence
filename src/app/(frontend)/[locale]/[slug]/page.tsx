@@ -10,6 +10,7 @@ import { homeStatic } from '@/endpoints/seed/home-static'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
+import { getLocalizedPaths } from '@/utilities/localizedSlugs'
 import { LOCALES } from '@/utilities/i18n'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
@@ -22,12 +23,16 @@ export async function generateStaticParams() {
     limit: 1000,
     overrideAccess: false,
     pagination: false,
+    locale: 'all',
     select: { slug: true },
   })
 
-  return pages.docs
-    .filter((doc) => doc.slug !== 'home')
-    .flatMap(({ slug }) => LOCALES.map((locale) => ({ locale, slug })))
+  return pages.docs.flatMap((doc) => {
+    const slugByLocale = (doc as unknown as { slug?: Record<string, string> }).slug || {}
+    return LOCALES.map((locale) => ({ locale, slug: slugByLocale[locale] })).filter(
+      (p) => p.slug && p.slug !== 'home',
+    )
+  })
 }
 
 type Args = {
@@ -75,7 +80,10 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const decodedSlug = decodeURIComponent(slug)
   const page = await queryPageBySlug({ slug: decodedSlug, locale })
   const canonicalPath = decodedSlug === 'home' ? '' : `/${decodedSlug}`
-  return generateMeta({ doc: page, canonicalPath, locale })
+  const localizedPaths = page?.id
+    ? await getLocalizedPaths('pages', page.id, (s) => (s === 'home' ? '' : `/${s}`))
+    : undefined
+  return generateMeta({ doc: page, canonicalPath, locale, localizedPaths })
 }
 
 const queryPageBySlug = cache(async ({ slug, locale }: { slug: string; locale: string }) => {

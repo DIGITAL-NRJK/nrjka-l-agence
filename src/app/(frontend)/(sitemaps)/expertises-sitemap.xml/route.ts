@@ -3,7 +3,11 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 
-import { buildLocalizedSitemap, type LocalizedSitemapEntry } from '@/utilities/sitemap'
+import {
+  buildLocalizedSitemap,
+  localizedPathsFromDoc,
+  type LocalizedSitemapEntry,
+} from '@/utilities/sitemap'
 
 const getExpertisesSitemap = unstable_cache(
   async () => {
@@ -16,6 +20,7 @@ const getExpertisesSitemap = unstable_cache(
       depth: 0,
       limit: 1000,
       pagination: false,
+      locale: 'all',
       where: {
         published: {
           equals: true,
@@ -29,11 +34,11 @@ const getExpertisesSitemap = unstable_cache(
 
     const entries: LocalizedSitemapEntry[] = results.docs
       ? results.docs
-          .filter((doc) => Boolean(doc?.slug))
           .map((doc) => ({
-            path: `/expertises/${doc.slug}`,
+            paths: localizedPathsFromDoc(doc, (s) => `/expertises/${s}`),
             lastmod: doc.updatedAt || undefined,
           }))
+          .filter((e) => Object.keys(e.paths).length > 0)
       : []
 
     return buildLocalizedSitemap(SITE_URL, entries)

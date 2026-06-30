@@ -9,6 +9,7 @@ import configPromise from '@payload-config'
 import type { CaseStudy, Media, Service } from '@/payload-types'
 import RichText from '@/components/RichText'
 import { LOCALES } from '@/utilities/i18n'
+import { getLocalizedPaths, buildLanguageAlternates } from '@/utilities/localizedSlugs'
 
 type Args = { params: Promise<{ locale: string; slug: string }> }
 
@@ -31,9 +32,15 @@ export async function generateStaticParams() {
     collection: 'case-studies',
     limit: 500,
     pagination: false,
+    locale: 'all',
     select: { slug: true },
   })
-  return res.docs?.flatMap(({ slug }) => LOCALES.map((locale) => ({ locale, slug }))) || []
+  return (
+    res.docs?.flatMap((doc) => {
+      const slugByLocale = (doc as unknown as { slug?: Record<string, string> }).slug || {}
+      return LOCALES.map((locale) => ({ locale, slug: slugByLocale[locale] })).filter((p) => p.slug)
+    }) || []
+  )
 }
 
 const relName = (rel: unknown): string | undefined =>
@@ -245,14 +252,10 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     cs.seo?.metaTitle ||
     `${cs.client_name} — ${locale === 'en' ? 'NRJKA Case Study' : 'Réalisation NRJKA'}`
   const description = cs.seo?.metaDescription || cs.excerpt || undefined
+  const localizedPaths = await getLocalizedPaths('case-studies', cs.id, (s) => `/realisations/${s}`)
   return {
     title,
     description,
-    alternates: {
-      languages: {
-        fr: `/fr/realisations/${slug}`,
-        en: `/en/realisations/${slug}`,
-      },
-    },
+    alternates: buildLanguageAlternates({ locale, localizedPaths, fallbackPath: `/realisations/${slug}` }),
   }
 }

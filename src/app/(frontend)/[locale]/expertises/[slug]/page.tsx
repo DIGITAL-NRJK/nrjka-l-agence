@@ -12,6 +12,7 @@ import RichText from '@/components/RichText'
 import { JsonLd } from '@/components/JsonLd'
 import { LOCALES } from '@/utilities/i18n'
 import { getServerSideURL } from '@/utilities/getURL'
+import { getLocalizedPaths, buildLanguageAlternates } from '@/utilities/localizedSlugs'
 
 import { Faq } from '../../../expertises/[slug]/Faq'
 
@@ -37,10 +38,14 @@ export async function generateStaticParams() {
     where: { published: { equals: true } },
     limit: 100,
     pagination: false,
+    locale: 'all',
     select: { slug: true },
   })
   return (
-    res.docs?.flatMap(({ slug }) => LOCALES.map((locale) => ({ locale, slug }))) || []
+    res.docs?.flatMap((doc) => {
+      const slugByLocale = (doc as unknown as { slug?: Record<string, string> }).slug || {}
+      return LOCALES.map((locale) => ({ locale, slug: slugByLocale[locale] })).filter((p) => p.slug)
+    }) || []
   )
 }
 
@@ -325,14 +330,10 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { locale, slug } = await params
   const e = await queryExpertise(decodeURIComponent(slug), locale)
   if (!e) return {}
+  const localizedPaths = await getLocalizedPaths('expertises', e.id, (s) => `/expertises/${s}`)
   return {
     title: e.seo?.metaTitle || `${e.title} — ${locale === 'en' ? 'NRJKA Expertise' : 'Expertise NRJKA'}`,
     description: e.seo?.metaDescription || e.description || undefined,
-    alternates: {
-      languages: {
-        fr: `/fr/expertises/${slug}`,
-        en: `/en/expertises/${slug}`,
-      },
-    },
+    alternates: buildLanguageAlternates({ locale, localizedPaths, fallbackPath: `/expertises/${slug}` }),
   }
 }
