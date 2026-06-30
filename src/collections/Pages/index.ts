@@ -181,7 +181,7 @@ export const Pages: CollectionConfig<'pages'> = {
         },
       },
     },
-    slugField(),
+    slugField({ localized: true }),
   ],
   hooks: {
     afterChange: [revalidatePage],

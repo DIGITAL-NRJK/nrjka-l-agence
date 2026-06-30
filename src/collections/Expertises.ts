@@ -53,10 +53,11 @@ export const Expertises: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
+      localized: true,
       label: 'Slug (URL)',
       admin: {
         position: 'sidebar',
-        description: 'Identifiant dans l’URL : /expertises/<slug>. Ex. « web-experience ». Sans espaces ni accents.',
+        description: 'Identifiant dans l’URL : /expertises/<slug>, propre à chaque langue (FR et EN). Ex. « web-experience ». Sans espaces ni accents.',
       },
     },
     {

@@ -246,7 +246,7 @@ export const Posts: CollectionConfig<'posts'> = {
         },
       ],
     },
-    slugField(),
+    slugField({ localized: true }),
   ],
   hooks: {
     beforeChange: [enforceContributorDraft],

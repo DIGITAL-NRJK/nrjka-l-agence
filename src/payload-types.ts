@@ -1673,7 +1673,7 @@ export interface Expertise {
    */
   title: string;
   /**
-   * Identifiant dans l’URL : /expertises/<slug>. Ex. « web-experience ». Sans espaces ni accents.
+   * Identifiant dans l’URL : /expertises/<slug>, propre à chaque langue (FR et EN). Ex. « web-experience ». Sans espaces ni accents.
    */
   slug: string;
   /**
@@ -1910,6 +1910,9 @@ export interface Service {
 export interface CaseStudy {
   id: number;
   client_name: string;
+  /**
+   * Identifiant dans l’URL : /realisations/<slug>, propre à chaque langue (FR et EN).
+   */
   slug: string;
   excerpt?: string | null;
   excerpt_en?: string | null;

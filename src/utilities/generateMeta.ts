@@ -4,8 +4,8 @@ import type { Media, Page, Post, Config } from '../payload-types'
 
 import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
-import { LOCALES, DEFAULT_LOCALE } from './i18n'
 import { getSiteSettings } from './getSiteSettings'
+import { buildLanguageAlternates } from './localizedSlugs'
 
 export const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
@@ -27,8 +27,10 @@ export const generateMeta = async (args: {
   canonicalPath?: string
   /** locale active — sert à lire les valeurs SEO par défaut localisées */
   locale?: string
+  /** chemins par langue (après /[locale]) quand le slug est localisé ; sinon canonicalPath partagé */
+  localizedPaths?: Partial<Record<string, string>>
 }): Promise<Metadata> => {
-  const { doc, canonicalPath, locale = 'fr' } = args
+  const { doc, canonicalPath, locale = 'fr', localizedPaths } = args
 
   const settings = await getSiteSettings(locale)
   const seo = settings?.seo
@@ -48,25 +50,8 @@ export const generateMeta = async (args: {
       : doc.meta.title
     : seo?.defaultMetaTitle?.trim() || `${siteName} — Agence web & transformation digitale`
 
-  const serverUrl = getServerSideURL()
-
-  // URL canonique auto-référente de la page courante (préfixée par la locale).
-  const localizedUrl =
-    canonicalPath !== undefined ? `${serverUrl}/${locale}${canonicalPath}` : undefined
-
-  const alternates =
-    canonicalPath !== undefined
-      ? {
-          canonical: localizedUrl,
-          languages: {
-            ...Object.fromEntries(
-              LOCALES.map((l) => [l, `${serverUrl}/${l}${canonicalPath}`]),
-            ),
-            // x-default : version servie quand la langue du visiteur ne correspond à aucune locale.
-            'x-default': `${serverUrl}/${DEFAULT_LOCALE}${canonicalPath}`,
-          } as Record<string, string>,
-        }
-      : undefined
+  // Canonical + hreflang par langue. Gère le slug localisé (URL EN ≠ FR) via localizedPaths.
+  const alternates = buildLanguageAlternates({ locale, localizedPaths, fallbackPath: canonicalPath })
 
   return {
     description,
@@ -82,7 +67,7 @@ export const generateMeta = async (args: {
       locale: locale === 'en' ? 'en_US' : 'fr_FR',
       siteName,
       title,
-      url: localizedUrl || '/',
+      url: alternates?.canonical || '/',
     }),
     title,
     ...(alternates ? { alternates } : {}),
