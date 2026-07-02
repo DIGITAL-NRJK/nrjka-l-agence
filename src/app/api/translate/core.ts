@@ -14,11 +14,6 @@ type ArrayManualEnField = {
   array: string
   pairs: Array<{ source: string; target: string }>
 }
-// Traduit en profondeur un champ entier (groupe `hero`, tableau de blocs `layout`…) :
-// parcourt récursivement la structure, traduit les textes des clés "texte" + le richtext,
-// et préserve tout le reste (ids, types, URLs, médias, icônes, enums).
-type LocalizedDeepField = { kind: 'localized_deep'; path: string }
-
 export type FieldDescriptor =
   | LocalizedField
   | LocalizedRichTextField
@@ -26,19 +21,17 @@ export type FieldDescriptor =
   | ManualEnField
   | RichtextManualEnField
   | ArrayManualEnField
-  | LocalizedDeepField
 
 // ─── Translation config per collection ───────────────────────────────────────
 // Règles : seulement du texte (jamais blocs/medias). Les champs non-localisés sans
 // pendant _en sont exclus (sinon on écraserait le FR en écrivant sur la locale 'en').
 
 export const TRANSLATABLE_FIELDS: Record<string, FieldDescriptor[]> = {
+  // Pages : traitées par voie dédiée (translateLocalizedDocument, lecture FR + EN),
+  // car 100 % localisées avec blocs/tableaux. Cette entrée sert juste à autoriser la collection.
   pages: [
     { kind: 'localized', path: 'meta.title' },
     { kind: 'localized', path: 'meta.description' },
-    // Contenu visible : en-tête + tous les blocs du layout (titres, sous-titres, textes, richtext…).
-    { kind: 'localized_deep', path: 'hero' },
-    { kind: 'localized_deep', path: 'layout' },
   ],
   posts: [
     { kind: 'localized', path: 'title' },
@@ -106,27 +99,65 @@ export const TRANSLATABLE_COLLECTIONS: { slug: string; label: string }[] = [
 
 const LT_URL = (process.env.LIBRETRANSLATE_URL ?? 'https://translate.nrjka.com').replace(/\/$/, '')
 
-export async function translateText(text: string): Promise<string> {
-  if (!text?.trim()) return text
+// Limiteur de concurrence : l'instance LibreTranslate auto-hébergée sature (502) si on
+// l'inonde de requêtes parallèles (une page = beaucoup de champs). On plafonne les appels
+// simultanés et on file le reste dans une attente.
+const MAX_CONCURRENT = 3
+let activeRequests = 0
+const waitQueue: Array<() => void> = []
 
+async function withLimit<T>(fn: () => Promise<T>): Promise<T> {
+  if (activeRequests >= MAX_CONCURRENT) {
+    await new Promise<void>((resolve) => waitQueue.push(resolve))
+  }
+  activeRequests++
+  try {
+    return await fn()
+  } finally {
+    activeRequests--
+    waitQueue.shift()?.()
+  }
+}
+
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504])
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+async function translateTextOnce(text: string): Promise<string> {
   const body: Record<string, string> = { q: text, source: 'fr', target: 'en', format: 'text' }
   if (process.env.LIBRETRANSLATE_API_KEY) body.api_key = process.env.LIBRETRANSLATE_API_KEY
 
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 30_000)
-  try {
-    const res = await fetch(`${LT_URL}/translate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-      signal: controller.signal,
-    })
-    if (!res.ok) throw new Error(`LibreTranslate ${res.status}: ${await res.text()}`)
-    const data = await res.json()
-    return typeof data.translatedText === 'string' ? data.translatedText : text
-  } finally {
-    clearTimeout(timeout)
+  let lastError: Error = new Error('LibreTranslate: échec inconnu')
+  for (let attempt = 0; attempt < 4; attempt++) {
+    if (attempt > 0) await sleep(500 * 2 ** (attempt - 1)) // 0.5s, 1s, 2s
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 30_000)
+    try {
+      const res = await fetch(`${LT_URL}/translate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      })
+      if (RETRYABLE_STATUS.has(res.status)) {
+        lastError = new Error(`LibreTranslate ${res.status} (transitoire)`)
+        continue // réessaie
+      }
+      if (!res.ok) throw new Error(`LibreTranslate ${res.status}: ${(await res.text()).slice(0, 200)}`)
+      const data = await res.json()
+      return typeof data.translatedText === 'string' ? data.translatedText : text
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error('LibreTranslate: erreur réseau')
+      // erreurs réseau/timeout → réessaie aussi
+    } finally {
+      clearTimeout(timeout)
+    }
   }
+  throw lastError
+}
+
+export async function translateText(text: string): Promise<string> {
+  if (!text?.trim()) return text
+  return withLimit(() => translateTextOnce(text))
 }
 
 // ─── Lexical richText : traduit récursivement les nœuds texte, préserve le reste ──
@@ -148,45 +179,149 @@ export async function translateLexical(node: unknown): Promise<unknown> {
   return obj
 }
 
-// ─── Traduction "profonde" : groupe hero / blocs du layout ────────────────────
-// On traduit les chaînes des clés NON listées ci-dessous (qui couvrent ids, types,
-// URLs, slugs, médias, icônes, enums, valeurs neutres) + le richtext (objets `root`).
-// Les ids de médias/relations sont des nombres → ignorés d'office. Le reste est préservé.
-const DEEP_SKIP_KEYS = new Set(
-  [
-    'id', 'blockType', 'blockName', 'type', 'url', 'href', 'slug', 'icon', 'appearance',
-    'relationTo', 'target', 'rel', 'value', 'name', 'reference', 'linkType', 'size', 'width',
-    'color', 'colorScheme', 'variant', 'mode', 'format', 'email', 'phone', 'telephone', 'date',
-    'image', 'media', 'logo', 'photo', 'avatar', 'file', 'background', 'video', 'poster',
-    'createdAt', 'updatedAt', 'publishedAt', 'position', 'order',
-  ].map((k) => k.toLowerCase()),
-)
+// ─── Traduction d'un document ENTIÈREMENT localisé (pages…) ───────────────────
+// On lit le doc en FR (source) ET en EN (cible), sans fallback. On ne traduit que les champs
+// TEXTE connus (liste d'inclusion → jamais un enum/slug/url/icône).
+// Point CLÉ des ids : sur ce schéma, les lignes de blocs/tableaux ont des ids PAR LANGUE.
+// Envoyer un id FR dans le payload EN provoque « Value must be unique ». Donc :
+//   - id présent côté EN (cible) → réutilisé → Payload MET À JOUR la ligne EN ;
+//   - sinon → pas d'id → Payload CRÉE la ligne EN ;
+//   - jamais un id issu du doc FR (garde-fou collectIDs).
+const TGT_LOCALE = 'en'
+const SRC_LOCALE = 'fr'
 
-export async function translateDeep(value: unknown, key?: string): Promise<unknown> {
-  // Richtext lexical (objet avec `root`) → traducteur dédié.
-  if (
-    value &&
-    typeof value === 'object' &&
-    !Array.isArray(value) &&
-    'root' in (value as Record<string, unknown>)
-  ) {
-    return translateLexical(value)
-  }
+// Champs de la page à traduire (le reste — média, réglages… — n'est pas touché).
+const PAGE_FIELD_PATHS = ['title', 'hero', 'layout', 'meta.title', 'meta.description']
+
+// Clés de champs TEXTE à traduire (liste d'inclusion : tout le reste est préservé tel quel).
+const TRANSLATABLE_PAGE_STRING_KEYS = new Set([
+  'title', 'titleAccent', 'subtitle', 'subheading', 'heading', 'description', 'excerpt',
+  'eyebrow', 'label', 'badge', 'text', 'content', 'caption', 'quote', 'question', 'answer',
+  'intro', 'role', 'tag', 'buttonLabel', 'linkLabel', 'ctaLabel',
+])
+
+const SYSTEM_KEYS = new Set(['createdAt', 'updatedAt'])
+
+// Collecte récursivement tous les `id` d'un document (sert à interdire de réémettre un id FR).
+function collectIDs(value: unknown, ids = new Set<unknown>()): Set<unknown> {
   if (Array.isArray(value)) {
-    return Promise.all(value.map((item) => translateDeep(item)))
+    value.forEach((item) => collectIDs(item, ids))
+    return ids
   }
-  if (value && typeof value === 'object') {
-    const entries = await Promise.all(
-      Object.entries(value as Record<string, unknown>).map(
-        async ([k, v]) => [k, await translateDeep(v, k)] as const,
+  if (!value || typeof value !== 'object') return ids
+  const obj = value as Record<string, unknown>
+  if (obj.id !== undefined) ids.add(obj.id)
+  Object.values(obj).forEach((child) => collectIDs(child, ids))
+  return ids
+}
+
+function getTargetID(targetValue: unknown): unknown {
+  if (targetValue && typeof targetValue === 'object' && !Array.isArray(targetValue)) {
+    return (targetValue as Record<string, unknown>).id
+  }
+  return undefined
+}
+
+// Traduit une valeur FR en s'appuyant sur la valeur EN existante (targetValue) pour réutiliser
+// les ids EN des lignes. `sourceIDs` = ensemble des ids du doc FR, jamais réémis côté EN.
+async function translatePageValue(
+  sourceValue: unknown,
+  targetValue: unknown,
+  sourceIDs: Set<unknown>,
+  key = '',
+): Promise<unknown> {
+  if (typeof sourceValue === 'string') {
+    if (!sourceValue.trim() || !TRANSLATABLE_PAGE_STRING_KEYS.has(key)) return sourceValue
+    return translateText(sourceValue)
+  }
+  if (Array.isArray(sourceValue)) {
+    const targetArray = Array.isArray(targetValue) ? targetValue : []
+    return Promise.all(
+      sourceValue.map((sourceItem, index) =>
+        translatePageValue(sourceItem, targetArray[index], sourceIDs, key),
       ),
     )
-    return Object.fromEntries(entries)
   }
-  if (typeof value === 'string' && key && !DEEP_SKIP_KEYS.has(key.toLowerCase()) && value.trim()) {
-    return translateText(value)
+  if (!sourceValue || typeof sourceValue !== 'object') return sourceValue
+
+  const sourceObj = sourceValue as Record<string, unknown>
+  // Richtext (lexical) → traducteur dédié.
+  if (sourceObj.root && typeof sourceObj.root === 'object') return translateLexical(sourceObj)
+
+  const targetObj =
+    targetValue && typeof targetValue === 'object' && !Array.isArray(targetValue)
+      ? (targetValue as Record<string, unknown>)
+      : {}
+
+  const output: Record<string, unknown> = {}
+  // On ne réutilise QUE l'id EN (cible), et jamais un id issu du doc FR.
+  const targetID = getTargetID(targetObj)
+  if (targetID !== undefined && !sourceIDs.has(targetID)) output.id = targetID
+
+  for (const [childKey, childValue] of Object.entries(sourceObj)) {
+    if (childKey === 'id' || SYSTEM_KEYS.has(childKey)) continue
+    output[childKey] = await translatePageValue(childValue, targetObj[childKey], sourceIDs, childKey)
   }
-  return value
+  return output
+}
+
+async function translateLocalizedDocument(
+  payload: Payload,
+  collection: string,
+  id: string | number,
+): Promise<string[]> {
+  const sourceDoc = await payload.findByID({
+    collection: collection as any,
+    id,
+    locale: SRC_LOCALE,
+    fallbackLocale: false,
+    depth: 0,
+    overrideAccess: true,
+  })
+  if (!sourceDoc) return []
+
+  const targetDoc = await payload.findByID({
+    collection: collection as any,
+    id,
+    locale: TGT_LOCALE,
+    fallbackLocale: false,
+    depth: 0,
+    overrideAccess: true,
+  })
+
+  const sourceData = sourceDoc as Record<string, unknown>
+  const targetData = (targetDoc ?? {}) as Record<string, unknown>
+  const sourceIDs = collectIDs(sourceDoc)
+
+  const data: Record<string, unknown> = {}
+  const translatedKeys: string[] = []
+
+  for (const path of PAGE_FIELD_PATHS) {
+    const sourceValue = getNestedValue(sourceData, path)
+    if (sourceValue === undefined || sourceValue === null) continue
+    const targetValue = getNestedValue(targetData, path)
+    const translated = await translatePageValue(
+      sourceValue,
+      targetValue,
+      sourceIDs,
+      path.split('.').at(-1) ?? '',
+    )
+    setNestedValue(data, path, translated)
+    translatedKeys.push(path)
+  }
+
+  if (translatedKeys.length === 0) return []
+
+  await payload.update({
+    collection: collection as any,
+    id,
+    locale: TGT_LOCALE,
+    fallbackLocale: false,
+    depth: 0,
+    overrideAccess: true,
+    data: data as any,
+  })
+  return translatedKeys
 }
 
 // ─── Helpers chemins pointés ──────────────────────────────────────────────────
@@ -220,6 +355,9 @@ export async function translateDocument(
 ): Promise<string[]> {
   const descriptors = TRANSLATABLE_FIELDS[collection]
   if (!descriptors) return []
+
+  // Collections 100 % localisées avec blocs/tableaux (pages) → voie toutes-locales dédiée.
+  if (collection === 'pages') return translateLocalizedDocument(payload, collection, id)
 
   const doc = await payload.findByID({
     collection: collection as any,
@@ -267,14 +405,6 @@ export async function translateDocument(
         const value = getNestedValue(docData, descriptor.path)
         if (value && typeof value === 'object') {
           setNestedValue(localizedData, descriptor.path, await translateLexical(value))
-          translatedKeys.push(descriptor.path)
-        }
-        return
-      }
-      if (descriptor.kind === 'localized_deep') {
-        const value = getNestedValue(docData, descriptor.path)
-        if (value && typeof value === 'object') {
-          setNestedValue(localizedData, descriptor.path, await translateDeep(value))
           translatedKeys.push(descriptor.path)
         }
         return

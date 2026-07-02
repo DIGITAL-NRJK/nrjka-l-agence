@@ -62,8 +62,14 @@ export async function POST(req: NextRequest) {
   try {
     translatedKeys = await translateDocument(payload, collection, id)
   } catch (err) {
+    // Détail complet côté serveur (terminal) + renvoyé au client pour cibler le champ fautif.
+    const details = (err as { data?: unknown })?.data
+    payload.logger.error({ err, msg: `translate ${collection}#${id} a échoué`, details })
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'Translation failed.' },
+      {
+        error: err instanceof Error ? err.message : 'Translation failed.',
+        details: details ?? null,
+      },
       { status: 500 },
     )
   }
