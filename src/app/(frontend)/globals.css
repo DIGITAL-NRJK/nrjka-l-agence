@@ -192,6 +192,1407 @@
   --surface-soft: #131c2e;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   PALETTES DE COULEURS — pilotées par Paramètres du site › Apparence.
+   L'attribut data-palette est posé sur <html> par le layout (SSR, zéro flash).
+   Sans attribut (ou navy-terracotta) : les valeurs :root / [data-theme='dark']
+   ci-dessus restent la palette par défaut.
+   Chaque palette définit sa variante claire ET sombre (toggle visiteur conservé).
+   Contraste : texte/fond ≥ AA ; les accents vifs portent du texte foncé.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Forêt & Cuivre — vert sapin profond + cuivre chaud ── */
+[data-palette='foret-cuivre'] {
+  --background: #f7f7f3;
+  --foreground: #16211b;
+  --card: #edf0ea;
+  --card-foreground: #16211b;
+  --popover: #ffffff;
+  --popover-foreground: #16211b;
+  --primary: #1a3329;
+  --primary-foreground: #f3efe6;
+  --secondary: #eef1ec;
+  --secondary-foreground: #1a3329;
+  --muted: #eef1ec;
+  --muted-foreground: #5b6f63;
+  --accent: #eef1ec;
+  --accent-foreground: #1a3329;
+  --border: #dde3db;
+  --input: #dde3db;
+  --ring: #8ba394;
+  --brand: #1a3329;
+  --brand-2: #26493b;
+  --brand-foreground: #f3efe6;
+  --terracotta: #c87f4a;
+  --terracotta-dark: #b06c3b;
+  --terracotta-foreground: #221407;
+  --ink: #16211b;
+  --slate: #5b6f63;
+  --surface-soft: #f0f3ee;
+}
+[data-palette='foret-cuivre'][data-theme='dark'] {
+  --background: #0c1512;
+  --foreground: #e4ece6;
+  --card: #16281f;
+  --card-foreground: #e4ece6;
+  --popover: #16281f;
+  --popover-foreground: #e4ece6;
+  --primary: #e4ece6;
+  --primary-foreground: #0c1512;
+  --secondary: #14231c;
+  --secondary-foreground: #e4ece6;
+  --muted: #14231c;
+  --muted-foreground: #93a89b;
+  --accent: #14231c;
+  --accent-foreground: #e4ece6;
+  --border: #21362b;
+  --input: #21362b;
+  --ring: #2f4a3c;
+  --brand: #234636;
+  --brand-2: #2f5a46;
+  --brand-foreground: #f3efe6;
+  --terracotta: #c87f4a;
+  --terracotta-dark: #d98e58;
+  --terracotta-foreground: #221407;
+  --ink: #e4ece6;
+  --slate: #93a89b;
+  --surface-soft: #101c16;
+}
+
+/* ── Océan & Corail — bleu pétrole + corail doux ── */
+[data-palette='ocean-corail'] {
+  --background: #f5f8f8;
+  --foreground: #122430;
+  --card: #e9f0f1;
+  --card-foreground: #122430;
+  --popover: #ffffff;
+  --popover-foreground: #122430;
+  --primary: #0f3a4a;
+  --primary-foreground: #eef6f7;
+  --secondary: #eaf1f2;
+  --secondary-foreground: #0f3a4a;
+  --muted: #eaf1f2;
+  --muted-foreground: #53707e;
+  --accent: #eaf1f2;
+  --accent-foreground: #0f3a4a;
+  --border: #dbe5e7;
+  --input: #dbe5e7;
+  --ring: #7fa2ae;
+  --brand: #0f3a4a;
+  --brand-2: #175468;
+  --brand-foreground: #eef6f7;
+  --terracotta: #ef8354;
+  --terracotta-dark: #e06c3c;
+  --terracotta-foreground: #1c0f06;
+  --ink: #122430;
+  --slate: #53707e;
+  --surface-soft: #eef4f4;
+}
+[data-palette='ocean-corail'][data-theme='dark'] {
+  --background: #0a161d;
+  --foreground: #e2ecf1;
+  --card: #142934;
+  --card-foreground: #e2ecf1;
+  --popover: #142934;
+  --popover-foreground: #e2ecf1;
+  --primary: #e2ecf1;
+  --primary-foreground: #0a161d;
+  --secondary: #11232d;
+  --secondary-foreground: #e2ecf1;
+  --muted: #11232d;
+  --muted-foreground: #8fa9b6;
+  --accent: #11232d;
+  --accent-foreground: #e2ecf1;
+  --border: #1f3844;
+  --input: #1f3844;
+  --ring: #2e4f5e;
+  --brand: #16455a;
+  --brand-2: #1e5f7a;
+  --brand-foreground: #eef6f7;
+  --terracotta: #ef8354;
+  --terracotta-dark: #f79468;
+  --terracotta-foreground: #1c0f06;
+  --ink: #e2ecf1;
+  --slate: #8fa9b6;
+  --surface-soft: #0e1e27;
+}
+
+/* ── Aubergine & Or — prune profond + or sable ── */
+[data-palette='aubergine-or'] {
+  --background: #faf7f4;
+  --foreground: #251a29;
+  --card: #f1eaee;
+  --card-foreground: #251a29;
+  --popover: #ffffff;
+  --popover-foreground: #251a29;
+  --primary: #3b2144;
+  --primary-foreground: #f6f0ea;
+  --secondary: #f2ecf0;
+  --secondary-foreground: #3b2144;
+  --muted: #f2ecf0;
+  --muted-foreground: #6d5f74;
+  --accent: #f2ecf0;
+  --accent-foreground: #3b2144;
+  --border: #e5dbe3;
+  --input: #e5dbe3;
+  --ring: #a891ac;
+  --brand: #3b2144;
+  --brand-2: #543060;
+  --brand-foreground: #f6f0ea;
+  --terracotta: #d9a441;
+  --terracotta-dark: #c08c2c;
+  --terracotta-foreground: #241708;
+  --ink: #251a29;
+  --slate: #6d5f74;
+  --surface-soft: #f4eff2;
+}
+[data-palette='aubergine-or'][data-theme='dark'] {
+  --background: #150d18;
+  --foreground: #ece2f0;
+  --card: #241830;
+  --card-foreground: #ece2f0;
+  --popover: #241830;
+  --popover-foreground: #ece2f0;
+  --primary: #ece2f0;
+  --primary-foreground: #150d18;
+  --secondary: #1e1327;
+  --secondary-foreground: #ece2f0;
+  --muted: #1e1327;
+  --muted-foreground: #a493ab;
+  --accent: #1e1327;
+  --accent-foreground: #ece2f0;
+  --border: #33243c;
+  --input: #33243c;
+  --ring: #4b3556;
+  --brand: #462852;
+  --brand-2: #5d3a6e;
+  --brand-foreground: #f6f0ea;
+  --terracotta: #d9a441;
+  --terracotta-dark: #e5b558;
+  --terracotta-foreground: #241708;
+  --ink: #ece2f0;
+  --slate: #a493ab;
+  --surface-soft: #1c1220;
+}
+
+/* ── Graphite & Menthe — anthracite bleuté + vert menthe ── */
+[data-palette='graphite-menthe'] {
+  --background: #f6f7f8;
+  --foreground: #1a1d23;
+  --card: #edeff1;
+  --card-foreground: #1a1d23;
+  --popover: #ffffff;
+  --popover-foreground: #1a1d23;
+  --primary: #23272f;
+  --primary-foreground: #f2f4f6;
+  --secondary: #eef0f2;
+  --secondary-foreground: #23272f;
+  --muted: #eef0f2;
+  --muted-foreground: #5e6673;
+  --accent: #eef0f2;
+  --accent-foreground: #23272f;
+  --border: #dfe2e6;
+  --input: #dfe2e6;
+  --ring: #9aa3af;
+  --brand: #23272f;
+  --brand-2: #333945;
+  --brand-foreground: #f2f4f6;
+  --terracotta: #5cc8a1;
+  --terracotta-dark: #3fae87;
+  --terracotta-foreground: #0c1f18;
+  --ink: #1a1d23;
+  --slate: #5e6673;
+  --surface-soft: #f0f2f4;
+}
+[data-palette='graphite-menthe'][data-theme='dark'] {
+  --background: #101216;
+  --foreground: #e6e9ee;
+  --card: #1a1e25;
+  --card-foreground: #e6e9ee;
+  --popover: #1a1e25;
+  --popover-foreground: #e6e9ee;
+  --primary: #e6e9ee;
+  --primary-foreground: #101216;
+  --secondary: #171a20;
+  --secondary-foreground: #e6e9ee;
+  --muted: #171a20;
+  --muted-foreground: #99a1ad;
+  --accent: #171a20;
+  --accent-foreground: #e6e9ee;
+  --border: #262c35;
+  --input: #262c35;
+  --ring: #3a424f;
+  --brand: #262b34;
+  --brand-2: #343b47;
+  --brand-foreground: #f2f4f6;
+  --terracotta: #5cc8a1;
+  --terracotta-dark: #74d5b2;
+  --terracotta-foreground: #0c1f18;
+  --ink: #e6e9ee;
+  --slate: #99a1ad;
+  --surface-soft: #14161b;
+}
+
+/* ── Premium Tech — crème, sapin sombre + lime électrique ── */
+[data-palette='premium-tech'] {
+  --background: #f7f4ef;
+  --foreground: #121417;
+  --card: #eeeae2;
+  --card-foreground: #121417;
+  --popover: #fdfcfa;
+  --popover-foreground: #121417;
+  --primary: #143d3c;
+  --primary-foreground: #f2f7ed;
+  --secondary: #efece5;
+  --secondary-foreground: #143d3c;
+  --muted: #efece5;
+  --muted-foreground: #5d6660;
+  --accent: #efece5;
+  --accent-foreground: #143d3c;
+  --border: #e1dcd1;
+  --input: #e1dcd1;
+  --ring: #8fa39b;
+  --brand: #143d3c;
+  --brand-2: #1d5654;
+  --brand-foreground: #f2f7ed;
+  --terracotta: #d6ff3f;
+  --terracotta-dark: #b8e22b;
+  --terracotta-foreground: #171b06;
+  --ink: #121417;
+  --slate: #5d6660;
+  --surface-soft: #f1ede6;
+}
+[data-palette='premium-tech'][data-theme='dark'] {
+  --background: #0c1312;
+  --foreground: #e4ece8;
+  --card: #152423;
+  --card-foreground: #e4ece8;
+  --popover: #152423;
+  --popover-foreground: #e4ece8;
+  --primary: #e4ece8;
+  --primary-foreground: #0c1312;
+  --secondary: #121e1d;
+  --secondary-foreground: #e4ece8;
+  --muted: #121e1d;
+  --muted-foreground: #92a39d;
+  --accent: #121e1d;
+  --accent-foreground: #e4ece8;
+  --border: #21332f;
+  --input: #21332f;
+  --ring: #314944;
+  --brand: #1a4b49;
+  --brand-2: #236563;
+  --brand-foreground: #f2f7ed;
+  --terracotta: #d6ff3f;
+  --terracotta-dark: #c4ec31;
+  --terracotta-foreground: #171b06;
+  --ink: #e4ece8;
+  --slate: #92a39d;
+  --surface-soft: #101b1a;
+}
+
+/* ── Studio Créatif — ivoire, bleu électrique + corail vif ── */
+[data-palette='studio-creatif'] {
+  --background: #faf7f2;
+  --foreground: #171717;
+  --card: #f0ece4;
+  --card-foreground: #171717;
+  --popover: #fffdf9;
+  --popover-foreground: #171717;
+  --primary: #3b2eff;
+  --primary-foreground: #f5f4ff;
+  --secondary: #f1eee7;
+  --secondary-foreground: #2a20cc;
+  --muted: #f1eee7;
+  --muted-foreground: #6b665e;
+  --accent: #f1eee7;
+  --accent-foreground: #2a20cc;
+  --border: #e4dfd5;
+  --input: #e4dfd5;
+  --ring: #8f87ff;
+  --brand: #3b2eff;
+  --brand-2: #5a50ff;
+  --brand-foreground: #f5f4ff;
+  --terracotta: #ff6b4a;
+  --terracotta-dark: #e85430;
+  --terracotta-foreground: #230903;
+  --ink: #171717;
+  --slate: #6b665e;
+  --surface-soft: #f3f0e9;
+}
+[data-palette='studio-creatif'][data-theme='dark'] {
+  --background: #0f0e1a;
+  --foreground: #eae8f5;
+  --card: #1a1830;
+  --card-foreground: #eae8f5;
+  --popover: #1a1830;
+  --popover-foreground: #eae8f5;
+  --primary: #eae8f5;
+  --primary-foreground: #0f0e1a;
+  --secondary: #141224;
+  --secondary-foreground: #eae8f5;
+  --muted: #141224;
+  --muted-foreground: #9a97b0;
+  --accent: #141224;
+  --accent-foreground: #eae8f5;
+  --border: #262346;
+  --input: #262346;
+  --ring: #3d3870;
+  --brand: #4a3eff;
+  --brand-2: #6a60ff;
+  --brand-foreground: #f5f4ff;
+  --terracotta: #ff6b4a;
+  --terracotta-dark: #ff8265;
+  --terracotta-foreground: #230903;
+  --ink: #eae8f5;
+  --slate: #9a97b0;
+  --surface-soft: #131224;
+}
+
+/* ── Éditorial Moderne — papier, encre bleue + rouge brique ── */
+[data-palette='editorial-moderne'] {
+  --background: #f5f1ea;
+  --foreground: #1d1b18;
+  --card: #ece6db;
+  --card-foreground: #1d1b18;
+  --popover: #fcfaf6;
+  --popover-foreground: #1d1b18;
+  --primary: #222e50;
+  --primary-foreground: #f3f1ea;
+  --secondary: #eee9df;
+  --secondary-foreground: #222e50;
+  --muted: #eee9df;
+  --muted-foreground: #6a655c;
+  --accent: #eee9df;
+  --accent-foreground: #222e50;
+  --border: #e0d9cb;
+  --input: #e0d9cb;
+  --ring: #9aa0b5;
+  --brand: #222e50;
+  --brand-2: #32436f;
+  --brand-foreground: #f3f1ea;
+  --terracotta: #e94f37;
+  --terracotta-dark: #d13e27;
+  --terracotta-foreground: #260a05;
+  --ink: #1d1b18;
+  --slate: #6a655c;
+  --surface-soft: #efeae0;
+}
+[data-palette='editorial-moderne'][data-theme='dark'] {
+  --background: #0f1320;
+  --foreground: #e7e9f0;
+  --card: #1a2338;
+  --card-foreground: #e7e9f0;
+  --popover: #1a2338;
+  --popover-foreground: #e7e9f0;
+  --primary: #e7e9f0;
+  --primary-foreground: #0f1320;
+  --secondary: #141a2b;
+  --secondary-foreground: #e7e9f0;
+  --muted: #141a2b;
+  --muted-foreground: #94a0b8;
+  --accent: #141a2b;
+  --accent-foreground: #e7e9f0;
+  --border: #253252;
+  --input: #253252;
+  --ring: #36476e;
+  --brand: #2a3a63;
+  --brand-2: #3a4f82;
+  --brand-foreground: #f3f1ea;
+  --terracotta: #e94f37;
+  --terracotta-dark: #f0654e;
+  --terracotta-foreground: #260a05;
+  --ink: #e7e9f0;
+  --slate: #94a0b8;
+  --surface-soft: #141a2b;
+}
+
+/* ── Human & Warm — ivoire chaud, terre cuite + jaune miel ── */
+[data-palette='human-warm'] {
+  --background: #fff8ef;
+  --foreground: #211a16;
+  --card: #f6ede0;
+  --card-foreground: #211a16;
+  --popover: #fffcf7;
+  --popover-foreground: #211a16;
+  --primary: #7a3e2c;
+  --primary-foreground: #fff4e8;
+  --secondary: #f8f0e3;
+  --secondary-foreground: #7a3e2c;
+  --muted: #f8f0e3;
+  --muted-foreground: #77685c;
+  --accent: #f8f0e3;
+  --accent-foreground: #7a3e2c;
+  --border: #eadfce;
+  --input: #eadfce;
+  --ring: #c4a284;
+  --brand: #7a3e2c;
+  --brand-2: #96543e;
+  --brand-foreground: #fff4e8;
+  --terracotta: #ffb000;
+  --terracotta-dark: #e69c00;
+  --terracotta-foreground: #241a02;
+  --ink: #211a16;
+  --slate: #77685c;
+  --surface-soft: #f9f1e5;
+}
+[data-palette='human-warm'][data-theme='dark'] {
+  --background: #17100b;
+  --foreground: #f2e8dd;
+  --card: #251b13;
+  --card-foreground: #f2e8dd;
+  --popover: #251b13;
+  --popover-foreground: #f2e8dd;
+  --primary: #f2e8dd;
+  --primary-foreground: #17100b;
+  --secondary: #1e150e;
+  --secondary-foreground: #f2e8dd;
+  --muted: #1e150e;
+  --muted-foreground: #b3a292;
+  --accent: #1e150e;
+  --accent-foreground: #f2e8dd;
+  --border: #362a1f;
+  --input: #362a1f;
+  --ring: #54402e;
+  --brand: #8a4a35;
+  --brand-2: #a65c43;
+  --brand-foreground: #fff4e8;
+  --terracotta: #ffb000;
+  --terracotta-dark: #ffc133;
+  --terracotta-foreground: #241a02;
+  --ink: #f2e8dd;
+  --slate: #b3a292;
+  --surface-soft: #1d150f;
+}
+
+/* ── Luxury Digital — lin, vert bouteille + or vieilli ── */
+[data-palette='luxury-digital'] {
+  --background: #f4efe7;
+  --foreground: #15110d;
+  --card: #ebe4d8;
+  --card-foreground: #15110d;
+  --popover: #fbf9f4;
+  --popover-foreground: #15110d;
+  --primary: #243b35;
+  --primary-foreground: #f1ede2;
+  --secondary: #ede7db;
+  --secondary-foreground: #243b35;
+  --muted: #ede7db;
+  --muted-foreground: #6a655a;
+  --accent: #ede7db;
+  --accent-foreground: #243b35;
+  --border: #dfd7c7;
+  --input: #dfd7c7;
+  --ring: #9aa79f;
+  --brand: #243b35;
+  --brand-2: #33534b;
+  --brand-foreground: #f1ede2;
+  --terracotta: #c89b3c;
+  --terracotta-dark: #b0862c;
+  --terracotta-foreground: #211906;
+  --ink: #15110d;
+  --slate: #6a655a;
+  --surface-soft: #eee8dd;
+}
+[data-palette='luxury-digital'][data-theme='dark'] {
+  --background: #0f1311;
+  --foreground: #e8e6dd;
+  --card: #19241f;
+  --card-foreground: #e8e6dd;
+  --popover: #19241f;
+  --popover-foreground: #e8e6dd;
+  --primary: #e8e6dd;
+  --primary-foreground: #0f1311;
+  --secondary: #131a17;
+  --secondary-foreground: #e8e6dd;
+  --muted: #131a17;
+  --muted-foreground: #a09e90;
+  --accent: #131a17;
+  --accent-foreground: #e8e6dd;
+  --border: #263630;
+  --input: #263630;
+  --ring: #3a5248;
+  --brand: #2a473f;
+  --brand-2: #3a5f54;
+  --brand-foreground: #f1ede2;
+  --terracotta: #c89b3c;
+  --terracotta-dark: #d6ac50;
+  --terracotta-foreground: #211906;
+  --ink: #e8e6dd;
+  --slate: #a09e90;
+  --surface-soft: #131a17;
+}
+
+/* ── Bold Future — nuit violette, lavande + lime (né sombre, décliné en clair) ── */
+[data-palette='bold-future'] {
+  --background: #f6f4ff;
+  --foreground: #16121f;
+  --card: #ece9f8;
+  --card-foreground: #16121f;
+  --popover: #fdfcff;
+  --popover-foreground: #16121f;
+  --primary: #4f3dd8;
+  --primary-foreground: #f6f4ff;
+  --secondary: #eeebfa;
+  --secondary-foreground: #3d2eb0;
+  --muted: #eeebfa;
+  --muted-foreground: #675f7c;
+  --accent: #eeebfa;
+  --accent-foreground: #3d2eb0;
+  --border: #dfdaf0;
+  --input: #dfdaf0;
+  --ring: #a596e8;
+  --brand: #4f3dd8;
+  --brand-2: #6a58ec;
+  --brand-foreground: #f6f4ff;
+  --terracotta: #ccff00;
+  --terracotta-dark: #b3e600;
+  --terracotta-foreground: #1a2003;
+  --ink: #16121f;
+  --slate: #675f7c;
+  --surface-soft: #f0edfb;
+}
+[data-palette='bold-future'][data-theme='dark'] {
+  --background: #101014;
+  --foreground: #f6f2ff;
+  --card: #1b1b24;
+  --card-foreground: #f6f2ff;
+  --popover: #1b1b24;
+  --popover-foreground: #f6f2ff;
+  --primary: #b8a6ff;
+  --primary-foreground: #17122b;
+  --secondary: #15151b;
+  --secondary-foreground: #f6f2ff;
+  --muted: #15151b;
+  --muted-foreground: #a29bbe;
+  --accent: #15151b;
+  --accent-foreground: #f6f2ff;
+  --border: #2b2740;
+  --input: #2b2740;
+  --ring: #453a75;
+  --brand: #322a55;
+  --brand-2: #453a75;
+  --brand-foreground: #f6f2ff;
+  --terracotta: #ccff00;
+  --terracotta-dark: #daff40;
+  --terracotta-foreground: #1a2003;
+  --ink: #f6f2ff;
+  --slate: #a29bbe;
+  --surface-soft: #15151b;
+}
+
+/* ── Indigo SaaS — blanc bleuté, marine profond + blurple (réf. Stripe) ── */
+[data-palette='indigo-saas'] {
+  --background: #f7f9fc;
+  --foreground: #0a2540;
+  --card: #eaeff5;
+  --card-foreground: #0a2540;
+  --popover: #ffffff;
+  --popover-foreground: #0a2540;
+  --primary: #0a2540;
+  --primary-foreground: #f0f4fa;
+  --secondary: #ebf0f6;
+  --secondary-foreground: #0a2540;
+  --muted: #ebf0f6;
+  --muted-foreground: #526580;
+  --accent: #ebf0f6;
+  --accent-foreground: #0a2540;
+  --border: #dbe3ee;
+  --input: #dbe3ee;
+  --ring: #8ba3c7;
+  --brand: #0a2540;
+  --brand-2: #163a63;
+  --brand-foreground: #f0f4fa;
+  --terracotta: #635bff;
+  --terracotta-dark: #4f46e5;
+  --terracotta-foreground: #ffffff;
+  --ink: #0a2540;
+  --slate: #526580;
+  --surface-soft: #eef3f8;
+}
+[data-palette='indigo-saas'][data-theme='dark'] {
+  --background: #071120;
+  --foreground: #e4ecf7;
+  --card: #10233d;
+  --card-foreground: #e4ecf7;
+  --popover: #10233d;
+  --popover-foreground: #e4ecf7;
+  --primary: #e4ecf7;
+  --primary-foreground: #071120;
+  --secondary: #0d1c33;
+  --secondary-foreground: #e4ecf7;
+  --muted: #0d1c33;
+  --muted-foreground: #8ea6c4;
+  --accent: #0d1c33;
+  --accent-foreground: #e4ecf7;
+  --border: #1c3352;
+  --input: #1c3352;
+  --ring: #2c4a75;
+  --brand: #12294a;
+  --brand-2: #1c3b69;
+  --brand-foreground: #f0f4fa;
+  --terracotta: #7a73ff;
+  --terracotta-dark: #8f89ff;
+  --terracotta-foreground: #14123a;
+  --ink: #e4ecf7;
+  --slate: #8ea6c4;
+  --surface-soft: #0b1829;
+}
+
+/* ── Noir Studio — monochrome premium + bleu électrique (réf. Vercel) ── */
+[data-palette='noir-studio'] {
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+  --card: #f0f0f0;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #0a0a0a;
+  --primary-foreground: #fafafa;
+  --secondary: #f1f1f1;
+  --secondary-foreground: #0a0a0a;
+  --muted: #f1f1f1;
+  --muted-foreground: #616161;
+  --accent: #f1f1f1;
+  --accent-foreground: #0a0a0a;
+  --border: #e4e4e4;
+  --input: #e4e4e4;
+  --ring: #9e9e9e;
+  --brand: #0a0a0a;
+  --brand-2: #262626;
+  --brand-foreground: #fafafa;
+  --terracotta: #0070f3;
+  --terracotta-dark: #005cc8;
+  --terracotta-foreground: #ffffff;
+  --ink: #0a0a0a;
+  --slate: #616161;
+  --surface-soft: #f4f4f4;
+}
+[data-palette='noir-studio'][data-theme='dark'] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card: #171717;
+  --card-foreground: #ededed;
+  --popover: #171717;
+  --popover-foreground: #ededed;
+  --primary: #ededed;
+  --primary-foreground: #0a0a0a;
+  --secondary: #141414;
+  --secondary-foreground: #ededed;
+  --muted: #141414;
+  --muted-foreground: #9e9e9e;
+  --accent: #141414;
+  --accent-foreground: #ededed;
+  --border: #262626;
+  --input: #262626;
+  --ring: #3f3f3f;
+  --brand: #1a1a1a;
+  --brand-2: #2b2b2b;
+  --brand-foreground: #fafafa;
+  --terracotta: #3291ff;
+  --terracotta-dark: #52a8ff;
+  --terracotta-foreground: #04162b;
+  --ink: #ededed;
+  --slate: #9e9e9e;
+  --surface-soft: #111111;
+}
+
+/* ── Nébuleuse — neutres zinc + violet retenu (réf. Linear) ── */
+[data-palette='nebuleuse'] {
+  --background: #f7f7f9;
+  --foreground: #1c1d23;
+  --card: #ececf1;
+  --card-foreground: #1c1d23;
+  --popover: #ffffff;
+  --popover-foreground: #1c1d23;
+  --primary: #5e6ad2;
+  --primary-foreground: #f4f4ff;
+  --secondary: #ededf2;
+  --secondary-foreground: #4a54b8;
+  --muted: #ededf2;
+  --muted-foreground: #60626f;
+  --accent: #ededf2;
+  --accent-foreground: #4a54b8;
+  --border: #e0e0e8;
+  --input: #e0e0e8;
+  --ring: #a2a7e8;
+  --brand: #5e6ad2;
+  --brand-2: #7982e0;
+  --brand-foreground: #f4f4ff;
+  --terracotta: #97a0ff;
+  --terracotta-dark: #7c86ff;
+  --terracotta-foreground: #14163a;
+  --ink: #1c1d23;
+  --slate: #60626f;
+  --surface-soft: #f0f0f4;
+}
+[data-palette='nebuleuse'][data-theme='dark'] {
+  --background: #101116;
+  --foreground: #e3e4ea;
+  --card: #191a22;
+  --card-foreground: #e3e4ea;
+  --popover: #191a22;
+  --popover-foreground: #e3e4ea;
+  --primary: #e3e4ea;
+  --primary-foreground: #101116;
+  --secondary: #15161d;
+  --secondary-foreground: #e3e4ea;
+  --muted: #15161d;
+  --muted-foreground: #8f92a3;
+  --accent: #15161d;
+  --accent-foreground: #e3e4ea;
+  --border: #262835;
+  --input: #262835;
+  --ring: #3c3f52;
+  --brand: #2a2f57;
+  --brand-2: #3a4173;
+  --brand-foreground: #eceefc;
+  --terracotta: #7c86ff;
+  --terracotta-dark: #97a0ff;
+  --terracotta-foreground: #12142f;
+  --ink: #e3e4ea;
+  --slate: #8f92a3;
+  --surface-soft: #14151c;
+}
+
+/* ── Teal Transformatif — blanc nuage + teal WGSN 2026 ── */
+[data-palette='teal-transformatif'] {
+  --background: #f7fafa;
+  --foreground: #0e2a28;
+  --card: #e8f0ef;
+  --card-foreground: #0e2a28;
+  --popover: #ffffff;
+  --popover-foreground: #0e2a28;
+  --primary: #0f4c48;
+  --primary-foreground: #eefaf7;
+  --secondary: #e9f1f0;
+  --secondary-foreground: #0f4c48;
+  --muted: #e9f1f0;
+  --muted-foreground: #52706c;
+  --accent: #e9f1f0;
+  --accent-foreground: #0f4c48;
+  --border: #d9e5e3;
+  --input: #d9e5e3;
+  --ring: #7fa8a2;
+  --brand: #0f4c48;
+  --brand-2: #17665f;
+  --brand-foreground: #eefaf7;
+  --terracotta: #14b8a6;
+  --terracotta-dark: #0d9488;
+  --terracotta-foreground: #06231e;
+  --ink: #0e2a28;
+  --slate: #52706c;
+  --surface-soft: #eef4f3;
+}
+[data-palette='teal-transformatif'][data-theme='dark'] {
+  --background: #081513;
+  --foreground: #dfece9;
+  --card: #122522;
+  --card-foreground: #dfece9;
+  --popover: #122522;
+  --popover-foreground: #dfece9;
+  --primary: #dfece9;
+  --primary-foreground: #081513;
+  --secondary: #0e1f1c;
+  --secondary-foreground: #dfece9;
+  --muted: #0e1f1c;
+  --muted-foreground: #8caaa4;
+  --accent: #0e1f1c;
+  --accent-foreground: #dfece9;
+  --border: #1d3531;
+  --input: #1d3531;
+  --ring: #2c4c46;
+  --brand: #145a54;
+  --brand-2: #1c7a71;
+  --brand-foreground: #eefaf7;
+  --terracotta: #2dd4bf;
+  --terracotta-dark: #14b8a6;
+  --terracotta-foreground: #06231e;
+  --ink: #dfece9;
+  --slate: #8caaa4;
+  --surface-soft: #0c1c1a;
+}
+
+/* ── Sauge & Lin — neutres chauds + sauge et sienne douce (warm minimal) ── */
+[data-palette='sauge-lin'] {
+  --background: #f5f0eb;
+  --foreground: #232019;
+  --card: #ebe4da;
+  --card-foreground: #232019;
+  --popover: #fdfaf6;
+  --popover-foreground: #232019;
+  --primary: #3f5346;
+  --primary-foreground: #f2f0e6;
+  --secondary: #ece5da;
+  --secondary-foreground: #3f5346;
+  --muted: #ece5da;
+  --muted-foreground: #6e685c;
+  --accent: #ece5da;
+  --accent-foreground: #3f5346;
+  --border: #e0d8cb;
+  --input: #e0d8cb;
+  --ring: #a3a48f;
+  --brand: #3f5346;
+  --brand-2: #54695a;
+  --brand-foreground: #f2f0e6;
+  --terracotta: #c98a72;
+  --terracotta-dark: #b57559;
+  --terracotta-foreground: #241009;
+  --ink: #232019;
+  --slate: #6e685c;
+  --surface-soft: #efe9e1;
+}
+[data-palette='sauge-lin'][data-theme='dark'] {
+  --background: #14120d;
+  --foreground: #ece7dd;
+  --card: #211e16;
+  --card-foreground: #ece7dd;
+  --popover: #211e16;
+  --popover-foreground: #ece7dd;
+  --primary: #ece7dd;
+  --primary-foreground: #14120d;
+  --secondary: #1a1811;
+  --secondary-foreground: #ece7dd;
+  --muted: #1a1811;
+  --muted-foreground: #a8a190;
+  --accent: #1a1811;
+  --accent-foreground: #ece7dd;
+  --border: #322e23;
+  --input: #322e23;
+  --ring: #4d4835;
+  --brand: #46584c;
+  --brand-2: #5a7060;
+  --brand-foreground: #f2f0e6;
+  --terracotta: #c98a72;
+  --terracotta-dark: #d69c84;
+  --terracotta-foreground: #241009;
+  --ink: #ece7dd;
+  --slate: #a8a190;
+  --surface-soft: #191710;
+}
+
+/* ── Rétro Sunset — crème 70s, sienne brûlée + tournesol ── */
+[data-palette='retro-sunset'] {
+  --background: #faf3e7;
+  --foreground: #2b1a12;
+  --card: #f2e7d2;
+  --card-foreground: #2b1a12;
+  --popover: #fefaf1;
+  --popover-foreground: #2b1a12;
+  --primary: #8a3b23;
+  --primary-foreground: #fdf1e3;
+  --secondary: #f0e5cd;
+  --secondary-foreground: #8a3b23;
+  --muted: #f0e5cd;
+  --muted-foreground: #75604f;
+  --accent: #f0e5cd;
+  --accent-foreground: #8a3b23;
+  --border: #ead9bd;
+  --input: #ead9bd;
+  --ring: #c3a071;
+  --brand: #8a3b23;
+  --brand-2: #a04a2c;
+  --brand-foreground: #fdf1e3;
+  --terracotta: #f2b530;
+  --terracotta-dark: #d99c1b;
+  --terracotta-foreground: #241a02;
+  --ink: #2b1a12;
+  --slate: #75604f;
+  --surface-soft: #f5ecd9;
+}
+[data-palette='retro-sunset'][data-theme='dark'] {
+  --background: #1a120b;
+  --foreground: #f3e7d3;
+  --card: #2a1e12;
+  --card-foreground: #f3e7d3;
+  --popover: #2a1e12;
+  --popover-foreground: #f3e7d3;
+  --primary: #f3e7d3;
+  --primary-foreground: #1a120b;
+  --secondary: #221810;
+  --secondary-foreground: #f3e7d3;
+  --muted: #221810;
+  --muted-foreground: #b3a086;
+  --accent: #221810;
+  --accent-foreground: #f3e7d3;
+  --border: #3d2c1c;
+  --input: #3d2c1c;
+  --ring: #5c422a;
+  --brand: #9c452a;
+  --brand-2: #b55535;
+  --brand-foreground: #fdf1e3;
+  --terracotta: #f2b530;
+  --terracotta-dark: #f5c355;
+  --terracotta-foreground: #241a02;
+  --ink: #f3e7d3;
+  --slate: #b3a086;
+  --surface-soft: #20170e;
+}
+
+/* ── Magenta Pulse — dopamine : prune profonde + magenta vif ── */
+[data-palette='magenta-pulse'] {
+  --background: #fdf7fb;
+  --foreground: #27101f;
+  --card: #f5e9f1;
+  --card-foreground: #27101f;
+  --popover: #ffffff;
+  --popover-foreground: #27101f;
+  --primary: #58185c;
+  --primary-foreground: #fbeefb;
+  --secondary: #f6ecf3;
+  --secondary-foreground: #58185c;
+  --muted: #f6ecf3;
+  --muted-foreground: #6f5a68;
+  --accent: #f6ecf3;
+  --accent-foreground: #58185c;
+  --border: #ecdae6;
+  --input: #ecdae6;
+  --ring: #c493b7;
+  --brand: #58185c;
+  --brand-2: #75237a;
+  --brand-foreground: #fbeefb;
+  --terracotta: #d61f8d;
+  --terracotta-dark: #b8137a;
+  --terracotta-foreground: #ffffff;
+  --ink: #27101f;
+  --slate: #6f5a68;
+  --surface-soft: #f8eef4;
+}
+[data-palette='magenta-pulse'][data-theme='dark'] {
+  --background: #180a15;
+  --foreground: #f2e3ee;
+  --card: #291424;
+  --card-foreground: #f2e3ee;
+  --popover: #291424;
+  --popover-foreground: #f2e3ee;
+  --primary: #f2e3ee;
+  --primary-foreground: #180a15;
+  --secondary: #200f1c;
+  --secondary-foreground: #f2e3ee;
+  --muted: #200f1c;
+  --muted-foreground: #b193a8;
+  --accent: #200f1c;
+  --accent-foreground: #f2e3ee;
+  --border: #3d2136;
+  --input: #3d2136;
+  --ring: #5c3251;
+  --brand: #6b2170;
+  --brand-2: #86338c;
+  --brand-foreground: #fbeefb;
+  --terracotta: #f04fae;
+  --terracotta-dark: #d61f8d;
+  --terracotta-foreground: #2a0619;
+  --ink: #f2e3ee;
+  --slate: #b193a8;
+  --surface-soft: #1e0d1a;
+}
+
+/* ── Halo Iridescent — violet-bleu profond + cyan glacé (esthétique AI) ── */
+[data-palette='halo-iridescent'] {
+  --background: #f6f6fb;
+  --foreground: #171733;
+  --card: #ebebf5;
+  --card-foreground: #171733;
+  --popover: #ffffff;
+  --popover-foreground: #171733;
+  --primary: #2e2a72;
+  --primary-foreground: #efeffc;
+  --secondary: #ececf6;
+  --secondary-foreground: #2e2a72;
+  --muted: #ececf6;
+  --muted-foreground: #5e5e7a;
+  --accent: #ececf6;
+  --accent-foreground: #2e2a72;
+  --border: #dfdfee;
+  --input: #dfdfee;
+  --ring: #9b9bd0;
+  --brand: #2e2a72;
+  --brand-2: #4338ca;
+  --brand-foreground: #efeffc;
+  --terracotta: #4cc9f0;
+  --terracotta-dark: #22b1de;
+  --terracotta-foreground: #062733;
+  --ink: #171733;
+  --slate: #5e5e7a;
+  --surface-soft: #f0f0f8;
+}
+[data-palette='halo-iridescent'][data-theme='dark'] {
+  --background: #0d0d1f;
+  --foreground: #e6e6f3;
+  --card: #17172f;
+  --card-foreground: #e6e6f3;
+  --popover: #17172f;
+  --popover-foreground: #e6e6f3;
+  --primary: #e6e6f3;
+  --primary-foreground: #0d0d1f;
+  --secondary: #121228;
+  --secondary-foreground: #e6e6f3;
+  --muted: #121228;
+  --muted-foreground: #9797b8;
+  --accent: #121228;
+  --accent-foreground: #e6e6f3;
+  --border: #26264a;
+  --input: #26264a;
+  --ring: #3b3b70;
+  --brand: #37318a;
+  --brand-2: #4c43b3;
+  --brand-foreground: #efeffc;
+  --terracotta: #4cc9f0;
+  --terracotta-dark: #6fd6f5;
+  --terracotta-foreground: #062733;
+  --ink: #e6e6f3;
+  --slate: #9797b8;
+  --surface-soft: #111126;
+}
+
+/* ── Vert Commerce — vert bouteille + vert vif (réf. Shopify) ── */
+[data-palette='vert-commerce'] {
+  --background: #f8faf8;
+  --foreground: #122b21;
+  --card: #e9f1ec;
+  --card-foreground: #122b21;
+  --popover: #ffffff;
+  --popover-foreground: #122b21;
+  --primary: #004c3f;
+  --primary-foreground: #ecf9f2;
+  --secondary: #eaf2ed;
+  --secondary-foreground: #004c3f;
+  --muted: #eaf2ed;
+  --muted-foreground: #567365;
+  --accent: #eaf2ed;
+  --accent-foreground: #004c3f;
+  --border: #dbe6df;
+  --input: #dbe6df;
+  --ring: #7fa892;
+  --brand: #004c3f;
+  --brand-2: #036852;
+  --brand-foreground: #ecf9f2;
+  --terracotta: #17b877;
+  --terracotta-dark: #0c9c62;
+  --terracotta-foreground: #042416;
+  --ink: #122b21;
+  --slate: #567365;
+  --surface-soft: #eef4f0;
+}
+[data-palette='vert-commerce'][data-theme='dark'] {
+  --background: #0a1611;
+  --foreground: #e0ece5;
+  --card: #13271e;
+  --card-foreground: #e0ece5;
+  --popover: #13271e;
+  --popover-foreground: #e0ece5;
+  --primary: #e0ece5;
+  --primary-foreground: #0a1611;
+  --secondary: #0f2018;
+  --secondary-foreground: #e0ece5;
+  --muted: #0f2018;
+  --muted-foreground: #8ba899;
+  --accent: #0f2018;
+  --accent-foreground: #e0ece5;
+  --border: #1f3a2d;
+  --input: #1f3a2d;
+  --ring: #2e5442;
+  --brand: #0a5c4a;
+  --brand-2: #0f7a60;
+  --brand-foreground: #ecf9f2;
+  --terracotta: #22c986;
+  --terracotta-dark: #17b877;
+  --terracotta-foreground: #042416;
+  --ink: #e0ece5;
+  --slate: #8ba899;
+  --surface-soft: #0e1c15;
+}
+
+/* ── Corail Voyage — charbon chaud + corail Rausch (réf. Airbnb) ── */
+[data-palette='corail-voyage'] {
+  --background: #fffaf8;
+  --foreground: #262220;
+  --card: #f5ece7;
+  --card-foreground: #262220;
+  --popover: #ffffff;
+  --popover-foreground: #262220;
+  --primary: #2b2624;
+  --primary-foreground: #fdf6f2;
+  --secondary: #f6efe9;
+  --secondary-foreground: #2b2624;
+  --muted: #f6efe9;
+  --muted-foreground: #776b64;
+  --accent: #f6efe9;
+  --accent-foreground: #2b2624;
+  --border: #ecdfd7;
+  --input: #ecdfd7;
+  --ring: #c0a99c;
+  --brand: #2b2624;
+  --brand-2: #453d39;
+  --brand-foreground: #fdf6f2;
+  --terracotta: #ff385c;
+  --terracotta-dark: #e11d48;
+  --terracotta-foreground: #ffffff;
+  --ink: #262220;
+  --slate: #776b64;
+  --surface-soft: #f9f1ec;
+}
+[data-palette='corail-voyage'][data-theme='dark'] {
+  --background: #171210;
+  --foreground: #f0e8e3;
+  --card: #251d1a;
+  --card-foreground: #f0e8e3;
+  --popover: #251d1a;
+  --popover-foreground: #f0e8e3;
+  --primary: #f0e8e3;
+  --primary-foreground: #171210;
+  --secondary: #1e1714;
+  --secondary-foreground: #f0e8e3;
+  --muted: #1e1714;
+  --muted-foreground: #b0a196;
+  --accent: #1e1714;
+  --accent-foreground: #f0e8e3;
+  --border: #372c26;
+  --input: #372c26;
+  --ring: #54423a;
+  --brand: #322b28;
+  --brand-2: #463c37;
+  --brand-foreground: #f5efe9;
+  --terracotta: #ff5673;
+  --terracotta-dark: #ff7288;
+  --terracotta-foreground: #330208;
+  --ink: #f0e8e3;
+  --slate: #b0a196;
+  --surface-soft: #1c1512;
+}
+
+/* ── Noël — neige chaude, vert sapin + rouge baie ── */
+[data-palette='noel'] {
+  --background: #f9f7f2;
+  --foreground: #16251c;
+  --card: #eef0e8;
+  --card-foreground: #16251c;
+  --popover: #fffdf9;
+  --popover-foreground: #16251c;
+  --primary: #14432f;
+  --primary-foreground: #f2f7ee;
+  --secondary: #edf0e7;
+  --secondary-foreground: #14432f;
+  --muted: #edf0e7;
+  --muted-foreground: #5c6e60;
+  --accent: #edf0e7;
+  --accent-foreground: #14432f;
+  --border: #e0e3d6;
+  --input: #e0e3d6;
+  --ring: #8fa891;
+  --brand: #14432f;
+  --brand-2: #1d5a40;
+  --brand-foreground: #f2f7ee;
+  --terracotta: #d43f4e;
+  --terracotta-dark: #b92c3b;
+  --terracotta-foreground: #2d060a;
+  --ink: #16251c;
+  --slate: #5c6e60;
+  --surface-soft: #f1f3ea;
+}
+[data-palette='noel'][data-theme='dark'] {
+  --background: #0b1611;
+  --foreground: #e5ece3;
+  --card: #15271d;
+  --card-foreground: #e5ece3;
+  --popover: #15271d;
+  --popover-foreground: #e5ece3;
+  --primary: #e5ece3;
+  --primary-foreground: #0b1611;
+  --secondary: #102018;
+  --secondary-foreground: #e5ece3;
+  --muted: #102018;
+  --muted-foreground: #92a794;
+  --accent: #102018;
+  --accent-foreground: #e5ece3;
+  --border: #203a2c;
+  --input: #203a2c;
+  --ring: #305441;
+  --brand: #1a5239;
+  --brand-2: #246b4b;
+  --brand-foreground: #f2f7ee;
+  --terracotta: #e05563;
+  --terracotta-dark: #ea6f7b;
+  --terracotta-foreground: #2d060a;
+  --ink: #e5ece3;
+  --slate: #92a794;
+  --surface-soft: #0f1d15;
+}
+
+/* ── Vacances — sable clair, bleu océan + soleil mangue ── */
+[data-palette='vacances'] {
+  --background: #fdf9f0;
+  --foreground: #17313d;
+  --card: #f2ecdd;
+  --card-foreground: #17313d;
+  --popover: #fffdf7;
+  --popover-foreground: #17313d;
+  --primary: #0e6ba8;
+  --primary-foreground: #f0f8fd;
+  --secondary: #f3eee0;
+  --secondary-foreground: #0d5787;
+  --muted: #f3eee0;
+  --muted-foreground: #647568;
+  --accent: #f3eee0;
+  --accent-foreground: #0d5787;
+  --border: #eae2cd;
+  --input: #eae2cd;
+  --ring: #83b3ce;
+  --brand: #0e6ba8;
+  --brand-2: #1583c9;
+  --brand-foreground: #f0f8fd;
+  --terracotta: #ffb703;
+  --terracotta-dark: #e6a303;
+  --terracotta-foreground: #241a00;
+  --ink: #17313d;
+  --slate: #647568;
+  --surface-soft: #f7f2e4;
+}
+[data-palette='vacances'][data-theme='dark'] {
+  --background: #0a1720;
+  --foreground: #e2edf3;
+  --card: #132a38;
+  --card-foreground: #e2edf3;
+  --popover: #132a38;
+  --popover-foreground: #e2edf3;
+  --primary: #e2edf3;
+  --primary-foreground: #0a1720;
+  --secondary: #0f222e;
+  --secondary-foreground: #e2edf3;
+  --muted: #0f222e;
+  --muted-foreground: #8da9b8;
+  --accent: #0f222e;
+  --accent-foreground: #e2edf3;
+  --border: #1e3b4c;
+  --input: #1e3b4c;
+  --ring: #2d566d;
+  --brand: #11557f;
+  --brand-2: #176fa5;
+  --brand-foreground: #f0f8fd;
+  --terracotta: #ffb703;
+  --terracotta-dark: #ffc633;
+  --terracotta-foreground: #241a00;
+  --ink: #e2edf3;
+  --slate: #8da9b8;
+  --surface-soft: #0e2029;
+}
+
+/* ── Saint-Valentin — rose poudré, bordeaux framboise + rose vif ── */
+[data-palette='saint-valentin'] {
+  --background: #fdf5f7;
+  --foreground: #331420;
+  --card: #f6e6ea;
+  --card-foreground: #331420;
+  --popover: #fffbfc;
+  --popover-foreground: #331420;
+  --primary: #7a1f3d;
+  --primary-foreground: #fdeef3;
+  --secondary: #f7e9ed;
+  --secondary-foreground: #7a1f3d;
+  --muted: #f7e9ed;
+  --muted-foreground: #75565f;
+  --accent: #f7e9ed;
+  --accent-foreground: #7a1f3d;
+  --border: #efdae0;
+  --input: #efdae0;
+  --ring: #cf94a5;
+  --brand: #7a1f3d;
+  --brand-2: #97294e;
+  --brand-foreground: #fdeef3;
+  --terracotta: #ec5c8c;
+  --terracotta-dark: #dd4276;
+  --terracotta-foreground: #33060f;
+  --ink: #331420;
+  --slate: #75565f;
+  --surface-soft: #f9eef1;
+}
+[data-palette='saint-valentin'][data-theme='dark'] {
+  --background: #1a0d13;
+  --foreground: #f2e3e9;
+  --card: #2c1620;
+  --card-foreground: #f2e3e9;
+  --popover: #2c1620;
+  --popover-foreground: #f2e3e9;
+  --primary: #f2e3e9;
+  --primary-foreground: #1a0d13;
+  --secondary: #22111a;
+  --secondary-foreground: #f2e3e9;
+  --muted: #22111a;
+  --muted-foreground: #b294a0;
+  --accent: #22111a;
+  --accent-foreground: #f2e3e9;
+  --border: #402231;
+  --input: #402231;
+  --ring: #603348;
+  --brand: #8c2647;
+  --brand-2: #a9315a;
+  --brand-foreground: #fdeef3;
+  --terracotta: #f0709b;
+  --terracotta-dark: #f68bad;
+  --terracotta-foreground: #33060f;
+  --ink: #f2e3e9;
+  --slate: #b294a0;
+  --surface-soft: #201018;
+}
+
+/* ── Nouvel An — champagne clair, bleu minuit + or ── */
+[data-palette='nouvel-an'] {
+  --background: #f7f5f0;
+  --foreground: #171d33;
+  --card: #ecebe2;
+  --card-foreground: #171d33;
+  --popover: #fdfcf8;
+  --popover-foreground: #171d33;
+  --primary: #131b3a;
+  --primary-foreground: #f4f2e9;
+  --secondary: #eeece3;
+  --secondary-foreground: #131b3a;
+  --muted: #eeece3;
+  --muted-foreground: #64665e;
+  --accent: #eeece3;
+  --accent-foreground: #131b3a;
+  --border: #e2dfd2;
+  --input: #e2dfd2;
+  --ring: #a5a58e;
+  --brand: #131b3a;
+  --brand-2: #1e2a58;
+  --brand-foreground: #f4f2e9;
+  --terracotta: #d4af37;
+  --terracotta-dark: #ba9726;
+  --terracotta-foreground: #231b04;
+  --ink: #171d33;
+  --slate: #64665e;
+  --surface-soft: #f1efe7;
+}
+[data-palette='nouvel-an'][data-theme='dark'] {
+  --background: #0a0f24;
+  --foreground: #e8e9f0;
+  --card: #141c3d;
+  --card-foreground: #e8e9f0;
+  --popover: #141c3d;
+  --popover-foreground: #e8e9f0;
+  --primary: #e8e9f0;
+  --primary-foreground: #0a0f24;
+  --secondary: #101733;
+  --secondary-foreground: #e8e9f0;
+  --muted: #101733;
+  --muted-foreground: #999db5;
+  --accent: #101733;
+  --accent-foreground: #e8e9f0;
+  --border: #232c55;
+  --input: #232c55;
+  --ring: #35407a;
+  --brand: #1a2450;
+  --brand-2: #263370;
+  --brand-foreground: #f4f2e9;
+  --terracotta: #d4af37;
+  --terracotta-dark: #e0c159;
+  --terracotta-foreground: #231b04;
+  --ink: #e8e9f0;
+  --slate: #999db5;
+  --surface-soft: #0e142e;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

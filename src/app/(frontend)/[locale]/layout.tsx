@@ -19,6 +19,7 @@ import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
 import { isValidLocale, DEFAULT_LOCALE } from '@/utilities/i18n'
 import { getSiteSettings } from '@/utilities/getSiteSettings'
+import { resolvePalette } from '@/utilities/palettes'
 
 import '../globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
@@ -98,6 +99,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   // Paramètres du site (SEO, social, coordonnées, maintenance). Repli null géré par getSiteSettings.
   const settings = await getSiteSettings(locale)
 
+  // Palette de couleurs (Paramètres › Apparence) — posée en SSR sur <html>, zéro flash.
+  // Le mode clair/sombre reste au visiteur (data-theme via InitTheme).
+  const palette = resolvePalette(
+    (settings as { appearance?: { colorScheme?: string } } | null)?.appearance?.colorScheme,
+  )
+
   // Maintenance / coming soon check — skip for draft/preview mode
   let maintenanceActive = false
   let maintenanceMode: 'maintenance' | 'coming_soon' = 'maintenance'
@@ -123,6 +130,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     return (
       <html
         className={cn(GeistSans.variable, GeistMono.variable, bricolage.variable)}
+        data-palette={palette}
         lang={locale}
         suppressHydrationWarning
       >
@@ -149,6 +157,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html
       className={cn(GeistSans.variable, GeistMono.variable, bricolage.variable)}
+      data-palette={palette}
       lang={locale}
       suppressHydrationWarning
     >

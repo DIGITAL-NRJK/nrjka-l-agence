@@ -1,6 +1,8 @@
 import type { GlobalConfig } from 'payload'
 import { revalidateTag } from 'next/cache'
 
+import { DEFAULT_PALETTE, PALETTES } from '@/utilities/palettes'
+
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Paramètres du site',
@@ -22,6 +24,32 @@ export const SiteSettings: GlobalConfig = {
     ],
   },
   fields: [
+    // ─── Apparence / palette de couleurs ────────────────────────────────────────
+    {
+      name: 'appearance',
+      type: 'group',
+      label: '🎨 Apparence',
+      admin: {
+        description:
+          'Palette de couleurs du site public. Le choix s’applique à tout le site ; chaque palette a sa variante claire et sombre (le visiteur garde son réglage clair/sombre).',
+      },
+      fields: [
+        {
+          name: 'colorScheme',
+          type: 'select',
+          label: 'Palette de couleurs',
+          defaultValue: DEFAULT_PALETTE,
+          required: true,
+          options: PALETTES.map(({ value, label }) => ({ value, label })),
+          admin: {
+            components: {
+              Field: '@/components/admin/PaletteField#PaletteField',
+            },
+          },
+        },
+      ],
+    },
+
     // ─── SEO par défaut ─────────────────────────────────────────────────────────
     {
       name: 'seo',
