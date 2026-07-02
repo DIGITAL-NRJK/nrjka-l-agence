@@ -189,6 +189,8 @@ export const LabBlock: React.FC<LabBlockProps> = ({
                           className="h-full w-full object-cover"
                           src={media.url || ''}
                           alt={media.alt || demo.title || ''}
+                          loading="lazy"
+                          decoding="async"
                         />
                       )
                     ) : (

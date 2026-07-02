@@ -136,6 +136,10 @@ export default async function LocaleLayout({ children, params }: Props) {
       >
         <head>
           <InitTheme />
+          {/* Anti-flash : html{opacity:0} attend le script de thème — si JS est coupé, on réaffiche. */}
+          <noscript>
+            <style>{'html{opacity:1}'}</style>
+          </noscript>
           <link href="/favicon.ico" rel="icon" sizes="32x32" />
           <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
         </head>
@@ -163,6 +167,10 @@ export default async function LocaleLayout({ children, params }: Props) {
     >
       <head>
         <InitTheme />
+        {/* Anti-flash : html{opacity:0} attend le script de thème — si JS est coupé, on réaffiche. */}
+        <noscript>
+          <style>{'html{opacity:1}'}</style>
+        </noscript>
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>

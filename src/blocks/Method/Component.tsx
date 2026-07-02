@@ -5,12 +5,13 @@ import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearan
 
 import { MethodStepper, type MethodStep } from './Stepper'
 
-export const MethodBlock: React.FC<MethodBlockProps> = ({
+export const MethodBlock: React.FC<MethodBlockProps & { locale?: string }> = ({
   eyebrow,
   title,
   intro,
   steps,
   appearance,
+  locale = 'fr',
 }) => {
   const list = (steps || []) as MethodStep[]
   const a = appearance || {}
@@ -44,7 +45,7 @@ export const MethodBlock: React.FC<MethodBlockProps> = ({
       </div>
 
       {/* Stepper interactif (4 D) */}
-      {list.length > 0 && <MethodStepper steps={list} />}
+      {list.length > 0 && <MethodStepper steps={list} locale={locale} />}
     </section>
   )
 }

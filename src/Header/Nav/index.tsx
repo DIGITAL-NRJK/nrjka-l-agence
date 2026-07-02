@@ -9,6 +9,7 @@ import type { Header as HeaderType } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { localizeHref } from '@/utilities/localizeHref'
 import { MegaMenu, type MegaMenuPole, type MegaMenuChrome } from './MegaMenu'
 
 export const HeaderNav: React.FC<{
@@ -16,8 +17,17 @@ export const HeaderNav: React.FC<{
   menu?: MegaMenuPole[]
   chrome?: MegaMenuChrome
   locale?: string
-}> = ({ data, menu = [], chrome, locale = 'fr' }) => {
+}> = ({ data, menu = [], chrome: rawChrome, locale = 'fr' }) => {
   const navItems = data?.navItems || []
+  // Les CTAs du mégamenu viennent du CMS (ex. « /contact ») : on les préfixe avec la
+  // locale pour éviter la redirection 308 du middleware à chaque clic/crawl.
+  const chrome = rawChrome
+    ? {
+        ...rawChrome,
+        ctaPrimaryHref: localizeHref(rawChrome.ctaPrimaryHref, locale),
+        ctaSecondaryHref: localizeHref(rawChrome.ctaSecondaryHref, locale),
+      }
+    : rawChrome
   const hasMenu = menu.length > 0
   const [open, setOpen] = useState(false) // burger mobile
   const [mega, setMega] = useState(false) // mégamenu desktop

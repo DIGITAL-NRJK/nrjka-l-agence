@@ -6,8 +6,8 @@ import { ArrowUpRight } from 'lucide-react'
 import type { PillarsBlock as PillarsBlockProps, Expertise } from '@/payload-types'
 import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
 
-export const PillarsBlock = async (props: PillarsBlockProps) => {
-  const { eyebrow, title, intro } = props
+export const PillarsBlock = async (props: PillarsBlockProps & { locale?: string }) => {
+  const { eyebrow, title, intro, locale = 'fr' } = props
   const a = props.appearance || {}
 
   let items: Expertise[] = []
@@ -62,7 +62,7 @@ export const PillarsBlock = async (props: PillarsBlockProps) => {
               return (
                 <a
                   key={pole.id}
-                  href={`/expertises/${pole.slug}`}
+                  href={`/${locale}/expertises/${pole.slug}`}
                   className="group flex gap-6 border-b border-border py-8 transition-all duration-300 hover:border-terracotta/50 hover:pl-2 sm:gap-8"
                 >
                   <span className="font-display text-4xl font-bold leading-none tabular-nums text-ink/15 transition-colors group-hover:text-terracotta sm:text-5xl">

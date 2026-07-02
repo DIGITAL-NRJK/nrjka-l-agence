@@ -59,7 +59,7 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
             {headlineAccent && (
               <>
                 <br />
-                <span className="relative inline-block whitespace-nowrap text-terracotta-dark">
+                <span className="relative inline-block sm:whitespace-nowrap text-terracotta-dark">
                   {headlineAccent}
                   <svg
                     className="absolute -bottom-1 left-0 h-2 w-full text-terracotta/60"

@@ -38,9 +38,11 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   const rawHref =
     type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
-      ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
-          reference.value.slug
-        }`
+      ? reference.relationTo === 'pages' && reference.value.slug === 'home'
+        ? '/' // la page d'accueil vit à la racine de la locale, pas sur /home
+        : `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
+            reference.value.slug
+          }`
       : url
 
   if (!rawHref) return null
@@ -48,7 +50,9 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   // Prefix internal links with locale if provided and not already prefixed
   const href =
     locale && rawHref.startsWith('/') && !LOCALES.some((l) => rawHref.startsWith(`/${l}/`) || rawHref === `/${l}`)
-      ? `/${locale}${rawHref}`
+      ? rawHref === '/'
+        ? `/${locale}`
+        : `/${locale}${rawHref}`
       : rawHref
 
   const size = appearance === 'link' ? 'clear' : sizeFromProps
