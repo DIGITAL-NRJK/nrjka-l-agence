@@ -1593,6 +1593,46 @@
   --surface-soft: #0e142e;
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCENT LISIBLE EN TEXTE (--terracotta-text)
+   `terracotta-dark` sert à la fois de fond de survol (doit rester proche de
+   l'accent) et de couleur de TEXTE (« En savoir plus », puces mono…) — pour les
+   palettes à accent clair (or, lime, menthe…), le même ton ne peut pas remplir
+   les deux rôles (échecs WCAG AA relevés par Lighthouse). Ce token fournit une
+   variante assombrie AA pour l'usage texte, sans toucher aux fonds/survols.
+   En mode sombre, l'accent d'origine est déjà lisible → on le restaure.
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root { --terracotta-text: #b45309; }
+[data-palette='foret-cuivre'] { --terracotta-text: #8f5527; }
+[data-palette='ocean-corail'] { --terracotta-text: #b34c22; }
+[data-palette='aubergine-or'] { --terracotta-text: #8f6714; }
+[data-palette='graphite-menthe'] { --terracotta-text: #1d7a5a; }
+[data-palette='premium-tech'] { --terracotta-text: #55700a; }
+[data-palette='studio-creatif'] { --terracotta-text: #b93711; }
+[data-palette='editorial-moderne'] { --terracotta-text: #b53521; }
+[data-palette='human-warm'] { --terracotta-text: #8a5e00; }
+[data-palette='luxury-digital'] { --terracotta-text: #7d5e17; }
+[data-palette='bold-future'] { --terracotta-text: #55650a; }
+[data-palette='indigo-saas'] { --terracotta-text: #4f46e5; }
+[data-palette='noir-studio'] { --terracotta-text: #005cc8; }
+[data-palette='nebuleuse'] { --terracotta-text: #4a54b8; }
+[data-palette='teal-transformatif'] { --terracotta-text: #0b6b62; }
+[data-palette='sauge-lin'] { --terracotta-text: #96502e; }
+[data-palette='retro-sunset'] { --terracotta-text: #8a5f0a; }
+[data-palette='magenta-pulse'] { --terracotta-text: #b8137a; }
+[data-palette='vert-commerce'] { --terracotta-text: #0a7048; }
+[data-palette='corail-voyage'] { --terracotta-text: #c81840; }
+[data-palette='noel'] { --terracotta-text: #b92c3b; }
+[data-palette='vacances'] { --terracotta-text: #8f6a00; }
+[data-palette='saint-valentin'] { --terracotta-text: #b62d5d; }
+[data-palette='nouvel-an'] { --terracotta-text: #8a701c; }
+[data-theme='dark'] { --terracotta-text: var(--terracotta-dark); }
+
+/* La classe utilitaire text-terracotta-dark bascule sur le token lisible.
+   (Règle non-layérée : prime sur la couche utilities de Tailwind.) */
+.text-terracotta-dark { color: var(--terracotta-text); }
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -1652,6 +1692,12 @@
   }
   body {
     @apply bg-background text-foreground min-h-[100vh] flex flex-col;
+  }
+  /* Garde-fou contre les débordements horizontaux sur mobile (Lighthouse content-width).
+     `clip` ne crée pas de conteneur de scroll (contrairement à hidden) : sticky/anchors OK. */
+  html,
+  body {
+    overflow-x: clip;
   }
 }
 
