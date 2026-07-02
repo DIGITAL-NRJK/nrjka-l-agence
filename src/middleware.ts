@@ -9,7 +9,8 @@ export function middleware(request: NextRequest) {
   )
   if (hasLocale) return NextResponse.next()
 
-  const url = new URL(`/${DEFAULT_LOCALE}${pathname}`, request.url)
+  // pathname '/' donnait '/fr/' → 2e redirection (Lighthouse : ~920 ms perdues).
+  const url = new URL(`/${DEFAULT_LOCALE}${pathname === '/' ? '' : pathname}`, request.url)
   url.search = request.nextUrl.search
   // 308 (permanent) : la redirection vers la locale par défaut est structurelle,
   // ce qui transmet mieux les signaux SEO qu'un 307 temporaire.

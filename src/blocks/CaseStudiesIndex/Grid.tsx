@@ -113,7 +113,7 @@ export const RealisationsGrid: React.FC<{
                     decoding="async"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center font-display text-2xl font-bold text-white/30">
+                  <div className="flex h-full w-full items-center justify-center font-display text-2xl font-bold text-white/60">
                     {p.clientName}
                   </div>
                 )}
