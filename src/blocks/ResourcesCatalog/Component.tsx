@@ -40,7 +40,8 @@ const RESOURCE_FORMATS: Record<string, string> = {
 const mediaUrl = (m: unknown): string | null =>
   m && typeof m === 'object' && 'url' in m ? ((m as { url?: string | null }).url ?? null) : null
 
-export const ResourcesCatalogBlock = async (props: ResourcesCatalogProps) => {
+export const ResourcesCatalogBlock = async (props: ResourcesCatalogProps & { locale?: string }) => {
+  const blockLocale = props.locale || 'fr'
   const { eyebrow, title, subtitle } = props
   const a = props.appearance || {}
 
@@ -137,7 +138,7 @@ export const ResourcesCatalogBlock = async (props: ResourcesCatalogProps) => {
         )}
       </div>
 
-      <CatalogGrid items={items} filters={filters} />
+      <CatalogGrid items={items} filters={filters} locale={blockLocale} />
     </section>
   )
 }

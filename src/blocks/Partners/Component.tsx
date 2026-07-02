@@ -6,6 +6,7 @@ import { ArrowUpRight } from 'lucide-react'
 
 import type { PartnersBlock as PartnersBlockProps, CaseStudy, Media } from '@/payload-types'
 import { bgStyle, colorStyle, textClass, titleClass } from '@/utilities/appearance'
+import { localizeHref } from '@/utilities/localizeHref'
 
 const techCategories = [
   { value: 'web', label: 'Web' },
@@ -16,8 +17,9 @@ const techCategories = [
   { value: 'other', label: 'Autre' },
 ]
 
-export const PartnersBlock = async (props: PartnersBlockProps) => {
-  const { eyebrow, title, intro, projectsLimit, techLabel, technologies, ctaLabel, ctaHref } = props
+export const PartnersBlock = async (props: PartnersBlockProps & { locale?: string }) => {
+  const { eyebrow, title, intro, projectsLimit, techLabel, technologies, ctaLabel, ctaHref, locale = 'fr' } =
+    props
   const a = props.appearance || {}
 
   const techs = technologies || []
@@ -86,7 +88,7 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
             return (
               <Link
                 key={p.id}
-                href={`/realisations/${p.slug}`}
+                href={`/${locale}/realisations/${p.slug}`}
                 className={[
                   'group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-terracotta/40',
                   single ? 'lg:grid lg:grid-cols-[1.05fr_0.95fr]' : 'flex flex-col',
@@ -103,6 +105,8 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
                       src={img.url || ''}
                       alt={img.alt || p.client_name}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center font-display text-2xl font-bold text-white/30">
@@ -205,6 +209,9 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
                               src={logo.url || ''}
                               alt={logo.alt || tech.name || ''}
                               className="h-5 w-auto opacity-70 grayscale transition-all group-hover:opacity-100 group-hover:grayscale-0"
+                              loading="lazy"
+                              decoding="async"
+                              height={20}
                             />
                           )}
                           <span className="text-sm font-medium text-ink">{tech.name}</span>
@@ -231,7 +238,7 @@ export const PartnersBlock = async (props: PartnersBlockProps) => {
       {ctaLabel && (
         <div className="mt-10">
           <a
-            href={ctaHref || '#'}
+            href={localizeHref(ctaHref, locale)}
             className="group inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 font-medium text-brand-foreground transition-colors hover:bg-brand-2"
           >
             {ctaLabel}

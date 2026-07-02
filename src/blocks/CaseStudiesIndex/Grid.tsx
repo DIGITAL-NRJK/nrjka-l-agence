@@ -31,7 +31,8 @@ export const RealisationsGrid: React.FC<{
   projects: IndexProject[]
   sectors: Taxonomy[]
   types: Taxonomy[]
-}> = ({ projects, sectors, types }) => {
+  locale?: string
+}> = ({ projects, sectors, types, locale = 'fr' }) => {
   const [sector, setSector] = useState<string | null>(null)
   const [type, setType] = useState<string | null>(null)
 
@@ -98,7 +99,7 @@ export const RealisationsGrid: React.FC<{
           {filtered.map((p) => (
             <Link
               key={p.id}
-              href={`/realisations/${p.slug}`}
+              href={`/${locale}/realisations/${p.slug}`}
               className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-terracotta/40"
             >
               <div className="relative aspect-16/10 overflow-hidden bg-brand">
@@ -108,6 +109,8 @@ export const RealisationsGrid: React.FC<{
                     src={p.image.url}
                     alt={p.image.alt || p.clientName}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center font-display text-2xl font-bold text-white/30">

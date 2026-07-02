@@ -14,7 +14,7 @@ import { LOCALES } from '@/utilities/i18n'
 import { getServerSideURL } from '@/utilities/getURL'
 import { getLocalizedPaths, buildLanguageAlternates } from '@/utilities/localizedSlugs'
 
-import { Faq } from '../../../expertises/[slug]/Faq'
+import { Faq } from './Faq'
 
 type Args = { params: Promise<{ locale: string; slug: string }> }
 

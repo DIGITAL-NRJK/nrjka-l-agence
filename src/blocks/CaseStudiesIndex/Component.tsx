@@ -19,8 +19,8 @@ const nameOf = (rel: unknown): { id?: string; name?: string } => {
   return {}
 }
 
-export const CaseStudiesIndexBlock = async (props: Props) => {
-  const { eyebrow, title, intro } = props
+export const CaseStudiesIndexBlock = async (props: Props & { locale?: string }) => {
+  const { eyebrow, title, intro, locale = 'fr' } = props
   const a = props.appearance || {}
 
   let projects: IndexProject[] = []
@@ -98,7 +98,7 @@ export const CaseStudiesIndexBlock = async (props: Props) => {
         )}
       </div>
 
-      <RealisationsGrid projects={projects} sectors={sectors} types={types} />
+      <RealisationsGrid projects={projects} sectors={sectors} types={types} locale={locale} />
     </section>
   )
 }

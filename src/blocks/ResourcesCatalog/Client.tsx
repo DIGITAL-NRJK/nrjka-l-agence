@@ -38,7 +38,8 @@ const chip = (active: boolean) =>
 export const CatalogGrid: React.FC<{
   items: CatalogItem[]
   filters: CatalogFilter[]
-}> = ({ items, filters }) => {
+  locale?: string
+}> = ({ items, filters, locale = 'fr' }) => {
   const [selected, setSelected] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
@@ -136,7 +137,7 @@ export const CatalogGrid: React.FC<{
                         </a>
                       ) : (
                         <Link
-                          href="/contact"
+                          href={`/${locale}/contact`}
                           className="inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-all hover:gap-2.5"
                         >
                           Demander
@@ -145,7 +146,7 @@ export const CatalogGrid: React.FC<{
                       )
                     ) : (
                       <Link
-                        href="/contact"
+                        href={`/${locale}/contact`}
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-all hover:gap-2.5"
                       >
                         Précommander

@@ -16,9 +16,11 @@ import { getServerSideURL } from '@/utilities/getURL'
 
 type Args = { params: Promise<{ locale: string; slug: string }> }
 
-// Le contenu (et les champs _en) vient de l'admin et change sans rebuild.
-// Sans ceci, la page reste figée sur son snapshot statique (anglais manquant → FR).
-export const dynamic = 'force-dynamic'
+// ISR : page statique (TTFB rapide, servie par le CDN) régénérée au plus toutes les
+// 10 minutes — le contenu admin (dont les champs _en) reste frais sans payer un rendu
+// serveur par visite comme le faisait l'ancien force-dynamic. La locale fait partie du
+// chemin (/fr /en) : chaque langue a son propre snapshot, pas de mélange de cache.
+export const revalidate = 600
 
 const queryService = cache(async (slug: string, locale: string) => {
   const payload = await getPayload({ config: configPromise })

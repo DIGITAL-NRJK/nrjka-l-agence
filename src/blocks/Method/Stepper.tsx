@@ -10,7 +10,7 @@ export type MethodStep = {
   activities?: { label?: string | null; id?: string | null }[] | null
 }
 
-export const MethodStepper: React.FC<{ steps: MethodStep[] }> = ({ steps }) => {
+export const MethodStepper: React.FC<{ steps: MethodStep[]; locale?: string }> = ({ steps, locale = 'fr' }) => {
   const [active, setActive] = useState(0)
   const n = steps.length
   if (n === 0) return null
@@ -88,7 +88,7 @@ export const MethodStepper: React.FC<{ steps: MethodStep[] }> = ({ steps }) => {
           <div className="mt-8">
             {isLast ? (
               <Link
-                href="/contact"
+                href={`/${locale}/contact`}
                 className="group inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark"
               >
                 Demander un audit

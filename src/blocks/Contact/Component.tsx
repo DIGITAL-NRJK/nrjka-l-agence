@@ -111,7 +111,7 @@ export const ContactBlock = async (props: ContactBlockProps) => {
           {titleAccent && (
             <>
               {' '}
-              <span className="relative inline-block whitespace-nowrap text-terracotta-dark">
+              <span className="relative inline-block sm:whitespace-nowrap text-terracotta-dark">
                 {titleAccent}
               </span>
             </>

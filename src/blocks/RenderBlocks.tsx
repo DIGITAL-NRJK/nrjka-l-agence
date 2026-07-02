@@ -75,8 +75,10 @@ const blockSpacing: Record<string, string> = {
 }
 export const RenderBlocks: React.FC<{
   blocks: Page['layout']
+  /** locale active — transmise aux blocs pour préfixer leurs liens internes (évite les 308) */
+  locale?: string
 }> = (props) => {
-  const { blocks } = props
+  const { blocks, locale = 'fr' } = props
 
   if (blocks && blocks.length > 0) {
     return (
@@ -91,7 +93,7 @@ export const RenderBlocks: React.FC<{
               return (
                 <div className={`block-reveal ${blockSpacing[blockType] || 'my-16'}`} key={index}>
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
-                  <Block {...block} disableInnerContainer />
+                  <Block {...block} locale={locale} disableInnerContainer />
                 </div>
               )
             }
