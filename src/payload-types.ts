@@ -4473,6 +4473,37 @@ export interface Footer {
 export interface SiteSetting {
   id: number;
   /**
+   * Palette de couleurs du site public. Le choix s’applique à tout le site ; chaque palette a sa variante claire et sombre (le visiteur garde son réglage clair/sombre).
+   */
+  appearance: {
+    colorScheme:
+      | 'navy-terracotta'
+      | 'foret-cuivre'
+      | 'ocean-corail'
+      | 'aubergine-or'
+      | 'graphite-menthe'
+      | 'premium-tech'
+      | 'studio-creatif'
+      | 'editorial-moderne'
+      | 'human-warm'
+      | 'luxury-digital'
+      | 'bold-future'
+      | 'indigo-saas'
+      | 'noir-studio'
+      | 'nebuleuse'
+      | 'teal-transformatif'
+      | 'sauge-lin'
+      | 'retro-sunset'
+      | 'magenta-pulse'
+      | 'halo-iridescent'
+      | 'vert-commerce'
+      | 'corail-voyage'
+      | 'noel'
+      | 'vacances'
+      | 'saint-valentin'
+      | 'nouvel-an';
+  };
+  /**
    * Valeurs de repli utilisées quand une page n’a pas son propre SEO. Le SEO par page (onglet SEO de chaque contenu) reste prioritaire.
    */
   seo?: {
@@ -4643,6 +4674,11 @@ export interface FooterSelect<T extends boolean = true> {
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
+  appearance?:
+    | T
+    | {
+        colorScheme?: T;
+      };
   seo?:
     | T
     | {
