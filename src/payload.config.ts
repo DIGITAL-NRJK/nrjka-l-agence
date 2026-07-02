@@ -39,7 +39,19 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   serverURL: getServerSideURL(),
   admin: {
+    meta: {
+      titleSuffix: '· NRJKA',
+      icons: [
+        { rel: 'icon', type: 'image/svg+xml', url: '/favicon.svg' },
+        { rel: 'icon', type: 'image/x-icon', url: '/favicon.ico' },
+      ],
+    },
     components: {
+      // Identité NRJKA (remplace le logo Payload sur la connexion et dans la nav).
+      graphics: {
+        Icon: '@/components/admin/BrandLogo#Icon',
+        Logo: '@/components/admin/BrandLogo#Logo',
+      },
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.
       beforeLogin: ['@/components/BeforeLogin'],

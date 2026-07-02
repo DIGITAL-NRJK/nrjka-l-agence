@@ -1,0 +1,54 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   NRJKA — habillage de l'admin Payload
+   Page de connexion aux couleurs du site (navy + terracotta), boutons de marque.
+   Les variables --theme-* de Payload sont conservées partout ailleurs pour ne
+   pas casser la lisibilité de l'admin (mode sombre inclus).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --nrjka-brand: #1f2a44;
+  --nrjka-brand-2: #2d3e5f;
+  --nrjka-accent: #f4a261;
+  --nrjka-accent-dark: #e89251;
+  --nrjka-accent-fg: #1f2a44;
+}
+
+/* ── Page de connexion (template minimal : login, mot de passe oublié…) ── */
+.template-minimal {
+  background:
+    radial-gradient(60rem 32rem at 15% -10%, var(--nrjka-brand-2) 0%, transparent 60%),
+    radial-gradient(50rem 30rem at 110% 110%, #16203a 0%, transparent 55%),
+    var(--nrjka-brand);
+
+  .template-minimal__wrap {
+    background: var(--theme-bg);
+    border-radius: 18px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 24px 64px rgba(8, 12, 26, 0.45);
+  }
+
+  /* Champs : focus terracotta */
+  input:focus {
+    border-color: var(--nrjka-accent);
+    box-shadow: 0 0 0 2px rgba(244, 162, 97, 0.35);
+  }
+}
+
+/* ── Boutons principaux : terracotta (connexion + actions de l'admin) ── */
+.btn--style-primary {
+  background: var(--nrjka-accent);
+  color: var(--nrjka-accent-fg);
+
+  &:hover,
+  &:focus-visible {
+    background: var(--nrjka-accent-dark);
+    color: var(--nrjka-accent-fg);
+  }
+}
+
+/* ── Nav de l'admin : le monogramme respire ── */
+.nav .nav__brand,
+.graphic-icon {
+  display: flex;
+  align-items: center;
+}
