@@ -77,21 +77,38 @@ export const RenderBlocks: React.FC<{
   blocks: Page['layout']
   /** locale active — transmise aux blocs pour préfixer leurs liens internes (évite les 308) */
   locale?: string
+  /** mode aperçu (brouillon) : affiche les sections masquées, signalées par un bandeau */
+  draft?: boolean
 }> = (props) => {
-  const { blocks, locale = 'fr' } = props
+  const { blocks, locale = 'fr', draft = false } = props
 
   if (blocks && blocks.length > 0) {
     return (
       <Fragment>
         {blocks.map((block, index) => {
           const { blockType } = block
+          const isHidden = (block as { hidden?: boolean }).hidden === true
+
+          // Site public : la section masquée n'est pas rendue.
+          // Aperçu (draft) : on la garde, signalée, pour continuer à l'éditer visuellement.
+          if (isHidden && !draft) return null
 
           if (blockType && blockType in blockComponents) {
             const Block = blockComponents[blockType]
 
             if (Block) {
               return (
-                <div className={`block-reveal ${blockSpacing[blockType] || 'my-16'}`} key={index}>
+                <div
+                  className={`block-reveal ${blockSpacing[blockType] || 'my-16'}${
+                    isHidden ? ' relative opacity-50' : ''
+                  }`}
+                  key={index}
+                >
+                  {isHidden && (
+                    <div className="pointer-events-none absolute left-1/2 top-2 z-10 -translate-x-1/2 rounded-full bg-ink px-3 py-1 text-xs font-medium text-background shadow">
+                      Section masquée (aperçu uniquement)
+                    </div>
+                  )}
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
                   <Block {...block} locale={locale} disableInnerContainer />
                 </div>
