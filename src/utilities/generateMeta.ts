@@ -41,8 +41,15 @@ export const generateMeta = async (args: {
   // Image OG : celle du document, sinon l'image par défaut des Paramètres, sinon le fallback statique.
   const ogImage = getImageURL(doc?.meta?.image || seo?.defaultOgImage)
 
+  // Filet de sécurité : une meta description est toujours présente, même si le SEO
+  // par page et le SEO par défaut (Paramètres du site) sont vides — évite le manque
+  // signalé par Lighthouse / Search Console.
+  const fallbackDescription =
+    locale === 'en'
+      ? 'NRJKA — human-scale digital agency: websites, SEO, automation and CRM for sustainable growth.'
+      : 'NRJKA — agence digitale à taille humaine : sites web, SEO, automatisation et CRM pour une croissance durable.'
   const description =
-    doc?.meta?.description || seo?.defaultMetaDescription?.trim() || undefined
+    doc?.meta?.description || seo?.defaultMetaDescription?.trim() || fallbackDescription
 
   const title = doc?.meta?.title
     ? suffix

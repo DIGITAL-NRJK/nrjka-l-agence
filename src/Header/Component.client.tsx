@@ -44,9 +44,11 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome, 
           <Link href={`/${locale}`} className="text-brand dark:text-white">
             <Logo />
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <HeaderNav data={data} menu={menu} chrome={chrome} locale={locale} />
-            <LanguageSwitcher />
+            <div className="shrink-0">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </div>

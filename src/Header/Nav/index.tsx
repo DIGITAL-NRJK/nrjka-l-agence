@@ -31,6 +31,7 @@ export const HeaderNav: React.FC<{
   const hasMenu = menu.length > 0
   const [open, setOpen] = useState(false) // burger mobile
   const [mega, setMega] = useState(false) // mégamenu desktop
+  const [openPole, setOpenPole] = useState<string | null>(null) // accordéon pôle (mobile)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
@@ -74,7 +75,7 @@ export const HeaderNav: React.FC<{
   }
 
   return (
-    <nav className="flex items-center gap-7">
+    <nav className="flex items-center gap-2 md:gap-7">
       {/* Liens — desktop. Le déclencheur « Services » est inséré à la position choisie en admin. */}
       <div className="hidden items-center gap-7 md:flex">
         {(() => {
@@ -139,10 +140,10 @@ export const HeaderNav: React.FC<{
       {/* Bascule thème — desktop */}
       <ThemeToggle className="hidden md:flex" />
 
-      {/* CTA — toujours visible */}
+      {/* CTA — toujours visible ; compact sur mobile pour ne pas déborder ni passer à la ligne */}
       <a
         href={`/${locale}/contact`}
-        className="rounded-full bg-terracotta px-5 py-2 text-sm font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark"
+        className="shrink-0 whitespace-nowrap rounded-full bg-terracotta px-3 py-1.5 text-xs font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark sm:px-5 sm:py-2 sm:text-sm"
       >
         {locale === 'en' ? 'Request an audit' : 'Demander un audit'}
       </a>
@@ -178,17 +179,56 @@ export const HeaderNav: React.FC<{
                   Nos pôles
                 </div>
                 <ul>
-                  {menu.map((p) => (
-                    <li key={p.id}>
-                      <Link
-                        href={p.href}
-                        onClick={() => setOpen(false)}
-                        className="block rounded-xl px-4 py-2.5 text-base font-medium text-ink transition-colors hover:bg-surface-soft"
-                      >
-                        {p.title}
-                      </Link>
-                    </li>
-                  ))}
+                  {menu.map((p) => {
+                    const expanded = openPole === p.id
+                    const hasServices = p.services.length > 0
+                    return (
+                      <li key={p.id}>
+                        <div className="flex items-center">
+                          <Link
+                            href={p.href}
+                            onClick={() => setOpen(false)}
+                            className="flex-1 rounded-xl px-4 py-2.5 text-base font-medium text-ink transition-colors hover:bg-surface-soft"
+                          >
+                            {p.title}
+                          </Link>
+                          {hasServices && (
+                            <button
+                              type="button"
+                              onClick={() => setOpenPole(expanded ? null : p.id)}
+                              aria-expanded={expanded}
+                              aria-label={
+                                expanded
+                                  ? `Masquer les services de ${p.title}`
+                                  : `Voir les services de ${p.title}`
+                              }
+                              className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate transition-colors hover:bg-surface-soft hover:text-ink"
+                            >
+                              <ChevronDown
+                                className={`h-4 w-4 transition-transform ${expanded ? 'rotate-180' : ''}`}
+                                strokeWidth={2.2}
+                              />
+                            </button>
+                          )}
+                        </div>
+                        {hasServices && expanded && (
+                          <ul className="mb-1 ml-3 border-l border-border pl-3">
+                            {p.services.map((s, si) => (
+                              <li key={si}>
+                                <Link
+                                  href={s.href}
+                                  onClick={() => setOpen(false)}
+                                  className="block rounded-lg px-3 py-2 text-sm text-slate transition-colors hover:bg-surface-soft hover:text-ink"
+                                >
+                                  {s.title}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
               </div>
             )}
