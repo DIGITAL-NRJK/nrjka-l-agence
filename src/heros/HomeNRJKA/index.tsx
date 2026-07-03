@@ -135,7 +135,7 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
                 {panelTitle || 'De la complexité à la clarté'}
               </div>
 
-              <ul className="grid grid-cols-2 gap-2">
+              <ul className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
                 {dims.map((dim, i) => (
                   <li
                     key={i}
@@ -144,8 +144,8 @@ export const HomeNRJKAHero: React.FC<HeroProps> = (props) => {
                     <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-xs font-semibold text-terracotta">
                       {`0${i + 1}`}
                     </span>
-                    <div>
-                      <div className="font-semibold text-white">{dim.title}</div>
+                    <div className="min-w-0">
+                      <div className="font-semibold text-white [overflow-wrap:anywhere]">{dim.title}</div>
                       <div className="text-sm text-white/70">{dim.tag}</div>
                     </div>
                   </li>

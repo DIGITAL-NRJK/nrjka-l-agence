@@ -83,6 +83,14 @@
   "engines": {
     "node": "^18.20.2 || >=20.9.0"
   },
+  "browserslist": [
+    "chrome >= 92",
+    "edge >= 92",
+    "firefox >= 92",
+    "safari >= 15.4",
+    "ios_saf >= 15.4",
+    "not dead"
+  ],
   "pnpm": {
     "onlyBuiltDependencies": [
       "sharp",
