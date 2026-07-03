@@ -32,15 +32,25 @@ export async function Header({ locale = 'fr' }: { locale?: string }) {
       const svcAny = svc as any
       const svcTitle = locale === 'en' ? (svcAny.title_en || svc.title || '') : (svc.title || '')
       const svcDesc  = locale === 'en' ? (svcAny.description_en ?? svc.description ?? null) : (svc.description ?? null)
+      // Renommage par langue : override EN dédié en anglais, sinon nom du service
+      // (title_en géré ci-dessus). Le override FR ne « fuit » plus vers l'anglais.
+      const svcLabel =
+        locale === 'en'
+          ? (sRow as { labelOverrideEn?: string | null }).labelOverrideEn || svcTitle
+          : sRow.labelOverride || svcTitle
       services.push({
-        title: sRow.labelOverride || svcTitle,
+        title: svcLabel,
         description: svcDesc,
         href: svc.slug ? `/${locale}/services/${svc.slug}` : '#',
       })
     }
+    const poleLabel =
+      locale === 'en'
+        ? (row as { labelOverrideEn?: string | null }).labelOverrideEn || pole.title || ''
+        : row.labelOverride || pole.title || ''
     menu.push({
       id: String(pole.id ?? i),
-      title: row.labelOverride || pole.title || '',
+      title: poleLabel,
       subtitle: null,
       icon: pole.icon ?? null,
       href: pole.slug ? `/${locale}/expertises/${pole.slug}` : '#',

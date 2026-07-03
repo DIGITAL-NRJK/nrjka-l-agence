@@ -88,6 +88,12 @@ export const Header: GlobalConfig = {
               admin: { description: 'Laisser vide = le nom du pôle.' },
             },
             {
+              name: 'labelOverrideEn',
+              type: 'text',
+              label: 'Renommer — anglais (optionnel)',
+              admin: { description: 'Nom affiché en version anglaise. Laisser vide = le nom du pôle.' },
+            },
+            {
               name: 'services',
               type: 'array',
               label: 'Services du pôle',
@@ -110,6 +116,12 @@ export const Header: GlobalConfig = {
                   type: 'text',
                   label: 'Renommer (optionnel)',
                   admin: { description: 'Laisser vide = le nom du service.' },
+                },
+                {
+                  name: 'labelOverrideEn',
+                  type: 'text',
+                  label: 'Renommer — anglais (optionnel)',
+                  admin: { description: 'Nom affiché en version anglaise. Laisser vide = le nom du service.' },
                 },
               ],
             },
