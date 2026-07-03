@@ -26,6 +26,7 @@ import { Distinctions } from '../../blocks/Distinctions/config'
 import { StatsBand } from '../../blocks/StatsBand/config'
 import { Team } from '../../blocks/Team/config'
 import { ResourcesCatalog } from '../../blocks/ResourcesCatalog/config'
+import { withVisibility } from '../../blocks/withVisibility'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -127,7 +128,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 StatsBand,
                 Team,
                 ResourcesCatalog,
-              ],
+              ].map(withVisibility),
               admin: {
                 initCollapsed: true,
               },

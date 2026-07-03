@@ -581,6 +581,10 @@ export interface User {
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   richText?: {
     root: {
       type: string;
@@ -629,6 +633,10 @@ export interface CallToActionBlock {
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   columns?:
     | {
         size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
@@ -689,6 +697,10 @@ export interface MediaBlock {
  * via the `definition` "ArchiveBlock".
  */
 export interface ArchiveBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   introContent?: {
     root: {
       type: string;
@@ -723,6 +735,10 @@ export interface ArchiveBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   form: number | Form;
   enableIntro?: boolean | null;
   introContent?: {
@@ -923,6 +939,10 @@ export interface Form {
  * via the `definition` "PromiseBlock".
  */
 export interface PromiseBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   subtitle?: string | null;
@@ -979,6 +999,10 @@ export interface PromiseBlock {
  */
 export interface PillarsBlock {
   /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
+  /**
    * Petit libellé au-dessus du titre (ex. « Nos expertises »).
    */
   eyebrow?: string | null;
@@ -1009,6 +1033,10 @@ export interface PillarsBlock {
  * via the `definition` "MethodBlock".
  */
 export interface MethodBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
@@ -1044,6 +1072,10 @@ export interface MethodBlock {
  * via the `definition` "LabBlock".
  */
 export interface LabBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
@@ -1092,6 +1124,10 @@ export interface LabBlock {
  * via the `definition` "CommitmentsBlock".
  */
 export interface CommitmentsBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
@@ -1134,6 +1170,10 @@ export interface CommitmentsBlock {
  * via the `definition` "PartnersBlock".
  */
 export interface PartnersBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
@@ -1175,6 +1215,10 @@ export interface PartnersBlock {
  * via the `definition` "TestimonialsBlock".
  */
 export interface TestimonialsBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
@@ -1201,6 +1245,10 @@ export interface TestimonialsBlock {
  * via the `definition` "ResourcesBlock".
  */
 export interface ResourcesBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
@@ -1224,6 +1272,10 @@ export interface ResourcesBlock {
  * via the `definition` "CtaFinalBlock".
  */
 export interface CtaFinalBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   body?: string | null;
@@ -1251,6 +1303,10 @@ export interface CtaFinalBlock {
  * via the `definition` "ContactBlock".
  */
 export interface ContactBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title?: string | null;
   /**
@@ -1303,6 +1359,10 @@ export interface ContactBlock {
  * via the `definition` "PresenceBlock".
  */
 export interface PresenceBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title?: string | null;
   intro?: string | null;
@@ -1349,6 +1409,10 @@ export interface PresenceBlock {
  * via the `definition` "CaseStudiesIndexBlock".
  */
 export interface CaseStudiesIndexBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title?: string | null;
   intro?: string | null;
@@ -1371,6 +1435,10 @@ export interface CaseStudiesIndexBlock {
  * via the `definition` "FaqBlock".
  */
 export interface FaqBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   /**
    * Petit libellé au-dessus du titre (ex. « Questions fréquentes »).
    */
@@ -1412,6 +1480,10 @@ export interface FaqBlock {
  * via the `definition` "AboutHeroBlock".
  */
 export interface AboutHeroBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   /**
    * Petit libellé (eyebrow) affiché avec un trait au-dessus du titre.
    */
@@ -1463,6 +1535,10 @@ export interface AboutHeroBlock {
  * via the `definition` "D4CardsBlock".
  */
 export interface D4CardsBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
@@ -1501,6 +1577,10 @@ export interface D4CardsBlock {
  * via the `definition` "DistinctionsBlock".
  */
 export interface DistinctionsBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
@@ -1558,6 +1638,10 @@ export interface DistinctionsBlock {
  */
 export interface StatsBandBlock {
   /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
+  /**
    * Chiffres clés (valeur + libellé). Affichés sur une bande claire.
    */
   items?:
@@ -1592,6 +1676,10 @@ export interface StatsBandBlock {
  * via the `definition` "TeamBlock".
  */
 export interface TeamBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   eyebrow?: string | null;
   title: string;
   intro?: string | null;
@@ -1634,6 +1722,10 @@ export interface TeamBlock {
  * via the `definition` "ResourcesCatalogBlock".
  */
 export interface ResourcesCatalogBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
   /**
    * Petit libellé avec trait (ex. « Ressources »).
    */
@@ -2848,6 +2940,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "CallToActionBlock_select".
  */
 export interface CallToActionBlockSelect<T extends boolean = true> {
+  hidden?: T;
   richText?: T;
   links?:
     | T
@@ -2872,6 +2965,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
  * via the `definition` "ContentBlock_select".
  */
 export interface ContentBlockSelect<T extends boolean = true> {
+  hidden?: T;
   columns?:
     | T
     | {
@@ -2898,6 +2992,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
  * via the `definition` "MediaBlock_select".
  */
 export interface MediaBlockSelect<T extends boolean = true> {
+  hidden?: T;
   media?: T;
   id?: T;
   blockName?: T;
@@ -2907,6 +3002,7 @@ export interface MediaBlockSelect<T extends boolean = true> {
  * via the `definition` "ArchiveBlock_select".
  */
 export interface ArchiveBlockSelect<T extends boolean = true> {
+  hidden?: T;
   introContent?: T;
   populateBy?: T;
   relationTo?: T;
@@ -2921,6 +3017,7 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
  * via the `definition` "FormBlock_select".
  */
 export interface FormBlockSelect<T extends boolean = true> {
+  hidden?: T;
   form?: T;
   enableIntro?: T;
   introContent?: T;
@@ -2932,6 +3029,7 @@ export interface FormBlockSelect<T extends boolean = true> {
  * via the `definition` "PromiseBlock_select".
  */
 export interface PromiseBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   subtitle?: T;
@@ -2962,6 +3060,7 @@ export interface PromiseBlockSelect<T extends boolean = true> {
  * via the `definition` "PillarsBlock_select".
  */
 export interface PillarsBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -2982,6 +3081,7 @@ export interface PillarsBlockSelect<T extends boolean = true> {
  * via the `definition` "MethodBlock_select".
  */
 export interface MethodBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3015,6 +3115,7 @@ export interface MethodBlockSelect<T extends boolean = true> {
  * via the `definition` "LabBlock_select".
  */
 export interface LabBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3055,6 +3156,7 @@ export interface LabBlockSelect<T extends boolean = true> {
  * via the `definition` "CommitmentsBlock_select".
  */
 export interface CommitmentsBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3083,6 +3185,7 @@ export interface CommitmentsBlockSelect<T extends boolean = true> {
  * via the `definition` "PartnersBlock_select".
  */
 export interface PartnersBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3116,6 +3219,7 @@ export interface PartnersBlockSelect<T extends boolean = true> {
  * via the `definition` "TestimonialsBlock_select".
  */
 export interface TestimonialsBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3137,6 +3241,7 @@ export interface TestimonialsBlockSelect<T extends boolean = true> {
  * via the `definition` "ResourcesBlock_select".
  */
 export interface ResourcesBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3158,6 +3263,7 @@ export interface ResourcesBlockSelect<T extends boolean = true> {
  * via the `definition` "CtaFinalBlock_select".
  */
 export interface CtaFinalBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   body?: T;
@@ -3183,6 +3289,7 @@ export interface CtaFinalBlockSelect<T extends boolean = true> {
  * via the `definition` "ContactBlock_select".
  */
 export interface ContactBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   titleAccent?: T;
@@ -3215,6 +3322,7 @@ export interface ContactBlockSelect<T extends boolean = true> {
  * via the `definition` "PresenceBlock_select".
  */
 export interface PresenceBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3247,6 +3355,7 @@ export interface PresenceBlockSelect<T extends boolean = true> {
  * via the `definition` "CaseStudiesIndexBlock_select".
  */
 export interface CaseStudiesIndexBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3267,6 +3376,7 @@ export interface CaseStudiesIndexBlockSelect<T extends boolean = true> {
  * via the `definition` "FaqBlock_select".
  */
 export interface FaqBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3294,6 +3404,7 @@ export interface FaqBlockSelect<T extends boolean = true> {
  * via the `definition` "AboutHeroBlock_select".
  */
 export interface AboutHeroBlockSelect<T extends boolean = true> {
+  hidden?: T;
   badge?: T;
   title?: T;
   titleAccent?: T;
@@ -3322,6 +3433,7 @@ export interface AboutHeroBlockSelect<T extends boolean = true> {
  * via the `definition` "D4CardsBlock_select".
  */
 export interface D4CardsBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3349,6 +3461,7 @@ export interface D4CardsBlockSelect<T extends boolean = true> {
  * via the `definition` "DistinctionsBlock_select".
  */
 export interface DistinctionsBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3377,6 +3490,7 @@ export interface DistinctionsBlockSelect<T extends boolean = true> {
  * via the `definition` "StatsBandBlock_select".
  */
 export interface StatsBandBlockSelect<T extends boolean = true> {
+  hidden?: T;
   items?:
     | T
     | {
@@ -3401,6 +3515,7 @@ export interface StatsBandBlockSelect<T extends boolean = true> {
  * via the `definition` "TeamBlock_select".
  */
 export interface TeamBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   intro?: T;
@@ -3429,6 +3544,7 @@ export interface TeamBlockSelect<T extends boolean = true> {
  * via the `definition` "ResourcesCatalogBlock_select".
  */
 export interface ResourcesCatalogBlockSelect<T extends boolean = true> {
+  hidden?: T;
   eyebrow?: T;
   title?: T;
   subtitle?: T;
