@@ -5,6 +5,7 @@ import * as migration_20260702_132602_theming_palette from './20260702_132602_th
 import * as migration_20260702_135336_theming_palette_vague2 from './20260702_135336_theming_palette_vague2';
 import * as migration_20260702_201244_theming_palettes_saisonnieres from './20260702_201244_theming_palettes_saisonnieres';
 import * as migration_20260703_165000_blocks_hidden from './20260703_165000_blocks_hidden';
+import * as migration_20260703_175226_megamenu_label_en from './20260703_175226_megamenu_label_en';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20260703_165000_blocks_hidden.up,
     down: migration_20260703_165000_blocks_hidden.down,
-    name: '20260703_165000_blocks_hidden'
+    name: '20260703_165000_blocks_hidden',
+  },
+  {
+    up: migration_20260703_175226_megamenu_label_en.up,
+    down: migration_20260703_175226_megamenu_label_en.down,
+    name: '20260703_175226_megamenu_label_en'
   },
 ];

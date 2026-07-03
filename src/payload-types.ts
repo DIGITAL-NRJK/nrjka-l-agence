@@ -4523,6 +4523,10 @@ export interface Header {
            */
           labelOverride?: string | null;
           /**
+           * Nom affiché en version anglaise. Laisser vide = le nom du pôle.
+           */
+          labelOverrideEn?: string | null;
+          /**
            * Choisissez les services à lister sous ce pôle et leur ordre (glisser-déposer).
            */
           services?:
@@ -4535,6 +4539,10 @@ export interface Header {
                  * Laisser vide = le nom du service.
                  */
                 labelOverride?: string | null;
+                /**
+                 * Nom affiché en version anglaise. Laisser vide = le nom du service.
+                 */
+                labelOverrideEn?: string | null;
                 id?: string | null;
               }[]
             | null;
@@ -4744,11 +4752,13 @@ export interface HeaderSelect<T extends boolean = true> {
           | {
               pole?: T;
               labelOverride?: T;
+              labelOverrideEn?: T;
               services?:
                 | T
                 | {
                     service?: T;
                     labelOverride?: T;
+                    labelOverrideEn?: T;
                     id?: T;
                   };
               id?: T;

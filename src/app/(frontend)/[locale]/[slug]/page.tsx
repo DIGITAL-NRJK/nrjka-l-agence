@@ -62,8 +62,18 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   const { hero, layout } = page
 
+  // Blocs « pleine largeur » de clôture (fond coloré full-bleed) : ils doivent coller
+  // au footer, sans le rembourrage bas de l'article qui créerait une bande crème.
+  const FLUSH_BOTTOM_BLOCKS = new Set(['ctaFinal', 'contact'])
+  const lastBlock = Array.isArray(layout) ? layout[layout.length - 1] : undefined
+  const flushBottom =
+    !!lastBlock && FLUSH_BOTTOM_BLOCKS.has((lastBlock as { blockType?: string }).blockType ?? '')
+
+  const articleClass =
+    hero?.type === 'homeNRJKA' ? '' : flushBottom ? 'pt-16' : 'pt-16 pb-24'
+
   return (
-    <article className={hero?.type === 'homeNRJKA' ? '' : 'pt-16 pb-24'}>
+    <article className={articleClass}>
       <PageClient />
       <PayloadRedirects disableNotFound url={url} />
 
