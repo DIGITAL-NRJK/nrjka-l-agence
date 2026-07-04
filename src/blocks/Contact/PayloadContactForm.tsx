@@ -73,11 +73,17 @@ export const PayloadContactForm: React.FC<{ form: FormType }> = ({ form }) => {
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-soft sm:p-8">
       <FormProvider {...formMethods}>
-        {!isLoading && hasSubmitted && confirmationType === 'message' && (
-          <RichText data={confirmationMessage} />
-        )}
+        {/* Région live : annonce succès/erreur aux lecteurs d'écran (WCAG 4.1.3). */}
+        <div role="status" aria-live="polite">
+          {!isLoading && hasSubmitted && confirmationType === 'message' && (
+            <RichText data={confirmationMessage} />
+          )}
+        </div>
         {error && (
-          <div className="mb-5 rounded-xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <div
+            role="alert"
+            className="mb-5 rounded-xl bg-destructive/10 px-4 py-3 text-sm text-destructive"
+          >
             {error.message}
           </div>
         )}
