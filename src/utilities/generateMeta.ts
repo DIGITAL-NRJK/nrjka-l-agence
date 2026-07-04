@@ -21,6 +21,11 @@ export const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null
   return url
 }
 
+/** URL d'une image Open Graph générée dynamiquement (brandée NRJKA — voir /next/og). */
+export const dynamicOgImageUrl = (title: string, subtitle?: string) =>
+  `${getServerSideURL()}/next/og?title=${encodeURIComponent(title)}` +
+  (subtitle ? `&subtitle=${encodeURIComponent(subtitle)}` : '')
+
 export const generateMeta = async (args: {
   doc: Partial<Page> | Partial<Post> | null
   /** canonical path after the locale prefix, e.g. '' for home, '/contact', '/posts/my-slug' */
@@ -38,9 +43,6 @@ export const generateMeta = async (args: {
   const siteName = seo?.siteName?.trim() || 'NRJKA Digital'
   const suffix = seo?.titleSuffix?.trim()
 
-  // Image OG : celle du document, sinon l'image par défaut des Paramètres, sinon le fallback statique.
-  const ogImage = getImageURL(doc?.meta?.image || seo?.defaultOgImage)
-
   // Filet de sécurité : une meta description est toujours présente, même si le SEO
   // par page et le SEO par défaut (Paramètres du site) sont vides — évite le manque
   // signalé par Lighthouse / Search Console.
@@ -50,6 +52,13 @@ export const generateMeta = async (args: {
       : 'NRJKA — agence digitale à taille humaine : sites web, SEO, automatisation et CRM pour une croissance durable.'
   const description =
     doc?.meta?.description || seo?.defaultMetaDescription?.trim() || fallbackDescription
+
+  // Image OG : image propre du document si définie, sinon une image générée dynamiquement
+  // (brandée, avec le titre + la description de la page). Remplace l'ancien OG statique.
+  const ogHeadline = doc?.meta?.title?.trim() || seo?.defaultMetaTitle?.trim() || siteName
+  const ogImage = doc?.meta?.image
+    ? getImageURL(doc.meta.image)
+    : dynamicOgImageUrl(ogHeadline, description)
 
   const title = doc?.meta?.title
     ? suffix
@@ -64,13 +73,7 @@ export const generateMeta = async (args: {
     description,
     openGraph: mergeOpenGraph({
       description: description || '',
-      images: ogImage
-        ? [
-            {
-              url: ogImage,
-            },
-          ]
-        : undefined,
+      images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : undefined,
       locale: locale === 'en' ? 'en_US' : 'fr_FR',
       siteName,
       title,

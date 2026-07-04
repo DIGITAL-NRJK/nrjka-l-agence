@@ -12,6 +12,7 @@ import RichText from '@/components/RichText'
 import { JsonLd } from '@/components/JsonLd'
 import { LOCALES } from '@/utilities/i18n'
 import { getServerSideURL } from '@/utilities/getURL'
+import { dynamicOgImageUrl } from '@/utilities/generateMeta'
 import { getLocalizedPaths, buildLanguageAlternates } from '@/utilities/localizedSlugs'
 
 import { Faq } from './Faq'
@@ -334,6 +335,11 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return {
     title: e.seo?.metaTitle || `${e.title} — ${locale === 'en' ? 'NRJKA Expertise' : 'Expertise NRJKA'}`,
     description: e.seo?.metaDescription || e.description || undefined,
+    openGraph: {
+      images: [
+        { url: dynamicOgImageUrl(e.title, e.seo?.metaDescription || e.description || undefined), width: 1200, height: 630 },
+      ],
+    },
     alternates: buildLanguageAlternates({ locale, localizedPaths, fallbackPath: `/expertises/${slug}` }),
   }
 }

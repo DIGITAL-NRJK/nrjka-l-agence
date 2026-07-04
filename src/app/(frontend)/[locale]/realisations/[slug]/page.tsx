@@ -9,6 +9,7 @@ import configPromise from '@payload-config'
 import type { CaseStudy, Media, Service } from '@/payload-types'
 import RichText from '@/components/RichText'
 import { LOCALES } from '@/utilities/i18n'
+import { dynamicOgImageUrl } from '@/utilities/generateMeta'
 import { getLocalizedPaths, buildLanguageAlternates } from '@/utilities/localizedSlugs'
 
 type Args = { params: Promise<{ locale: string; slug: string }> }
@@ -256,6 +257,11 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return {
     title,
     description,
+    openGraph: {
+      images: [
+        { url: dynamicOgImageUrl(cs.client_name || (title as string), cs.excerpt || undefined), width: 1200, height: 630 },
+      ],
+    },
     alternates: buildLanguageAlternates({ locale, localizedPaths, fallbackPath: `/realisations/${slug}` }),
   }
 }
