@@ -33,6 +33,18 @@ const TIMELINES: Option[] = [
   { value: 'flexible', fr: 'Pas encore défini', en: 'Not defined yet' },
 ]
 
+// URL tolérante : accepte « nomdedomaine.com », « www.nomdedomaine.com » ou l'URL complète,
+// puis normalise vers https:// avant l'envoi.
+const normalizeUrl = (raw: string) => {
+  const s = raw.trim()
+  if (!s) return ''
+  return /^https?:\/\//i.test(s) ? s : `https://${s}`
+}
+const isValidDomain = (raw: string) => {
+  const s = raw.trim().replace(/^https?:\/\//i, '')
+  return /^([a-z0-9-]+\.)+[a-z]{2,}(\/[^\s]*)?$/i.test(s)
+}
+
 const t = (locale: string) =>
   locale === 'en'
     ? {
@@ -53,7 +65,7 @@ const t = (locale: string) =>
         next: 'Continue',
         submit: 'Send my request',
         sending: 'Sending…',
-        successTitle: 'Request received 🎉',
+        successTitle: 'Request received',
         successBody: 'Thanks — we’ll get back to you within 48 hours with next steps.',
         home: 'Back to homepage',
         errorMsg: 'Something went wrong. Please try again or email us.',
@@ -77,7 +89,7 @@ const t = (locale: string) =>
         next: 'Continuer',
         submit: 'Envoyer ma demande',
         sending: 'Envoi…',
-        successTitle: 'Demande reçue 🎉',
+        successTitle: 'Demande reçue',
         successBody: 'Merci — nous revenons vers vous sous 48 h avec les prochaines étapes.',
         home: 'Retour à l’accueil',
         errorMsg: 'Une erreur est survenue. Réessayez ou écrivez-nous par email.',
@@ -130,16 +142,17 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (company2) return // honeypot rempli → bot, on ignore silencieusement
-    if (!siteUrl || !name || !emailValid || !consent) {
+    if (!isValidDomain(siteUrl) || !name || !emailValid || !consent) {
       setError(L.required)
       return
     }
     setError(null)
     setSubmitting(true)
 
+    const url = normalizeUrl(siteUrl)
     const summary =
       `Demande d'audit (site existant)\n` +
-      `• Site : ${siteUrl}\n` +
+      `• Site : ${url}\n` +
       `• Objet : ${labelFr(NEEDS, need)}\n` +
       `• Délai : ${labelFr(TIMELINES, timeline)}\n\n` +
       (message ? message : '(pas de précision)')
@@ -158,7 +171,7 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
           source_tool: 'audit',
           service_type: labelFr(NEEDS, need),
           services_needed: [{ service: labelFr(NEEDS, need) }],
-          context: `Site : ${siteUrl} — Délai : ${labelFr(TIMELINES, timeline)}`,
+          context: `Site : ${url} — Délai : ${labelFr(TIMELINES, timeline)}`,
           status: 'new',
         }),
       })
@@ -279,10 +292,12 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
             </label>
             <input
               id="af-url"
-              type="url"
+              type="text"
               required
               inputMode="url"
-              placeholder="https://…"
+              autoCapitalize="none"
+              spellCheck={false}
+              placeholder="nomdedomaine.com"
               value={siteUrl}
               onChange={(e) => setSiteUrl(e.target.value)}
               className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-ink outline-none focus-visible:border-terracotta"
