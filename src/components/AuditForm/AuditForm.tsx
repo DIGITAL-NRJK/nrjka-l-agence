@@ -8,29 +8,21 @@ import { getClientSideURL } from '@/utilities/getURL'
 import { track, CONVERSIONS } from '@/utilities/analytics'
 
 /**
- * Flux « Demander un audit » — multi-étapes qualifiant (besoin · budget · délai · coordonnées).
- * Stocke le lead dans la collection `contact-messages` (source_tool = 'audit'), consultable
- * et filtrable dans l'admin (groupe CRM). Aucune nouvelle collection ni migration.
+ * Flux « Demander un audit » — multi-étapes qualifiant, pour un SITE EXISTANT.
+ * Étapes : objet de l'audit · délai · coordonnées (avec l'URL du site).
+ * Stocke le lead dans `contact-messages` (source_tool = 'audit'). Pas de nouvelle
+ * collection ni migration. Pour une création, on renvoie vers le formulaire de contact.
  */
 
 type Option = { value: string; fr: string; en: string }
 
 const NEEDS: Option[] = [
-  { value: 'site-vitrine', fr: 'Site vitrine', en: 'Showcase website' },
-  { value: 'ecommerce', fr: 'Site e-commerce', en: 'E-commerce site' },
-  { value: 'refonte', fr: 'Refonte de site', en: 'Website redesign' },
   { value: 'seo', fr: 'SEO / visibilité', en: 'SEO / visibility' },
-  { value: 'automatisation', fr: 'Automatisation / CRM', en: 'Automation / CRM' },
-  { value: 'autre', fr: 'Autre besoin', en: 'Something else' },
-]
-
-const BUDGETS: Option[] = [
-  { value: '<5k', fr: 'Moins de 5 000 €', en: 'Under €5,000' },
-  { value: '5-10k', fr: '5 000 – 10 000 €', en: '€5,000 – €10,000' },
-  { value: '10-25k', fr: '10 000 – 25 000 €', en: '€10,000 – €25,000' },
-  { value: '25-50k', fr: '25 000 – 50 000 €', en: '€25,000 – €50,000' },
-  { value: '>50k', fr: 'Plus de 50 000 €', en: 'Over €50,000' },
-  { value: 'a-definir', fr: 'À définir', en: 'To be defined' },
+  { value: 'performance', fr: 'Performance & technique', en: 'Performance & tech' },
+  { value: 'conversion', fr: 'Conversion / UX', en: 'Conversion / UX' },
+  { value: 'refonte', fr: 'Refonte / modernisation', en: 'Redesign / modernization' },
+  { value: 'accessibilite', fr: 'Accessibilité', en: 'Accessibility' },
+  { value: 'global', fr: 'Audit global', en: 'Full audit' },
 ]
 
 const TIMELINES: Option[] = [
@@ -44,17 +36,19 @@ const TIMELINES: Option[] = [
 const t = (locale: string) =>
   locale === 'en'
     ? {
-        steps: ['Need', 'Budget', 'Timeline', 'Contact'],
-        q1: 'What do you need?',
-        q2: 'What’s your budget?',
-        q3: 'What’s your timeline?',
-        q4: 'How can we reach you?',
+        steps: ['Focus', 'Timeline', 'Contact'],
+        q1: 'What should we audit?',
+        q2: 'What’s your timeline?',
+        q3: 'How can we reach you?',
+        siteUrl: 'URL of the site to audit',
         name: 'Full name',
         email: 'Email',
         company: 'Company',
         phone: 'Phone',
-        message: 'Tell us about your project (optional)',
+        message: 'Anything specific to look at? (optional)',
         consent: 'I agree to be contacted about my request.',
+        existing: 'This audit is for an existing website. Planning a new site?',
+        contactLink: 'Use the contact form',
         back: 'Back',
         next: 'Continue',
         submit: 'Send my request',
@@ -63,22 +57,22 @@ const t = (locale: string) =>
         successBody: 'Thanks — we’ll get back to you within 48 hours with next steps.',
         home: 'Back to homepage',
         errorMsg: 'Something went wrong. Please try again or email us.',
-        required: 'Please fill in the required fields.',
-        step: 'Step',
-        of: 'of',
+        required: 'Please fill in the required fields (site URL, name, email).',
       }
     : {
-        steps: ['Besoin', 'Budget', 'Délai', 'Coordonnées'],
-        q1: 'Quel est votre besoin ?',
-        q2: 'Quel est votre budget ?',
-        q3: 'Quel est votre délai ?',
-        q4: 'Comment vous recontacter ?',
+        steps: ['Objet', 'Délai', 'Coordonnées'],
+        q1: 'Sur quoi porte l’audit ?',
+        q2: 'Quel est votre délai ?',
+        q3: 'Comment vous recontacter ?',
+        siteUrl: 'URL du site à auditer',
         name: 'Nom complet',
         email: 'Email',
         company: 'Entreprise',
         phone: 'Téléphone',
-        message: 'Parlez-nous de votre projet (facultatif)',
+        message: 'Un point précis à examiner ? (facultatif)',
         consent: 'J’accepte d’être recontacté au sujet de ma demande.',
+        existing: 'Cet audit concerne un site existant. Vous préparez une création ?',
+        contactLink: 'Utilisez le formulaire de contact',
         back: 'Retour',
         next: 'Continuer',
         submit: 'Envoyer ma demande',
@@ -87,20 +81,19 @@ const t = (locale: string) =>
         successBody: 'Merci — nous revenons vers vous sous 48 h avec les prochaines étapes.',
         home: 'Retour à l’accueil',
         errorMsg: 'Une erreur est survenue. Réessayez ou écrivez-nous par email.',
-        required: 'Merci de remplir les champs obligatoires.',
-        step: 'Étape',
-        of: 'sur',
+        required: 'Merci de remplir les champs obligatoires (URL du site, nom, email).',
       }
 
 export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
   const en = locale === 'en'
   const L = useMemo(() => t(locale), [locale])
   const headingRef = useRef<HTMLHeadingElement>(null)
+  const TOTAL = L.steps.length
 
-  const [step, setStep] = useState(0) // 0..3
+  const [step, setStep] = useState(0) // 0..2
   const [need, setNeed] = useState('')
-  const [budget, setBudget] = useState('')
   const [timeline, setTimeline] = useState('')
+  const [siteUrl, setSiteUrl] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [company, setCompany] = useState('')
@@ -119,12 +112,12 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
   }
   const labelFr = (opts: Option[], value: string) => opts.find((x) => x.value === value)?.fr ?? value
 
-  const stepValid = step === 0 ? !!need : step === 1 ? !!budget : step === 2 ? !!timeline : true
+  const stepValid = step === 0 ? !!need : step === 1 ? !!timeline : true
   const focusHeading = () => window.requestAnimationFrame(() => headingRef.current?.focus())
 
   const goNext = () => {
     if (!stepValid) return
-    setStep((s) => Math.min(3, s + 1))
+    setStep((s) => Math.min(TOTAL - 1, s + 1))
     focusHeading()
   }
   const goBack = () => {
@@ -137,7 +130,7 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (company2) return // honeypot rempli → bot, on ignore silencieusement
-    if (!name || !emailValid || !consent) {
+    if (!siteUrl || !name || !emailValid || !consent) {
       setError(L.required)
       return
     }
@@ -145,11 +138,11 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
     setSubmitting(true)
 
     const summary =
-      `Demande d'audit\n` +
-      `• Besoin : ${labelFr(NEEDS, need)}\n` +
-      `• Budget : ${labelFr(BUDGETS, budget)}\n` +
+      `Demande d'audit (site existant)\n` +
+      `• Site : ${siteUrl}\n` +
+      `• Objet : ${labelFr(NEEDS, need)}\n` +
       `• Délai : ${labelFr(TIMELINES, timeline)}\n\n` +
-      (message ? message : '(pas de description)')
+      (message ? message : '(pas de précision)')
 
     try {
       const res = await fetch(`${getClientSideURL()}/api/contact-messages`, {
@@ -165,13 +158,12 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
           source_tool: 'audit',
           service_type: labelFr(NEEDS, need),
           services_needed: [{ service: labelFr(NEEDS, need) }],
-          budget: labelFr(BUDGETS, budget),
-          context: `Délai : ${labelFr(TIMELINES, timeline)}`,
+          context: `Site : ${siteUrl} — Délai : ${labelFr(TIMELINES, timeline)}`,
           status: 'new',
         }),
       })
       if (!res.ok) throw new Error(String(res.status))
-      track(CONVERSIONS.auditRequest, { besoin: need, budget, delai: timeline })
+      track(CONVERSIONS.auditRequest, { objet: need, delai: timeline })
       setSubmitted(true)
       focusHeading()
     } catch {
@@ -183,7 +175,11 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border border-border bg-card p-8 text-center shadow-soft" role="status" aria-live="polite">
+      <div
+        className="rounded-2xl border border-border bg-card p-8 text-center shadow-soft"
+        role="status"
+        aria-live="polite"
+      >
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-terracotta/15">
           <Check className="h-6 w-6 text-terracotta-dark" strokeWidth={2.5} />
         </div>
@@ -201,15 +197,27 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
     )
   }
 
-  const options = step === 0 ? NEEDS : step === 1 ? BUDGETS : step === 2 ? TIMELINES : []
-  const current = step === 0 ? need : step === 1 ? budget : timeline
-  const setCurrent = step === 0 ? setNeed : step === 1 ? setBudget : setTimeline
-  const question = [L.q1, L.q2, L.q3, L.q4][step]
+  const options = step === 0 ? NEEDS : step === 1 ? TIMELINES : []
+  const current = step === 0 ? need : timeline
+  const setCurrent = step === 0 ? setNeed : setTimeline
+  const question = [L.q1, L.q2, L.q3][step]
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-soft sm:p-8">
+      {/* Mention : audit = site existant, création → contact */}
+      <p className="mb-6 rounded-xl bg-background px-4 py-3 text-sm text-slate">
+        {L.existing}{' '}
+        <Link
+          href={`/${locale}/contact`}
+          className="font-medium text-terracotta-dark underline underline-offset-2 hover:text-terracotta"
+        >
+          {L.contactLink}
+        </Link>
+        .
+      </p>
+
       {/* Progression */}
-      <ol className="mb-8 flex items-center gap-2" aria-label={`${L.step} ${step + 1} ${L.of} 4`}>
+      <ol className="mb-8 flex items-center gap-2" aria-label={`${en ? 'Step' : 'Étape'} ${step + 1}/${TOTAL}`}>
         {L.steps.map((s, i) => (
           <li key={s} className="flex flex-1 flex-col gap-1.5">
             <span
@@ -225,8 +233,8 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
         {question}
       </h2>
 
-      {/* Étapes 1–3 : choix qualifiant */}
-      {step < 3 && (
+      {/* Étapes 1–2 : choix qualifiant */}
+      {step < 2 && (
         <fieldset className="mt-6">
           <legend className="sr-only">{question}</legend>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -257,13 +265,28 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
         </fieldset>
       )}
 
-      {/* Étape 4 : coordonnées */}
-      {step === 3 && (
+      {/* Étape 3 : coordonnées */}
+      {step === 2 && (
         <form id="audit-form" onSubmit={handleSubmit} className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Récap qualifiant */}
           <div className="sm:col-span-2 rounded-xl bg-background px-4 py-3 text-sm text-slate">
-            <span className="font-medium text-ink">{label(NEEDS, need)}</span> · {label(BUDGETS, budget)} ·{' '}
-            {label(TIMELINES, timeline)}
+            <span className="font-medium text-ink">{label(NEEDS, need)}</span> · {label(TIMELINES, timeline)}
+          </div>
+
+          <div className="sm:col-span-2">
+            <label htmlFor="af-url" className="mb-1.5 block text-sm font-medium text-ink">
+              {L.siteUrl} *
+            </label>
+            <input
+              id="af-url"
+              type="url"
+              required
+              inputMode="url"
+              placeholder="https://…"
+              value={siteUrl}
+              onChange={(e) => setSiteUrl(e.target.value)}
+              className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-ink outline-none focus-visible:border-terracotta"
+            />
           </div>
 
           <div>
@@ -375,7 +398,7 @@ export const AuditForm: React.FC<{ locale: string }> = ({ locale }) => {
           {L.back}
         </button>
 
-        {step < 3 ? (
+        {step < TOTAL - 1 ? (
           <button
             type="button"
             onClick={goNext}
