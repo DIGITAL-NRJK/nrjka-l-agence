@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { Accordion } from '@/blocks/Faq/Accordion'
 import { LOCALES } from '@/utilities/i18n'
 import { getServerSideURL } from '@/utilities/getURL'
+import { dynamicOgImageUrl } from '@/utilities/generateMeta'
 
 type Args = { params: Promise<{ locale: string; slug: string }> }
 
@@ -377,6 +378,11 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return {
     title: s.seo?.metaTitle || `${metaT} — NRJKA`,
     description: s.seo?.metaDescription || metaD || undefined,
+    openGraph: {
+      images: [
+        { url: dynamicOgImageUrl(metaT as string, s.seo?.metaDescription || metaD || undefined), width: 1200, height: 630 },
+      ],
+    },
     alternates: {
       languages: {
         fr: `/fr/services/${slug}`,

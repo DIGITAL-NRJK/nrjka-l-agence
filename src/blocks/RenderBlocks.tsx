@@ -2,6 +2,8 @@ import React, { Fragment } from 'react'
 
 import type { Page } from '@/payload-types'
 
+import { Reveal } from '@/components/Reveal'
+
 import { ArchiveBlock } from '@/blocks/ArchiveBlock/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
@@ -97,21 +99,27 @@ export const RenderBlocks: React.FC<{
             const Block = blockComponents[blockType]
 
             if (Block) {
-              return (
-                <div
-                  className={`block-reveal ${blockSpacing[blockType] || 'my-16'}${
-                    isHidden ? ' relative opacity-50' : ''
-                  }`}
-                  key={index}
-                >
-                  {isHidden && (
+              const spacing = blockSpacing[blockType] || 'my-16'
+
+              // Bloc masqué (aperçu brouillon) : div simple à 50 % — pas de révélation
+              // (éviter tout conflit d'opacité avec l'animation).
+              if (isHidden) {
+                return (
+                  <div className={`relative opacity-50 ${spacing}`} key={index}>
                     <div className="pointer-events-none absolute left-1/2 top-2 z-10 -translate-x-1/2 rounded-full bg-ink px-3 py-1 text-xs font-medium text-background shadow">
                       Section masquée (aperçu uniquement)
                     </div>
-                  )}
+                    {/* @ts-expect-error there may be some mismatch between the expected types here */}
+                    <Block {...block} locale={locale} disableInnerContainer />
+                  </div>
+                )
+              }
+
+              return (
+                <Reveal className={spacing} key={index}>
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
                   <Block {...block} locale={locale} disableInnerContainer />
-                </div>
+                </Reveal>
               )
             }
           }

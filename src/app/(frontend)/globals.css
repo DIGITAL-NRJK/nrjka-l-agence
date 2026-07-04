@@ -1777,6 +1777,35 @@ html[data-theme='light'] {
   }
 }
 
+/* Révélation au scroll pilotée par JS (composant Reveal) — cohérente sur tous les
+   navigateurs. Seuls les éléments sous la ligne de flottaison reçoivent [data-reveal],
+   donc aucun flash. Sans JS : aucun attribut → contenu visible normalement. */
+[data-reveal='hidden'] {
+  opacity: 0;
+  transform: translateY(24px);
+}
+[data-reveal='shown'] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Défilement doux vers les ancres (#…), avec dégagement sous le header collant.
+   Neutralisé par prefers-reduced-motion (scroll-behavior: auto !important plus bas). */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
 /* ===== Accessibilité ===== */
 
 /* Lien d'évitement « Aller au contenu » — visible uniquement au focus clavier */
