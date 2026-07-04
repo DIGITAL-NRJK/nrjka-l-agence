@@ -88,10 +88,10 @@ export const MethodStepper: React.FC<{ steps: MethodStep[]; locale?: string }> =
           <div className="mt-8">
             {isLast ? (
               <Link
-                href={`/${locale}/contact`}
+                href={`/${locale}/demander-un-audit`}
                 className="group inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark"
               >
-                Demander un audit
+                {locale === 'en' ? 'Request an audit' : 'Demander un audit'}
                 <ArrowRight
                   className="h-4 w-4 transition-transform group-hover:translate-x-1"
                   strokeWidth={2.4}

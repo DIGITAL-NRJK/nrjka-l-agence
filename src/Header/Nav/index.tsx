@@ -142,7 +142,7 @@ export const HeaderNav: React.FC<{
 
       {/* CTA — toujours visible ; compact sur mobile pour ne pas déborder ni passer à la ligne */}
       <a
-        href={`/${locale}/contact`}
+        href={`/${locale}/demander-un-audit`}
         className="shrink-0 whitespace-nowrap rounded-full bg-terracotta px-3 py-1.5 text-xs font-medium text-terracotta-foreground transition-colors hover:bg-terracotta-dark sm:px-5 sm:py-2 sm:text-sm"
       >
         {locale === 'en' ? 'Request an audit' : 'Demander un audit'}
