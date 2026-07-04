@@ -194,6 +194,12 @@ export default async function LocaleLayout({ children, params }: Props) {
         </noscript>
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={locale === 'en' ? 'NRJKA — Blog' : 'NRJKA — Le blog'}
+          href={`/${locale}/rss.xml`}
+        />
       </head>
       <body>
         <script
