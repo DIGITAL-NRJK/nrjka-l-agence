@@ -39,7 +39,7 @@ export default async function DemanderUnAuditPage({ params }: Args) {
         title: 'Request your',
         accent: 'audit',
         subtitle:
-          'A few questions to understand your need. We reply within 48 hours with a first diagnosis and clear next steps.',
+          'A few questions about your existing website. We reply within 48 hours with a first diagnosis and clear next steps.',
         points: ['Tailored diagnosis', 'Reply within 48h', 'No commitment'],
       }
     : {
@@ -47,7 +47,7 @@ export default async function DemanderUnAuditPage({ params }: Args) {
         title: 'Demandez votre',
         accent: 'audit',
         subtitle:
-          'Quelques questions pour cerner votre besoin. Nous revenons vers vous sous 48 h avec un premier diagnostic et des étapes claires.',
+          'Quelques questions sur votre site existant. Nous revenons vers vous sous 48 h avec un premier diagnostic et des étapes claires.',
         points: ['Diagnostic personnalisé', 'Réponse sous 48 h', 'Sans engagement'],
       }
 
