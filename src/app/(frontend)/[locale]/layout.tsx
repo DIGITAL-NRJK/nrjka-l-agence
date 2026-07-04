@@ -5,11 +5,11 @@ import { cn } from '@/utilities/ui'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import { Bricolage_Grotesque } from 'next/font/google'
-import Script from 'next/script'
 import React from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
 import { AccessibilityWidget } from '@/components/AccessibilityWidget'
+import { ConsentManager } from '@/components/Consent/ConsentManager'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
 import { MaintenancePage } from '@/components/MaintenancePage'
@@ -194,11 +194,12 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Footer locale={locale} />
           <AccessibilityWidget />
         </Providers>
+        {/* Mesure d'audience : chargée UNIQUEMENT après consentement (voir ConsentManager). */}
         {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
-          <Script
-            src={process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL}
-            data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
-            strategy="afterInteractive"
+          <ConsentManager
+            locale={locale}
+            umamiSrc={process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL}
+            umamiWebsiteId={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
           />
         )}
       </body>

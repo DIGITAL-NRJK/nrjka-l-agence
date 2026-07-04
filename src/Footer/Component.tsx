@@ -8,6 +8,7 @@ import type { Footer as FooterType } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
+import { ManageConsentButton } from '@/components/Consent/ManageConsentButton'
 
 // Glyphes de marque en SVG inline : lucide-react a retiré ses icônes social
 // (LinkedIn, Instagram, etc.) depuis la v0.475, on ne peut donc plus les importer.
@@ -156,6 +157,7 @@ export async function Footer({ locale = 'fr' }: { locale?: string }) {
             <Link href={`/${locale}/confidentialite`} className="transition-colors hover:text-white/80">
               {locale === 'en' ? 'Privacy policy' : 'Confidentialité'}
             </Link>
+            <ManageConsentButton locale={locale} />
           </div>
         </div>
       </div>
