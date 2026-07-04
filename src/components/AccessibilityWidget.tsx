@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { Check, Minus, PersonStanding, Plus, RotateCcw, X } from 'lucide-react'
 
 // Panneau de préférences d'accessibilité — sobre et honnête (PAS un overlay « de conformité »).
@@ -53,6 +54,8 @@ const applySettings = (s: Settings) => {
 }
 
 export const AccessibilityWidget: React.FC = () => {
+  const pathname = usePathname()
+  const locale = pathname?.startsWith('/en') ? 'en' : 'fr'
   const [open, setOpen] = useState(false)
   const [cursorY, setCursorY] = useState(-200)
   const [s, setS] = useState<Settings>(DEFAULTS)
@@ -240,7 +243,7 @@ export const AccessibilityWidget: React.FC = () => {
             </button>
 
             <a
-              href="/accessibilite"
+              href={`/${locale}/accessibilite`}
               className="mt-4 block text-center text-xs font-medium text-terracotta-dark underline underline-offset-2 hover:text-terracotta"
             >
               Déclaration d’accessibilité
