@@ -91,6 +91,27 @@ function buildOrganizationJsonLd(settings: SiteSetting | null, locale: string) {
   }
 }
 
+// Données structurées WebSite + SearchAction (boîte de recherche sitelinks Google).
+function buildWebsiteJsonLd(settings: SiteSetting | null, locale: string) {
+  const serverUrl = getServerSideURL()
+  const siteName = settings?.seo?.siteName?.trim() || 'NRJKA Digital'
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteName,
+    url: `${serverUrl}/${locale}`,
+    inLanguage: locale === 'en' ? 'en' : 'fr',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${serverUrl}/${locale}/search?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
 export default async function LocaleLayout({ children, params }: Props) {
   const { isEnabled } = await draftMode()
   const { locale: rawLocale } = await params
@@ -178,6 +199,10 @@ export default async function LocaleLayout({ children, params }: Props) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildOrganizationJsonLd(settings, locale)) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildWebsiteJsonLd(settings, locale)) }}
         />
         <a href="#main" className="skip-link">
           {locale === 'en' ? 'Skip to content' : 'Aller au contenu'}

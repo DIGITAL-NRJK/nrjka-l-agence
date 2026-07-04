@@ -101,9 +101,23 @@ export default async function ServicePage({ params }: Args) {
     itemListElement: breadcrumbItems,
   }
 
+  // Offre de service structurée (schema.org/Service) — fournisseur = NRJKA.
+  const serviceJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: title as string,
+    ...(description ? { description: description as string } : {}),
+    url: `${origin}/${locale}/services/${s.slug}`,
+    ...(pole ? { category: pole.title } : {}),
+    provider: { '@type': 'Organization', name: 'NRJKA Digital', url: origin },
+    areaServed: 'FR',
+    inLanguage: locale === 'en' ? 'en' : 'fr',
+  }
+
   return (
     <article className="pt-28 pb-24 sm:pt-32">
       <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={serviceJsonLd} />
       {/* En-tête */}
       <header className="container">
         <Link
