@@ -8,6 +8,7 @@ import { draftMode } from 'next/headers'
 
 import type { Post, Media, Category } from '@/payload-types'
 import RichText from '@/components/RichText'
+import { readingTimeLabel } from '@/utilities/readingTime'
 import { ShareButtons } from '@/components/ShareButtons'
 import { JsonLd } from '@/components/JsonLd'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
@@ -66,6 +67,8 @@ export default async function Post({ params: paramsPromise }: Args) {
   const authorNames = (post.populatedAuthors || [])
     .map((a) => (a && typeof a === 'object' && 'name' in a ? (a as { name?: string }).name : undefined))
     .filter((n): n is string => Boolean(n))
+
+  const readTime = readingTimeLabel(post.content, locale)
 
   // Données structurées : article (BlogPosting) + fil d'Ariane (BreadcrumbList).
   const articleJsonLd = {
@@ -159,13 +162,21 @@ export default async function Post({ params: paramsPromise }: Args) {
         </Link>
 
         <div className="mt-8 max-w-3xl">
-          <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.14em] text-terracotta-dark">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium uppercase tracking-[0.14em] text-terracotta-dark">
             {firstCategory(post) && <span>{firstCategory(post)}</span>}
             <span className="text-slate">{formatDate(post.publishedAt, locale)}</span>
+            <span aria-hidden className="text-slate/50">·</span>
+            <span className="text-slate">{readTime}</span>
           </div>
           <h1 className="mt-4 font-display text-4xl font-bold leading-[1.08] tracking-tight text-ink sm:text-5xl">
             {post.title}
           </h1>
+          {authorNames.length > 0 && (
+            <p className="mt-4 text-sm text-slate">
+              {locale === 'en' ? 'By' : 'Par'}{' '}
+              <span className="font-medium text-ink">{authorNames.join(', ')}</span>
+            </p>
+          )}
           {post.meta?.description && (
             <p className="mt-5 text-lg leading-relaxed text-slate">{post.meta.description}</p>
           )}
