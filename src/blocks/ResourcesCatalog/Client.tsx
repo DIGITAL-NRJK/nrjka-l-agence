@@ -4,15 +4,19 @@ import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Download, Check } from 'lucide-react'
 
+import { ResourceGateForm } from '@/components/ResourceGateForm'
+
 export type CatalogItem = {
   id: string
+  resourceId?: string | null // id brut de la ressource (gratuit, pour le formulaire gated)
   kind: 'free' | 'paid'
   title: string
   description?: string | null
   category?: string | null // valeur de catégorie produit (null pour le gratuit)
   categoryLabel?: string | null
   formatLabel?: string | null // gratuit uniquement
-  fileUrl?: string | null // gratuit uniquement
+  fileUrl?: string | null // gratuit uniquement (null si gated)
+  gated?: boolean // gratuit : email requis avant l'accès
   price?: number | null // payant uniquement
   bestseller?: boolean
   features: string[]
@@ -41,6 +45,9 @@ export const CatalogGrid: React.FC<{
   locale?: string
 }> = ({ items, filters, locale = 'fr' }) => {
   const [selected, setSelected] = useState<string | null>(null)
+  const [gate, setGate] = useState<{ id: string; title: string } | null>(null)
+
+  const en = locale === 'en'
 
   const filtered = useMemo(() => {
     if (selected === null) return items
@@ -125,7 +132,18 @@ export const CatalogGrid: React.FC<{
                       {isFree ? 'Gratuit' : euro(item.price || 0)}
                     </span>
                     {isFree ? (
-                      item.fileUrl ? (
+                      item.gated ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setGate({ id: item.resourceId || item.id, title: item.title })
+                          }
+                          className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-2"
+                        >
+                          <Download className="h-4 w-4" strokeWidth={2.2} />
+                          {en ? 'Get it' : 'Recevoir'}
+                        </button>
+                      ) : item.fileUrl ? (
                         <a
                           href={item.fileUrl}
                           target="_blank"
@@ -133,14 +151,14 @@ export const CatalogGrid: React.FC<{
                           className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-2"
                         >
                           <Download className="h-4 w-4" strokeWidth={2.2} />
-                          Télécharger
+                          {en ? 'Download' : 'Télécharger'}
                         </a>
                       ) : (
                         <Link
                           href={`/${locale}/contact`}
                           className="inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-all hover:gap-2.5"
                         >
-                          Demander
+                          {en ? 'Request' : 'Demander'}
                           <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
                         </Link>
                       )
@@ -171,6 +189,15 @@ export const CatalogGrid: React.FC<{
             )
           })}
         </div>
+      )}
+
+      {gate && (
+        <ResourceGateForm
+          resourceId={gate.id}
+          resourceTitle={gate.title}
+          locale={locale}
+          onClose={() => setGate(null)}
+        />
       )}
     </div>
   )

@@ -28,6 +28,7 @@ import { DistinctionsBlock } from '@/blocks/Distinctions/Component'
 import { StatsBandBlock } from '@/blocks/StatsBand/Component'
 import { TeamBlock } from '@/blocks/Team/Component'
 import { ResourcesCatalogBlock } from '@/blocks/ResourcesCatalog/Component'
+import { LogoWallBlock } from '@/blocks/LogoWall/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -54,6 +55,7 @@ const blockComponents = {
   statsBand: StatsBandBlock,
   team: TeamBlock,
   resourcesCatalog: ResourcesCatalogBlock,
+  logoWall: LogoWallBlock,
 }
 // Rythme vertical de la home : les sections liées sont rapprochées,
 // chaque nouveau « mouvement » respire davantage.
@@ -65,6 +67,7 @@ const blockSpacing: Record<string, string> = {
   team: 'mt-16 lg:mt-20',
   statsBand: 'mt-16 lg:mt-20',
   resourcesCatalog: 'mt-12 lg:mt-16',
+  logoWall: 'mt-16 lg:mt-20',
   promise: 'mt-16 lg:mt-20',
   pillars: 'mt-28 lg:mt-40',
   method: 'mt-20 lg:mt-24',

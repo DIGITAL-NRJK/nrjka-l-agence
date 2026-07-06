@@ -6,6 +6,7 @@ import * as migration_20260702_135336_theming_palette_vague2 from './20260702_13
 import * as migration_20260702_201244_theming_palettes_saisonnieres from './20260702_201244_theming_palettes_saisonnieres';
 import * as migration_20260703_165000_blocks_hidden from './20260703_165000_blocks_hidden';
 import * as migration_20260703_175226_megamenu_label_en from './20260703_175226_megamenu_label_en';
+import * as migration_20260706_102407_add_chatbot_collections from './20260706_102407_add_chatbot_collections';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20260703_175226_megamenu_label_en.up,
     down: migration_20260703_175226_megamenu_label_en.down,
-    name: '20260703_175226_megamenu_label_en'
+    name: '20260703_175226_megamenu_label_en',
+  },
+  {
+    up: migration_20260706_102407_add_chatbot_collections.up,
+    down: migration_20260706_102407_add_chatbot_collections.down,
+    name: '20260706_102407_add_chatbot_collections'
   },
 ];

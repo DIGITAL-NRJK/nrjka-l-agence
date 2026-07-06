@@ -72,18 +72,25 @@ export const ResourcesCatalogBlock = async (props: ResourcesCatalogProps & { loc
     productsDocs = []
   }
 
-  const freeItems: CatalogItem[] = resourcesDocs.map((r) => ({
-    id: `r-${r.id}`,
-    kind: 'free',
-    title: r.title,
-    description: r.description,
-    category: null,
-    categoryLabel: r.category ? RESOURCE_CATEGORIES[r.category] ?? null : null,
-    formatLabel: r.format ? RESOURCE_FORMATS[r.format] ?? null : null,
-    fileUrl: r.file_url || mediaUrl(r.file),
-    features: (r.features || []).map((f) => f.feature).filter(Boolean) as string[],
-    updatedAt: r.updatedAt,
-  }))
+  const freeItems: CatalogItem[] = resourcesDocs.map((r) => {
+    const gated = Boolean(r.requires_contact)
+    return {
+      id: `r-${r.id}`,
+      resourceId: String(r.id),
+      kind: 'free' as const,
+      title: r.title,
+      description: r.description,
+      category: null,
+      categoryLabel: r.category ? RESOURCE_CATEGORIES[r.category] ?? null : null,
+      formatLabel: r.format ? RESOURCE_FORMATS[r.format] ?? null : null,
+      // ⚠️ Ressource gated : on NE divulgue PAS l'URL au client (le gate serait
+      // contournable via le source). Elle n'est renvoyée qu'après capture, par /api/resource-lead.
+      fileUrl: gated ? null : r.file_url || mediaUrl(r.file),
+      gated,
+      features: (r.features || []).map((f) => f.feature).filter(Boolean) as string[],
+      updatedAt: r.updatedAt,
+    }
+  })
 
   const paidItems: CatalogItem[] = productsDocs.map((p) => ({
     id: `p-${p.id}`,

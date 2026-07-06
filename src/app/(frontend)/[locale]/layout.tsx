@@ -9,6 +9,7 @@ import React from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
 import { AccessibilityWidget } from '@/components/AccessibilityWidget'
+import { ChatWidget } from '@/components/ChatWidget'
 import { ConsentManager } from '@/components/Consent/ConsentManager'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
@@ -224,6 +225,9 @@ export default async function LocaleLayout({ children, params }: Props) {
           <main id="main">{children}</main>
           <Footer locale={locale} />
           <AccessibilityWidget />
+          {Boolean(
+            process.env.AI_API_KEY || process.env.MISTRAL_API_KEY || process.env.AI_BASE_URL,
+          ) && <ChatWidget locale={locale} />}
         </Providers>
         {/* Mesure d'audience : chargée UNIQUEMENT après consentement (voir ConsentManager). */}
         {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
