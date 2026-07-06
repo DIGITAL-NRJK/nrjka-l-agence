@@ -24,6 +24,7 @@ export const CONVERSIONS = {
   auditRequest: 'demande_audit_submit',
   appointmentBooked: 'rdv_reserve',
   resourceDownload: 'ressource_telechargee',
+  resourceLead: 'ressource_lead',
   newsletterSignup: 'newsletter_inscription',
   ctaPrimaryClick: 'cta_principal_clic',
 } as const

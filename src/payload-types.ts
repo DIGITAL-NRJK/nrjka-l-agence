@@ -86,6 +86,8 @@ export interface Config {
     appointments: Appointment;
     'blog-comments': BlogComment;
     resources: Resource;
+    'knowledge-chunks': KnowledgeChunk;
+    'chat-conversations': ChatConversation;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -125,6 +127,8 @@ export interface Config {
     appointments: AppointmentsSelect<false> | AppointmentsSelect<true>;
     'blog-comments': BlogCommentsSelect<false> | BlogCommentsSelect<true>;
     resources: ResourcesSelect<false> | ResourcesSelect<true>;
+    'knowledge-chunks': KnowledgeChunksSelect<false> | KnowledgeChunksSelect<true>;
+    'chat-conversations': ChatConversationsSelect<false> | ChatConversationsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -312,6 +316,7 @@ export interface Page {
         | StatsBandBlock
         | TeamBlock
         | ResourcesCatalogBlock
+        | LogoWallBlock
       )[]
     | null;
   meta?: {
@@ -1753,6 +1758,56 @@ export interface ResourcesCatalogBlock {
   blockType: 'resourcesCatalog';
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LogoWallBlock".
+ */
+export interface LogoWallBlock {
+  /**
+   * Cochez pour retirer la section du site public. Elle reste ici, modifiable, et repérée « masqué ».
+   */
+  hidden?: boolean | null;
+  eyebrow?: string | null;
+  title?: string | null;
+  intro?: string | null;
+  /**
+   * Logos clients / partenaires (image + nom). Réorganisables. Un fond transparent (PNG/SVG) rend le mieux.
+   */
+  logos?:
+    | {
+        /**
+         * De préférence PNG/SVG à fond transparent.
+         */
+        logo: number | Media;
+        /**
+         * Nom du client (sert de texte alternatif et d’info-bulle).
+         */
+        name: string;
+        /**
+         * Lien optionnel (site du client ou étude de cas).
+         */
+        href?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Logos en niveaux de gris, révélés en couleur au survol (recommandé pour une bande sobre).
+   */
+  grayscale?: boolean | null;
+  /**
+   * Personnalisation visuelle de la section. Tout champ laissé vide ou « Par défaut » conserve le design d'origine.
+   */
+  appearance?: {
+    titleSize?: ('default' | 'sm' | 'md' | 'lg' | 'xl') | null;
+    textSize?: ('default' | 'sm' | 'base' | 'lg') | null;
+    titleColor?: string | null;
+    textColor?: string | null;
+    background?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'logoWall';
+}
+/**
  * Les grands domaines d'expertise de l'agence (les « pôles »). Chaque pôle a sa propre page /expertises/[slug] et peut être mis en avant comme pilier sur la page d'accueil. Les services granulaires (collection Services) se rattachent à un pôle.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2498,6 +2553,64 @@ export interface Resource {
   createdAt: string;
 }
 /**
+ * Fragments de contenu indexés pour le chatbot (générés automatiquement via /reindex-kb). Ne pas éditer à la main : le contenu est réécrit à chaque réindexation.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "knowledge-chunks".
+ */
+export interface KnowledgeChunk {
+  id: number;
+  title?: string | null;
+  text?: string | null;
+  /**
+   * Vecteur d’embedding (mistral-embed). Généré automatiquement.
+   */
+  embedding?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  locale?: ('fr' | 'en') | null;
+  sourceCollection?: string | null;
+  sourceId?: string | null;
+  url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Échanges avec le chatbot, conservés (avec consentement) pour analyser et améliorer les réponses. Purger régulièrement selon la politique de rétention.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-conversations".
+ */
+export interface ChatConversation {
+  id: number;
+  /**
+   * Début de la première question (repère de lecture).
+   */
+  summary?: string | null;
+  locale?: ('fr' | 'en') | null;
+  turns?: number | null;
+  consent?: boolean | null;
+  messages?:
+    | {
+        role?: ('user' | 'assistant') | null;
+        content?: string | null;
+        /**
+         * Horodatage ISO.
+         */
+        at?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -2764,6 +2877,14 @@ export interface PayloadLockedDocument {
         value: number | Resource;
       } | null)
     | ({
+        relationTo: 'knowledge-chunks';
+        value: number | KnowledgeChunk;
+      } | null)
+    | ({
+        relationTo: 'chat-conversations';
+        value: number | ChatConversation;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: number | Redirect;
       } | null)
@@ -2920,6 +3041,7 @@ export interface PagesSelect<T extends boolean = true> {
         statsBand?: T | StatsBandBlockSelect<T>;
         team?: T | TeamBlockSelect<T>;
         resourcesCatalog?: T | ResourcesCatalogBlockSelect<T>;
+        logoWall?: T | LogoWallBlockSelect<T>;
       };
   meta?:
     | T
@@ -3562,6 +3684,36 @@ export interface ResourcesCatalogBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LogoWallBlock_select".
+ */
+export interface LogoWallBlockSelect<T extends boolean = true> {
+  hidden?: T;
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  logos?:
+    | T
+    | {
+        logo?: T;
+        name?: T;
+        href?: T;
+        id?: T;
+      };
+  grayscale?: T;
+  appearance?:
+    | T
+    | {
+        titleSize?: T;
+        textSize?: T;
+        titleColor?: T;
+        textColor?: T;
+        background?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -4187,6 +4339,41 @@ export interface ResourcesSelect<T extends boolean = true> {
   requires_contact?: T;
   downloads?: T;
   published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "knowledge-chunks_select".
+ */
+export interface KnowledgeChunksSelect<T extends boolean = true> {
+  title?: T;
+  text?: T;
+  embedding?: T;
+  locale?: T;
+  sourceCollection?: T;
+  sourceId?: T;
+  url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-conversations_select".
+ */
+export interface ChatConversationsSelect<T extends boolean = true> {
+  summary?: T;
+  locale?: T;
+  turns?: T;
+  consent?: T;
+  messages?:
+    | T
+    | {
+        role?: T;
+        content?: T;
+        at?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

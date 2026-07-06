@@ -26,6 +26,7 @@ import { Distinctions } from '../../blocks/Distinctions/config'
 import { StatsBand } from '../../blocks/StatsBand/config'
 import { Team } from '../../blocks/Team/config'
 import { ResourcesCatalog } from '../../blocks/ResourcesCatalog/config'
+import { LogoWall } from '../../blocks/LogoWall/config'
 import { withVisibility } from '../../blocks/withVisibility'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
@@ -128,6 +129,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 StatsBand,
                 Team,
                 ResourcesCatalog,
+                LogoWall,
               ].map(withVisibility),
               admin: {
                 initCollapsed: true,

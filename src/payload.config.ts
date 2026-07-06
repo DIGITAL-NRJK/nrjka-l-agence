@@ -31,6 +31,8 @@ import { JobApplications } from './collections/JobApplications'
 import { Appointments } from './collections/Appointments'
 import { BlogComments } from './collections/BlogComments'
 import { Resources } from './collections/Resources'
+import { KnowledgeChunks } from './collections/KnowledgeChunks'
+import { ChatConversations } from './collections/ChatConversations'
 import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
@@ -96,7 +98,7 @@ export default buildConfig({
       { label: 'English', code: 'en' },
     ],
     defaultLocale: 'fr',
-    fallback: true,
+    fallback: false,
   },
   db: postgresAdapter({
     pool: {
@@ -128,6 +130,8 @@ export default buildConfig({
     Appointments,
     BlogComments,
     Resources,
+    KnowledgeChunks,
+    ChatConversations,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
