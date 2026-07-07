@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
+import * as Sentry from '@sentry/nextjs'
 
 /**
  * Garde-fou ULTIME : ne se déclenche que si le layout racine lui-même échoue.
@@ -16,6 +17,7 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error('Erreur critique (global-error) :', error)
+    Sentry.captureException(error)
   }, [error])
 
   const en =

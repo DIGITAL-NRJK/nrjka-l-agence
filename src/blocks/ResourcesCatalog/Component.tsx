@@ -74,6 +74,7 @@ export const ResourcesCatalogBlock = async (props: ResourcesCatalogProps & { loc
 
   const freeItems: CatalogItem[] = resourcesDocs.map((r) => {
     const gated = Boolean(r.requires_contact)
+    const fileHref = r.file_url || mediaUrl(r.file)
     return {
       id: `r-${r.id}`,
       resourceId: String(r.id),
@@ -85,8 +86,11 @@ export const ResourcesCatalogBlock = async (props: ResourcesCatalogProps & { loc
       formatLabel: r.format ? RESOURCE_FORMATS[r.format] ?? null : null,
       // ⚠️ Ressource gated : on NE divulgue PAS l'URL au client (le gate serait
       // contournable via le source). Elle n'est renvoyée qu'après capture, par /api/resource-lead.
-      fileUrl: gated ? null : r.file_url || mediaUrl(r.file),
+      fileUrl: gated ? null : fileHref,
       gated,
+      // Indique juste s'il existe un fichier (sans l'exposer) : une ressource gated
+      // SANS fichier n'a rien à livrer → on n'affiche pas « Recevoir ».
+      hasFile: Boolean(fileHref),
       features: (r.features || []).map((f) => f.feature).filter(Boolean) as string[],
       updatedAt: r.updatedAt,
     }
