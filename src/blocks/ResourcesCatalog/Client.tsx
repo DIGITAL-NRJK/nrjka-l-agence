@@ -17,6 +17,7 @@ export type CatalogItem = {
   formatLabel?: string | null // gratuit uniquement
   fileUrl?: string | null // gratuit uniquement (null si gated)
   gated?: boolean // gratuit : email requis avant l'accès
+  hasFile?: boolean // gratuit : un fichier livrable existe (sans exposer l'URL)
   price?: number | null // payant uniquement
   bestseller?: boolean
   features: string[]
@@ -132,7 +133,7 @@ export const CatalogGrid: React.FC<{
                       {isFree ? 'Gratuit' : euro(item.price || 0)}
                     </span>
                     {isFree ? (
-                      item.gated ? (
+                      item.gated && item.hasFile ? (
                         <button
                           type="button"
                           onClick={() =>

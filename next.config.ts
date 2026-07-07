@@ -1,4 +1,5 @@
 import { withPayload } from '@payloadcms/next/withPayload'
+import { withSentryConfig } from '@sentry/nextjs'
 import type { NextConfig } from 'next'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -43,4 +44,12 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withPayload(nextConfig, { devBundleServerPackages: false })
+export default withSentryConfig(withPayload(nextConfig, { devBundleServerPackages: false }), {
+  // Logs d'upload de source maps silencieux hors CI.
+  silent: !process.env.CI,
+  // Allège le bundle client (retire les logs internes du SDK).
+  disableLogger: true,
+  // GlitchTip auto-hébergé : pas d'upload de source maps vers Sentry SaaS
+  // (org/project/authToken volontairement omis). Optionnel plus tard via sentry-cli --url.
+})
+
