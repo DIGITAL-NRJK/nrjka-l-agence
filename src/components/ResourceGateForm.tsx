@@ -5,6 +5,7 @@ import { X, Download, Check, Loader2 } from 'lucide-react'
 
 import { getClientSideURL } from '@/utilities/getURL'
 import { track, CONVERSIONS } from '@/utilities/analytics'
+import { useFocusTrap } from '@/utilities/useFocusTrap'
 
 // Modale de capture pour une ressource « gated » : email requis avant l'accès.
 // À la validation : lead stocké + ressource envoyée par email + lien à l'écran.
@@ -60,6 +61,10 @@ export const ResourceGateForm: React.FC<{
   const [error, setError] = useState<string | null>(null)
   const [done, setDone] = useState<{ downloadUrl: string | null; emailed: boolean } | null>(null)
   const nameRef = useRef<HTMLInputElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  // Vraie modale (aria-modal) → on confine la tabulation à l'intérieur.
+  useFocusTrap(true, panelRef)
 
   useEffect(() => {
     nameRef.current?.focus()
@@ -107,6 +112,7 @@ export const ResourceGateForm: React.FC<{
       aria-label={resourceTitle}
     >
       <div
+        ref={panelRef}
         className="relative w-full max-w-md overflow-hidden rounded-2xl border border-border bg-background shadow-soft"
         onClick={(e) => e.stopPropagation()}
       >
