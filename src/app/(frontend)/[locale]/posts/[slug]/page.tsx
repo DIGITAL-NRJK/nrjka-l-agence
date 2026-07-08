@@ -146,7 +146,7 @@ export default async function Post({ params: paramsPromise }: Args) {
   }
 
   return (
-    <article className="pt-28 pb-24 sm:pt-32">
+    <article className="pt-16 pb-24 sm:pt-20">
       <JsonLd data={[articleJsonLd, breadcrumbJsonLd]} />
       <PayloadRedirects disableNotFound url={url} />
       {draft && <LivePreviewListener />}

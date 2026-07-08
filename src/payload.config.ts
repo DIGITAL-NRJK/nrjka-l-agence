@@ -34,6 +34,7 @@ import { Resources } from './collections/Resources'
 import { KnowledgeChunks } from './collections/KnowledgeChunks'
 import { ChatConversations } from './collections/ChatConversations'
 import { SiteSettings } from './globals/SiteSettings'
+import { CareersSettings } from './globals/CareersSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -152,7 +153,7 @@ export default buildConfig({
       },
     }),
   ],
-  globals: [Header, Footer, SiteSettings],
+  globals: [Header, Footer, SiteSettings, CareersSettings],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {

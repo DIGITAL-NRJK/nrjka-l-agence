@@ -25,6 +25,7 @@ export const CONVERSIONS = {
   appointmentBooked: 'rdv_reserve',
   resourceDownload: 'ressource_telechargee',
   resourceLead: 'ressource_lead',
+  jobApplication: 'candidature_soumise',
   newsletterSignup: 'newsletter_inscription',
   ctaPrimaryClick: 'cta_principal_clic',
 } as const

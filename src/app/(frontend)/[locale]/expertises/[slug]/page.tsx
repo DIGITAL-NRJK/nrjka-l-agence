@@ -91,7 +91,7 @@ export default async function ExpertisePage({ params }: Args) {
   }
 
   return (
-    <article className="pt-28 pb-24 sm:pt-32">
+    <article className="pt-16 pb-24 sm:pt-20">
       <JsonLd data={breadcrumbJsonLd} />
       {/* En-tête */}
       <header className="container">

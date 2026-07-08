@@ -103,7 +103,7 @@ export default async function Page({ params }: Args) {
     .sort((a, b) => a.title.localeCompare(b.title))
 
   return (
-    <section className="container pt-28 pb-24 sm:pt-32">
+    <section className="container pt-16 pb-24 sm:pt-20">
       <div className="max-w-2xl">
         <span className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-slate">
           <span className="h-px w-8 bg-terracotta" />

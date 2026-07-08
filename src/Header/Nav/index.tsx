@@ -12,6 +12,92 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { localizeHref } from '@/utilities/localizeHref'
 import { MegaMenu, type MegaMenuPole, type MegaMenuChrome } from './MegaMenu'
 
+type NavItemT = NonNullable<HeaderType['navItems']>[number]
+type NavLinkT = NavItemT['link']
+
+/** Menu déroulant desktop pour un item de nav qui a des sous-liens. */
+const NavDropdown: React.FC<{ label: string; items: { link: NavLinkT }[]; locale: string }> = ({
+  label,
+  items,
+  locale,
+}) => {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        triggerRef.current?.focus()
+      }
+    }
+    const onOutside = (e: Event) => {
+      const t = e.target as HTMLElement | null
+      if (ref.current && t && !ref.current.contains(t)) setOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('mousedown', onOutside)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('mousedown', onOutside)
+    }
+  }, [open])
+
+  const openNow = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current)
+    setOpen(true)
+  }
+  const scheduleClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current)
+    closeTimer.current = setTimeout(() => setOpen(false), 120)
+  }
+
+  return (
+    <div ref={ref} className="relative" onMouseEnter={openNow} onMouseLeave={scheduleClose}>
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="true"
+        className="flex items-center gap-1.5 text-sm font-medium text-slate transition-colors hover:text-ink"
+      >
+        {label}
+        <ChevronDown
+          className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`}
+          strokeWidth={2.2}
+        />
+      </button>
+      <div
+        className={`absolute left-0 top-full z-50 pt-3 ${
+          open ? 'visible opacity-100' : 'invisible pointer-events-none -translate-y-1 opacity-0'
+        } transition-all duration-200`}
+      >
+        <ul className="min-w-[12rem] overflow-hidden rounded-xl border border-border bg-background p-1.5 shadow-soft">
+          {items.map((sub, i) => (
+            <li key={i}>
+              <CMSLink
+                {...sub.link}
+                locale={locale}
+                appearance="link"
+                className="block whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-ink transition-colors hover:bg-surface-soft"
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
 export const HeaderNav: React.FC<{
   data: HeaderType
   menu?: MegaMenuPole[]
@@ -32,6 +118,7 @@ export const HeaderNav: React.FC<{
   const [open, setOpen] = useState(false) // burger mobile
   const [mega, setMega] = useState(false) // mégamenu desktop
   const [openPole, setOpenPole] = useState<string | null>(null) // accordéon pôle (mobile)
+  const [openMobileNav, setOpenMobileNav] = useState<number | null>(null) // accordéon sous-liens (mobile)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
@@ -79,15 +166,29 @@ export const HeaderNav: React.FC<{
       {/* Liens — desktop. Le déclencheur « Services » est inséré à la position choisie en admin. */}
       <div className="hidden items-center gap-7 md:flex">
         {(() => {
-          const links = navItems.map(({ link }, i) => (
-            <CMSLink
-              key={`nav-${i}`}
-              {...link}
-              locale={locale}
-              appearance="link"
-              className="text-sm font-medium text-slate transition-colors hover:text-ink"
-            />
-          ))
+          const links = navItems.map((item, i) => {
+            const subItems =
+              (item as unknown as { subItems?: { link: NavLinkT }[] }).subItems || []
+            if (subItems.length > 0) {
+              return (
+                <NavDropdown
+                  key={`nav-${i}`}
+                  label={item.link?.label || ''}
+                  items={subItems}
+                  locale={locale}
+                />
+              )
+            }
+            return (
+              <CMSLink
+                key={`nav-${i}`}
+                {...item.link}
+                locale={locale}
+                appearance="link"
+                className="text-sm font-medium text-slate transition-colors hover:text-ink"
+              />
+            )
+          })
 
           if (hasMenu) {
             const trigger = (
@@ -234,16 +335,53 @@ export const HeaderNav: React.FC<{
             )}
             {navItems.length > 0 && (
               <ul className="flex flex-col p-2">
-                {navItems.map(({ link }, i) => (
-                  <li key={i}>
-                    <CMSLink
-                      {...link}
-                      locale={locale}
-                      appearance="link"
-                      className="block rounded-xl px-4 py-3 text-base font-medium text-ink transition-colors hover:bg-surface-soft"
-                    />
-                  </li>
-                ))}
+                {navItems.map((item, i) => {
+                  const subItems =
+                    (item as unknown as { subItems?: { link: NavLinkT }[] }).subItems || []
+                  if (subItems.length > 0) {
+                    const expanded = openMobileNav === i
+                    return (
+                      <li key={i}>
+                        <button
+                          type="button"
+                          onClick={() => setOpenMobileNav(expanded ? null : i)}
+                          aria-expanded={expanded}
+                          className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-ink transition-colors hover:bg-surface-soft"
+                        >
+                          {item.link?.label}
+                          <ChevronDown
+                            className={`h-4 w-4 transition-transform ${expanded ? 'rotate-180' : ''}`}
+                            strokeWidth={2.2}
+                          />
+                        </button>
+                        {expanded && (
+                          <ul className="mb-1 ml-3 border-l border-border pl-3">
+                            {subItems.map((sub, si) => (
+                              <li key={si}>
+                                <CMSLink
+                                  {...sub.link}
+                                  locale={locale}
+                                  appearance="link"
+                                  className="block rounded-lg px-3 py-2 text-sm text-slate transition-colors hover:bg-surface-soft hover:text-ink"
+                                />
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    )
+                  }
+                  return (
+                    <li key={i}>
+                      <CMSLink
+                        {...item.link}
+                        locale={locale}
+                        appearance="link"
+                        className="block rounded-xl px-4 py-3 text-base font-medium text-ink transition-colors hover:bg-surface-soft"
+                      />
+                    </li>
+                  )
+                })}
               </ul>
             )}
             {/* Bascule thème — mobile */}

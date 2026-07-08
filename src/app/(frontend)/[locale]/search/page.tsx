@@ -45,7 +45,7 @@ export default async function Page({ params, searchParams: searchParamsPromise }
   })
 
   return (
-    <div className="pt-24 pb-24">
+    <div className="pt-16 pb-24 sm:pt-20">
       <PageClient />
       <div className="container mb-16">
         <div className="prose dark:prose-invert max-w-none text-center">

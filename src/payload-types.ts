@@ -148,11 +148,13 @@ export interface Config {
     header: Header;
     footer: Footer;
     'site-settings': SiteSetting;
+    'careers-settings': CareersSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'careers-settings': CareersSettingsSelect<false> | CareersSettingsSelect<true>;
   };
   locale: 'fr' | 'en';
   widgets: {
@@ -4680,6 +4682,29 @@ export interface Header {
           url?: string | null;
           label: string;
         };
+        /**
+         * Optionnel. Si vous ajoutez des sous-liens, cet élément devient un menu déroulant (ex. « L’Agence » → « À propos », « Carrières »). Le libellé de l’élément sert alors de déclencheur. Laissez vide pour un lien simple.
+         */
+        subItems?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                url?: string | null;
+                label: string;
+              };
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -4910,6 +4935,73 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * Tous les libellés des pages Carrières et du formulaire de candidature. Laissez un champ vide pour garder le texte par défaut.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "careers-settings".
+ */
+export interface CareersSetting {
+  id: number;
+  list?: {
+    /**
+     * Défaut : « Carrières ».
+     */
+    eyebrow?: string | null;
+    /**
+     * Défaut : « Construisons ensemble ».
+     */
+    title?: string | null;
+    intro?: string | null;
+    /**
+     * Affiché quand il n’y a aucune offre publiée.
+     */
+    emptyText?: string | null;
+    spontaneousCta?: string | null;
+  };
+  spontaneous?: {
+    eyebrow?: string | null;
+    /**
+     * Défaut : « Parlez-nous de vous ».
+     */
+    title?: string | null;
+    intro?: string | null;
+    lookForHeading?: string | null;
+    lookFor?:
+      | {
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    nextHeading?: string | null;
+    nextText?: string | null;
+  };
+  detail?: {
+    responsibilities?: string | null;
+    requirements?: string | null;
+    perks?: string | null;
+  };
+  form?: {
+    /**
+     * Défaut : « Postuler ».
+     */
+    title?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    linkedin?: string | null;
+    portfolio?: string | null;
+    coverLetter?: string | null;
+    cv?: string | null;
+    consent?: string | null;
+    submit?: string | null;
+    successTitle?: string | null;
+    successBody?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -4925,6 +5017,20 @@ export interface HeaderSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+            };
+        subItems?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
             };
         id?: T;
       };
@@ -5045,6 +5151,64 @@ export interface SiteSettingsSelect<T extends boolean = true> {
               ip?: T;
               id?: T;
             };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "careers-settings_select".
+ */
+export interface CareersSettingsSelect<T extends boolean = true> {
+  list?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        intro?: T;
+        emptyText?: T;
+        spontaneousCta?: T;
+      };
+  spontaneous?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        intro?: T;
+        lookForHeading?: T;
+        lookFor?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        nextHeading?: T;
+        nextText?: T;
+      };
+  detail?:
+    | T
+    | {
+        responsibilities?: T;
+        requirements?: T;
+        perks?: T;
+      };
+  form?:
+    | T
+    | {
+        title?: T;
+        firstName?: T;
+        lastName?: T;
+        email?: T;
+        phone?: T;
+        linkedin?: T;
+        portfolio?: T;
+        coverLetter?: T;
+        cv?: T;
+        consent?: T;
+        submit?: T;
+        successTitle?: T;
+        successBody?: T;
       };
   updatedAt?: T;
   createdAt?: T;
