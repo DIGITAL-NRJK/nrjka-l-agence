@@ -68,7 +68,7 @@ export default async function CaseStudyPage({ params }: Args) {
   const testimonials = cs.testimonials || []
 
   return (
-    <article className="container pt-28 pb-24 sm:pt-32">
+    <article className="container pt-16 pb-24 sm:pt-20">
       <Link
         href={`/${locale}/realisations`}
         className="inline-flex items-center gap-2 text-sm font-medium text-slate transition-colors hover:text-ink"

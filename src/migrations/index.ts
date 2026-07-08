@@ -7,6 +7,8 @@ import * as migration_20260702_201244_theming_palettes_saisonnieres from './2026
 import * as migration_20260703_165000_blocks_hidden from './20260703_165000_blocks_hidden';
 import * as migration_20260703_175226_megamenu_label_en from './20260703_175226_megamenu_label_en';
 import * as migration_20260706_102407_add_chatbot_collections from './20260706_102407_add_chatbot_collections';
+import * as migration_20260707_204512_add_nav_subitems from './20260707_204512_add_nav_subitems';
+import * as migration_20260708_061934 from './20260708_061934';
 
 export const migrations = [
   {
@@ -52,6 +54,16 @@ export const migrations = [
   {
     up: migration_20260706_102407_add_chatbot_collections.up,
     down: migration_20260706_102407_add_chatbot_collections.down,
-    name: '20260706_102407_add_chatbot_collections'
+    name: '20260706_102407_add_chatbot_collections',
+  },
+  {
+    up: migration_20260707_204512_add_nav_subitems.up,
+    down: migration_20260707_204512_add_nav_subitems.down,
+    name: '20260707_204512_add_nav_subitems',
+  },
+  {
+    up: migration_20260708_061934.up,
+    down: migration_20260708_061934.down,
+    name: '20260708_061934'
   },
 ];

@@ -19,7 +19,28 @@ export const Header: GlobalConfig = {
       fields: [
         link({
           appearances: false,
+          // Cible facultative : un item avec sous-liens n'est qu'un déclencheur (libellé seul).
+          requireTarget: false,
         }),
+        {
+          name: 'subItems',
+          type: 'array',
+          label: 'Sous-liens (menu déroulant)',
+          maxRows: 6,
+          admin: {
+            initCollapsed: true,
+            description:
+              'Optionnel. Si vous ajoutez des sous-liens, cet élément devient un menu déroulant (ex. « L’Agence » → « À propos », « Carrières »). Le libellé de l’élément sert alors de déclencheur. Laissez vide pour un lien simple.',
+            components: {
+              RowLabel: '@/Header/RowLabel#RowLabel',
+            },
+          },
+          fields: [
+            link({
+              appearances: false,
+            }),
+          ],
+        },
       ],
       maxRows: 6,
       admin: {
