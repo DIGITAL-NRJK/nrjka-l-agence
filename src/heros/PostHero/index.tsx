@@ -1,18 +1,23 @@
 import { formatDateTime } from 'src/utilities/formatDateTime'
+import Link from 'next/link'
 import React from 'react'
 
 import type { Post } from '@/payload-types'
 
 import { Media } from '@/components/Media'
-import { formatAuthors } from '@/utilities/formatAuthors'
+import { authorSlug } from '@/utilities/authorSlug'
 
 export const PostHero: React.FC<{
   post: Post
-}> = ({ post }) => {
+  locale?: string
+}> = ({ post, locale = 'fr' }) => {
   const { categories, heroImage, populatedAuthors, publishedAt, title } = post
+  const en = locale === 'en'
 
-  const hasAuthors =
-    populatedAuthors && populatedAuthors.length > 0 && formatAuthors(populatedAuthors) !== ''
+  const authors = (populatedAuthors || []).filter(
+    (a): a is { id?: string | number; name: string } => Boolean(a?.name),
+  )
+  const hasAuthors = authors.length > 0
 
   return (
     <div className="relative -mt-[10.4rem] flex items-end">
@@ -46,15 +51,27 @@ export const PostHero: React.FC<{
             {hasAuthors && (
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm">Author</p>
+                  <p className="text-sm">{en ? 'Author' : 'Auteur'}</p>
 
-                  <p>{formatAuthors(populatedAuthors)}</p>
+                  <p className="flex flex-wrap gap-x-2">
+                    {authors.map((a, i) => (
+                      <span key={a.id ?? i}>
+                        <Link
+                          href={`/${locale}/auteur/${authorSlug(a.name)}`}
+                          className="underline underline-offset-4 transition-colors hover:text-white/80"
+                        >
+                          {a.name}
+                        </Link>
+                        {i < authors.length - 1 ? ',' : ''}
+                      </span>
+                    ))}
+                  </p>
                 </div>
               </div>
             )}
             {publishedAt && (
               <div className="flex flex-col gap-1">
-                <p className="text-sm">Date Published</p>
+                <p className="text-sm">{en ? 'Published' : 'Publié le'}</p>
 
                 <time dateTime={publishedAt}>{formatDateTime(publishedAt)}</time>
               </div>
