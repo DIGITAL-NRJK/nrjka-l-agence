@@ -9,6 +9,7 @@ import { draftMode } from 'next/headers'
 import type { Post, Media, Category } from '@/payload-types'
 import RichText from '@/components/RichText'
 import { readingTimeLabel } from '@/utilities/readingTime'
+import { authorSlug } from '@/utilities/authorSlug'
 import { ShareButtons } from '@/components/ShareButtons'
 import { JsonLd } from '@/components/JsonLd'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
@@ -174,7 +175,17 @@ export default async function Post({ params: paramsPromise }: Args) {
           {authorNames.length > 0 && (
             <p className="mt-4 text-sm text-slate">
               {locale === 'en' ? 'By' : 'Par'}{' '}
-              <span className="font-medium text-ink">{authorNames.join(', ')}</span>
+              {authorNames.map((name, i) => (
+                <React.Fragment key={name}>
+                  <Link
+                    href={`/${locale}/auteur/${authorSlug(name)}`}
+                    className="font-medium text-ink underline underline-offset-4 transition-colors hover:text-terracotta-dark"
+                  >
+                    {name}
+                  </Link>
+                  {i < authorNames.length - 1 ? ', ' : ''}
+                </React.Fragment>
+              ))}
             </p>
           )}
           {post.meta?.description && (
