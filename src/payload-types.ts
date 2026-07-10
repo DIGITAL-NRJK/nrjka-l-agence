@@ -88,6 +88,7 @@ export interface Config {
     resources: Resource;
     'knowledge-chunks': KnowledgeChunk;
     'chat-conversations': ChatConversation;
+    popups: Popup;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -129,6 +130,7 @@ export interface Config {
     resources: ResourcesSelect<false> | ResourcesSelect<true>;
     'knowledge-chunks': KnowledgeChunksSelect<false> | KnowledgeChunksSelect<true>;
     'chat-conversations': ChatConversationsSelect<false> | ChatConversationsSelect<true>;
+    popups: PopupsSelect<false> | PopupsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -2613,6 +2615,65 @@ export interface ChatConversation {
   createdAt: string;
 }
 /**
+ * Fenêtres marketing (promo, annonce, capture email…). Choisissez un modèle, un déclencheur, les pages et la langue où l’afficher.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "popups".
+ */
+export interface Popup {
+  id: number;
+  /**
+   * Non affiché aux visiteurs. Sert à identifier la pop-up dans l’admin.
+   */
+  name: string;
+  enabled?: boolean | null;
+  /**
+   * Si plusieurs pop-ups ciblent la même page, la priorité la plus haute s’affiche.
+   */
+  priority?: number | null;
+  template: 'modal' | 'banner-bottom' | 'slide-in' | 'top-bar';
+  heading?: string | null;
+  body?: string | null;
+  /**
+   * Affichée par les modèles « Modale centrée » et « Slide-in ».
+   */
+  image?: (number | null) | Media;
+  /**
+   * Laisser vide pour masquer le bouton.
+   */
+  ctaLabel?: string | null;
+  /**
+   * URL ou chemin, ex. « /contact » ou « https://… ».
+   */
+  ctaUrl?: string | null;
+  dismissible?: boolean | null;
+  trigger?: ('load' | 'scroll' | 'exit') | null;
+  /**
+   * 0 = affichage immédiat.
+   */
+  delaySeconds?: number | null;
+  /**
+   * Pourcentage de la page atteint avant affichage.
+   */
+  scrollPercent?: number | null;
+  frequency?: ('session' | 'once' | 'always') | null;
+  showOn?: ('all' | 'include' | 'exclude') | null;
+  /**
+   * Ex. « /contact », « /blog ». Correspondance par début de chemin (sans la langue).
+   */
+  paths?:
+    | {
+        path?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  localeFilter?: ('all' | 'fr' | 'en') | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -2885,6 +2946,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'chat-conversations';
         value: number | ChatConversation;
+      } | null)
+    | ({
+        relationTo: 'popups';
+        value: number | Popup;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -4376,6 +4441,38 @@ export interface ChatConversationsSelect<T extends boolean = true> {
         at?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "popups_select".
+ */
+export interface PopupsSelect<T extends boolean = true> {
+  name?: T;
+  enabled?: T;
+  priority?: T;
+  template?: T;
+  heading?: T;
+  body?: T;
+  image?: T;
+  ctaLabel?: T;
+  ctaUrl?: T;
+  dismissible?: T;
+  trigger?: T;
+  delaySeconds?: T;
+  scrollPercent?: T;
+  frequency?: T;
+  showOn?: T;
+  paths?:
+    | T
+    | {
+        path?: T;
+        id?: T;
+      };
+  localeFilter?: T;
+  startDate?: T;
+  endDate?: T;
   updatedAt?: T;
   createdAt?: T;
 }

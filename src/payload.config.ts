@@ -33,6 +33,7 @@ import { BlogComments } from './collections/BlogComments'
 import { Resources } from './collections/Resources'
 import { KnowledgeChunks } from './collections/KnowledgeChunks'
 import { ChatConversations } from './collections/ChatConversations'
+import { Popups } from './collections/Popups'
 import { SiteSettings } from './globals/SiteSettings'
 import { CareersSettings } from './globals/CareersSettings'
 
@@ -133,6 +134,7 @@ export default buildConfig({
     Resources,
     KnowledgeChunks,
     ChatConversations,
+    Popups,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
