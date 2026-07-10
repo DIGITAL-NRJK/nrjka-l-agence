@@ -157,12 +157,14 @@ export interface Config {
     footer: Footer;
     'site-settings': SiteSetting;
     'careers-settings': CareersSetting;
+    'nav-settings': NavSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'careers-settings': CareersSettingsSelect<false> | CareersSettingsSelect<true>;
+    'nav-settings': NavSettingsSelect<false> | NavSettingsSelect<true>;
   };
   locale: 'fr' | 'en';
   widgets: {
@@ -5341,6 +5343,56 @@ export interface CareersSetting {
   createdAt?: string | null;
 }
 /**
+ * Ordre du menu de gauche. Glissez les lignes pour réordonner. Regroupez les entrées d’un même groupe pour ordonner les groupes entre eux. Les entrées non listées apparaissent à la fin, dans l’ordre par défaut. (Les groupes de « globals » comme Paramètres restent sous les collections.)
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "nav-settings".
+ */
+export interface NavSetting {
+  id: number;
+  order?:
+    | {
+        entity:
+          | 'pages'
+          | 'posts'
+          | 'categories'
+          | 'expertises'
+          | 'services'
+          | 'case-studies'
+          | 'case-study-sectors'
+          | 'case-study-types'
+          | 'testimonials'
+          | 'reviews'
+          | 'blog-comments'
+          | 'resources'
+          | 'media'
+          | 'products'
+          | 'contact-messages'
+          | 'appointments'
+          | 'job-offers'
+          | 'job-applications'
+          | 'popups'
+          | 'newsletter-subscribers'
+          | 'newsletter-signatures'
+          | 'newsletter-campaigns'
+          | 'knowledge-chunks'
+          | 'chat-conversations'
+          | 'users'
+          | 'redirects'
+          | 'forms'
+          | 'form-submissions'
+          | 'header'
+          | 'footer'
+          | 'site-settings'
+          | 'careers-settings'
+          | 'nav-settings';
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -5568,6 +5620,21 @@ export interface CareersSettingsSelect<T extends boolean = true> {
         submit?: T;
         successTitle?: T;
         successBody?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "nav-settings_select".
+ */
+export interface NavSettingsSelect<T extends boolean = true> {
+  order?:
+    | T
+    | {
+        entity?: T;
+        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
