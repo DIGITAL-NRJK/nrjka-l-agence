@@ -34,6 +34,9 @@ import { Resources } from './collections/Resources'
 import { KnowledgeChunks } from './collections/KnowledgeChunks'
 import { ChatConversations } from './collections/ChatConversations'
 import { Popups } from './collections/Popups'
+import { NewsletterSubscribers } from './collections/NewsletterSubscribers'
+import { NewsletterSignatures } from './collections/NewsletterSignatures'
+import { NewsletterCampaigns } from './collections/NewsletterCampaigns'
 import { SiteSettings } from './globals/SiteSettings'
 import { CareersSettings } from './globals/CareersSettings'
 
@@ -135,6 +138,9 @@ export default buildConfig({
     KnowledgeChunks,
     ChatConversations,
     Popups,
+    NewsletterSubscribers,
+    NewsletterSignatures,
+    NewsletterCampaigns,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
