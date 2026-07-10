@@ -11,6 +11,8 @@ import * as migration_20260707_204512_add_nav_subitems from './20260707_204512_a
 import * as migration_20260708_061934 from './20260708_061934';
 import * as migration_20260708_071341_add_footer_fields from './20260708_071341_add_footer_fields';
 import * as migration_20260708_075644_popups_and_maintenance_templates from './20260708_075644_popups_and_maintenance_templates';
+import * as migration_20260710_101934_newsletter_collections from './20260710_101934_newsletter_collections';
+import * as migration_20260710_112256_newsletter_rich_content from './20260710_112256_newsletter_rich_content';
 
 export const migrations = [
   {
@@ -77,5 +79,15 @@ export const migrations = [
     up: migration_20260708_075644_popups_and_maintenance_templates.up,
     down: migration_20260708_075644_popups_and_maintenance_templates.down,
     name: '20260708_075644_popups_and_maintenance_templates',
+  },
+  {
+    up: migration_20260710_101934_newsletter_collections.up,
+    down: migration_20260710_101934_newsletter_collections.down,
+    name: '20260710_101934_newsletter_collections',
+  },
+  {
+    up: migration_20260710_112256_newsletter_rich_content.up,
+    down: migration_20260710_112256_newsletter_rich_content.down,
+    name: '20260710_112256_newsletter_rich_content'
   },
 ];

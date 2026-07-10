@@ -50,3 +50,44 @@ export async function sendEmail({ to, subject, html, text, replyTo }: SendArgs):
     return false
   }
 }
+
+/**
+ * Envoi en lot (campagnes) via l'endpoint /emails/batch de Resend.
+ * Chaque entrée peut avoir un HTML différent (personnalisation : lien de désabonnement).
+ * Envoie par paquets de 100 (limite Resend). Renvoie le nombre d'emails acceptés.
+ * NE JETTE PAS.
+ */
+const BATCH_URL = 'https://api.resend.com/emails/batch'
+
+export async function sendBatch(messages: SendArgs[]): Promise<number> {
+  if (!resendConfigured() || messages.length === 0) return 0
+  let accepted = 0
+  for (let i = 0; i < messages.length; i += 100) {
+    const chunk = messages.slice(i, i + 100)
+    try {
+      const res = await fetch(BATCH_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify(
+          chunk.map((m) => ({
+            from: process.env.RESEND_FROM,
+            to: [m.to],
+            subject: m.subject,
+            html: m.html,
+            ...(m.text ? { text: m.text } : {}),
+            ...(m.replyTo || process.env.RESEND_REPLY_TO
+              ? { reply_to: m.replyTo || process.env.RESEND_REPLY_TO }
+              : {}),
+          })),
+        ),
+      })
+      if (res.ok) accepted += chunk.length
+    } catch {
+      // paquet en échec : on continue avec les suivants
+    }
+  }
+  return accepted
+}

@@ -89,6 +89,9 @@ export interface Config {
     'knowledge-chunks': KnowledgeChunk;
     'chat-conversations': ChatConversation;
     popups: Popup;
+    'newsletter-subscribers': NewsletterSubscriber;
+    'newsletter-signatures': NewsletterSignature;
+    'newsletter-campaigns': NewsletterCampaign;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -131,6 +134,9 @@ export interface Config {
     'knowledge-chunks': KnowledgeChunksSelect<false> | KnowledgeChunksSelect<true>;
     'chat-conversations': ChatConversationsSelect<false> | ChatConversationsSelect<true>;
     popups: PopupsSelect<false> | PopupsSelect<true>;
+    'newsletter-subscribers': NewsletterSubscribersSelect<false> | NewsletterSubscribersSelect<true>;
+    'newsletter-signatures': NewsletterSignaturesSelect<false> | NewsletterSignaturesSelect<true>;
+    'newsletter-campaigns': NewsletterCampaignsSelect<false> | NewsletterCampaignsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -2674,6 +2680,128 @@ export interface Popup {
   createdAt: string;
 }
 /**
+ * Liste des abonnés à la newsletter. « En attente » = inscription non confirmée (double opt-in). Export CSV : /api/newsletter/export (admin connecté).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-subscribers".
+ */
+export interface NewsletterSubscriber {
+  id: number;
+  email: string;
+  firstName?: string | null;
+  status?: ('pending' | 'confirmed' | 'unsubscribed') | null;
+  locale?: ('fr' | 'en') | null;
+  /**
+   * Origine de l’inscription (footer, popup, import, admin…).
+   */
+  source?: string | null;
+  /**
+   * Segmentation optionnelle (utilisable comme audience de campagne).
+   */
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  consentAt?: string | null;
+  confirmedAt?: string | null;
+  unsubscribedAt?: string | null;
+  confirmToken?: string | null;
+  unsubscribeToken?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Blocs de signature réutilisables (nom, fonction, coordonnées, logo…) à rattacher aux campagnes.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-signatures".
+ */
+export interface NewsletterSignature {
+  id: number;
+  /**
+   * Non affiché. Sert à choisir la signature dans une campagne.
+   */
+  name: string;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Rédigez, testez et envoyez une campagne aux abonnés confirmés. Pensez à remplir les versions FR et EN (bascule de langue en haut à droite).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-campaigns".
+ */
+export interface NewsletterCampaign {
+  id: number;
+  /**
+   * Non envoyé. Sert à identifier la campagne.
+   */
+  name: string;
+  subject?: string | null;
+  /**
+   * Court texte d’aperçu affiché après l’objet dans la boîte mail.
+   */
+  preheader?: string | null;
+  /**
+   * Titres, gras, listes, liens et images. Un pied de page avec lien de désabonnement est ajouté automatiquement à l’envoi.
+   */
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Bloc de signature ajouté en bas de l’email (optionnel, réutilisable).
+   */
+  signature?: (number | null) | NewsletterSignature;
+  audience?: ('all_confirmed' | 'fr_confirmed' | 'en_confirmed' | 'tag') | null;
+  /**
+   * N’envoyer qu’aux abonnés portant ce tag.
+   */
+  tag?: string | null;
+  status?: ('draft' | 'sent') | null;
+  testEmail?: string | null;
+  /**
+   * Coche + Enregistre → un email de contrôle est envoyé à l’email de test.
+   */
+  sendTest?: boolean | null;
+  /**
+   * Coche + Enregistre → envoi immédiat à toute l’audience. Action définitive (le statut passe à « Envoyée »).
+   */
+  sendNow?: boolean | null;
+  sentAt?: string | null;
+  recipientCount?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -2950,6 +3078,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'popups';
         value: number | Popup;
+      } | null)
+    | ({
+        relationTo: 'newsletter-subscribers';
+        value: number | NewsletterSubscriber;
+      } | null)
+    | ({
+        relationTo: 'newsletter-signatures';
+        value: number | NewsletterSignature;
+      } | null)
+    | ({
+        relationTo: 'newsletter-campaigns';
+        value: number | NewsletterCampaign;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -4473,6 +4613,61 @@ export interface PopupsSelect<T extends boolean = true> {
   localeFilter?: T;
   startDate?: T;
   endDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-subscribers_select".
+ */
+export interface NewsletterSubscribersSelect<T extends boolean = true> {
+  email?: T;
+  firstName?: T;
+  status?: T;
+  locale?: T;
+  source?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  consentAt?: T;
+  confirmedAt?: T;
+  unsubscribedAt?: T;
+  confirmToken?: T;
+  unsubscribeToken?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-signatures_select".
+ */
+export interface NewsletterSignaturesSelect<T extends boolean = true> {
+  name?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-campaigns_select".
+ */
+export interface NewsletterCampaignsSelect<T extends boolean = true> {
+  name?: T;
+  subject?: T;
+  preheader?: T;
+  body?: T;
+  signature?: T;
+  audience?: T;
+  tag?: T;
+  status?: T;
+  testEmail?: T;
+  sendTest?: T;
+  sendNow?: T;
+  sentAt?: T;
+  recipientCount?: T;
   updatedAt?: T;
   createdAt?: T;
 }
