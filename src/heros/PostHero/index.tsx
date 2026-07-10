@@ -15,7 +15,7 @@ export const PostHero: React.FC<{
   const en = locale === 'en'
 
   const authors = (populatedAuthors || []).filter(
-    (a): a is { id?: string | number; name: string } => Boolean(a?.name),
+    (a): a is { id?: string | null; name: string } => Boolean(a?.name),
   )
   const hasAuthors = authors.length > 0
 
