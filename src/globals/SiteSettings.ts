@@ -237,6 +237,22 @@ export const SiteSettings: GlobalConfig = {
           ],
         },
         {
+          name: 'template',
+          type: 'select',
+          label: "Modèle d'affichage",
+          defaultValue: 'minimal',
+          options: [
+            { label: '◽ Minimal centré', value: 'minimal' },
+            { label: '⏳ Marque + compte à rebours', value: 'countdown' },
+            { label: '🖼️ Image plein écran', value: 'image' },
+            { label: '📧 Capture email « Prévenez-moi »', value: 'notify' },
+          ],
+          admin: {
+            description:
+              'Style visuel de la page. Le compte à rebours s’affiche en mode Coming Soon si une date de lancement est définie.',
+          },
+        },
+        {
           name: 'title',
           type: 'text',
           label: 'Titre de la page',
@@ -257,6 +273,27 @@ export const SiteSettings: GlobalConfig = {
           admin: {
             condition: (data) => data?.maintenanceMode?.mode === 'coming_soon',
             description: 'Affiche un compte à rebours si la date est dans le futur.',
+          },
+        },
+        {
+          name: 'backgroundImage',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Image de fond',
+          admin: {
+            condition: (data) => data?.maintenanceMode?.template === 'image',
+            description: 'Utilisée par le modèle « Image plein écran » (un calque sombre garde le texte lisible).',
+          },
+        },
+        {
+          name: 'notifyConfirmation',
+          type: 'text',
+          localized: true,
+          label: 'Message de confirmation (capture email)',
+          defaultValue: 'Merci ! Nous vous préviendrons dès le lancement.',
+          admin: {
+            condition: (data) => data?.maintenanceMode?.template === 'notify',
+            description: 'Affiché après l’envoi du formulaire « Prévenez-moi ».',
           },
         },
         {

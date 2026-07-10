@@ -10,6 +10,8 @@ import React from 'react'
 import { AdminBar } from '@/components/AdminBar'
 import { AccessibilityWidget } from '@/components/AccessibilityWidget'
 import { ChatWidget } from '@/components/ChatWidget'
+import { PopupManager } from '@/components/PopupManager'
+import { getActivePopups } from '@/utilities/getPopups'
 import { ConsentManager } from '@/components/Consent/ConsentManager'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
@@ -136,15 +138,30 @@ export default async function LocaleLayout({ children, params }: Props) {
       ? 'We are performing maintenance. Check back soon.'
       : 'Nous effectuons une maintenance. Revenez bientôt.'
   let countdownDate: string | null = null
+  let maintenanceTemplate: 'minimal' | 'countdown' | 'image' | 'notify' = 'minimal'
+  let maintenanceBg: string | null = null
+  let maintenanceNotifyConfirm: string | null = null
 
   if (!isEnabled) {
-    const mm = settings?.maintenanceMode
+    const mm = settings?.maintenanceMode as
+      | (NonNullable<typeof settings>['maintenanceMode'] & {
+          template?: 'minimal' | 'countdown' | 'image' | 'notify' | null
+          backgroundImage?: { url?: string | null } | number | null
+          notifyConfirmation?: string | null
+        })
+      | undefined
     if (mm?.enabled) {
       maintenanceActive = true
       maintenanceMode = mm.mode || 'maintenance'
       maintenanceTitle = mm.title || maintenanceTitle
       maintenanceMessage = mm.message || maintenanceMessage
       countdownDate = mm.countdownDate || null
+      maintenanceTemplate = mm.template || 'minimal'
+      maintenanceBg =
+        mm.backgroundImage && typeof mm.backgroundImage === 'object'
+          ? mm.backgroundImage.url || null
+          : null
+      maintenanceNotifyConfirm = mm.notifyConfirmation || null
     }
   }
 
@@ -172,6 +189,9 @@ export default async function LocaleLayout({ children, params }: Props) {
               title={maintenanceTitle}
               message={maintenanceMessage}
               countdownDate={countdownDate}
+              template={maintenanceTemplate}
+              backgroundImageUrl={maintenanceBg}
+              notifyConfirmation={maintenanceNotifyConfirm}
               locale={locale}
             />
           </Providers>
@@ -179,6 +199,8 @@ export default async function LocaleLayout({ children, params }: Props) {
       </html>
     )
   }
+
+  const activePopups = await getActivePopups(locale)
 
   return (
     <html
@@ -228,6 +250,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           {Boolean(
             process.env.AI_API_KEY || process.env.MISTRAL_API_KEY || process.env.AI_BASE_URL,
           ) && <ChatWidget locale={locale} />}
+          {activePopups.length > 0 && <PopupManager popups={activePopups} locale={locale} />}
         </Providers>
         {/* Mesure d'audience : chargée UNIQUEMENT après consentement (voir ConsentManager). */}
         {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
