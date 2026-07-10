@@ -4777,6 +4777,14 @@ export interface Header {
  */
 export interface Footer {
   id: number;
+  /**
+   * Défaut : « Votre partenaire digital et stratégique pour construire une croissance durable. »
+   */
+  tagline?: string | null;
+  /**
+   * Défaut : « Agence digitale humaine — sites web, SEO, automatisation et CRM, pour une croissance durable. »
+   */
+  description?: string | null;
   navItems?:
     | {
         link: {
@@ -4797,6 +4805,33 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Vide = « Mentions légales » + « Confidentialité » par défaut.
+   */
+  legalLinks?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Affiché après « © {année} ». Défaut : « NRJKA. Tous droits réservés. »
+   */
+  copyright?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -4915,12 +4950,24 @@ export interface SiteSetting {
      */
     enabled?: boolean | null;
     mode?: ('maintenance' | 'coming_soon') | null;
+    /**
+     * Style visuel de la page. Le compte à rebours s’affiche en mode Coming Soon si une date de lancement est définie.
+     */
+    template?: ('minimal' | 'countdown' | 'image' | 'notify') | null;
     title?: string | null;
     message?: string | null;
     /**
      * Affiche un compte à rebours si la date est dans le futur.
      */
     countdownDate?: string | null;
+    /**
+     * Utilisée par le modèle « Image plein écran » (un calque sombre garde le texte lisible).
+     */
+    backgroundImage?: (number | null) | Media;
+    /**
+     * Affiché après l’envoi du formulaire « Prévenez-moi ».
+     */
+    notifyConfirmation?: string | null;
     /**
      * Ces IPs voient le site normal même en mode maintenance.
      */
@@ -5070,6 +5117,8 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
+  tagline?: T;
+  description?: T;
   navItems?:
     | T
     | {
@@ -5084,6 +5133,21 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  legalLinks?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  copyright?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -5142,9 +5206,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         enabled?: T;
         mode?: T;
+        template?: T;
         title?: T;
         message?: T;
         countdownDate?: T;
+        backgroundImage?: T;
+        notifyConfirmation?: T;
         allowedIps?:
           | T
           | {

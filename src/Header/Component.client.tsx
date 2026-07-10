@@ -36,7 +36,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome, 
 
   return (
     <header
-      className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md"
+      className="sticky z-50 border-b border-border bg-background/85 backdrop-blur-md"
+      style={{ top: 'var(--promo-offset, 0px)' }}
       {...(theme ? { 'data-theme': theme } : {})}
     >
       <div className="container relative">
