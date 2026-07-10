@@ -32,6 +32,8 @@ import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } f
 import { RowLabel as RowLabel_ec255a65fa6fa8d1faeb09cf35284224 } from '@/Header/RowLabel'
 import { RowLabel as RowLabel_1f6ff6ff633e3695d348f4f3c58f1466 } from '@/Footer/RowLabel'
 import { PaletteField as PaletteField_2c30d5f7eee93ee651fe55a1a86967bc } from '@/components/admin/PaletteField'
+import { NavSettingsRowLabel as NavSettingsRowLabel_10f0184a7f082b003b1de6e6aca3cb4b } from '@/globals/NavSettingsRowLabel'
+import { CustomNav as CustomNav_a9d4b87e0306b3ddfe97926a52a69591 } from '@/components/admin/Nav'
 import { Icon as Icon_fd0a9bbb35693e340bbbfa9596236d37 } from '@/components/admin/BrandLogo'
 import { Logo as Logo_fd0a9bbb35693e340bbbfa9596236d37 } from '@/components/admin/BrandLogo'
 import { default as default_1a7510af427896d367a49dbf838d2de6 } from '@/components/BeforeDashboard'
@@ -74,6 +76,8 @@ export const importMap = {
   "@/Header/RowLabel#RowLabel": RowLabel_ec255a65fa6fa8d1faeb09cf35284224,
   "@/Footer/RowLabel#RowLabel": RowLabel_1f6ff6ff633e3695d348f4f3c58f1466,
   "@/components/admin/PaletteField#PaletteField": PaletteField_2c30d5f7eee93ee651fe55a1a86967bc,
+  "@/globals/NavSettingsRowLabel#NavSettingsRowLabel": NavSettingsRowLabel_10f0184a7f082b003b1de6e6aca3cb4b,
+  "@/components/admin/Nav#CustomNav": CustomNav_a9d4b87e0306b3ddfe97926a52a69591,
   "@/components/admin/BrandLogo#Icon": Icon_fd0a9bbb35693e340bbbfa9596236d37,
   "@/components/admin/BrandLogo#Logo": Logo_fd0a9bbb35693e340bbbfa9596236d37,
   "@/components/BeforeDashboard#default": default_1a7510af427896d367a49dbf838d2de6,

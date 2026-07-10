@@ -39,6 +39,7 @@ import { NewsletterSignatures } from './collections/NewsletterSignatures'
 import { NewsletterCampaigns } from './collections/NewsletterCampaigns'
 import { SiteSettings } from './globals/SiteSettings'
 import { CareersSettings } from './globals/CareersSettings'
+import { NavSettings } from './globals/NavSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -59,6 +60,8 @@ export default buildConfig({
         Icon: '@/components/admin/BrandLogo#Icon',
         Logo: '@/components/admin/BrandLogo#Logo',
       },
+      // Menu de gauche réordonnable depuis l'admin (global « nav-settings »).
+      Nav: '@/components/admin/Nav#CustomNav',
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.
       beforeLogin: ['@/components/BeforeLogin'],
@@ -161,7 +164,7 @@ export default buildConfig({
       },
     }),
   ],
-  globals: [Header, Footer, SiteSettings, CareersSettings],
+  globals: [Header, Footer, SiteSettings, CareersSettings, NavSettings],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {

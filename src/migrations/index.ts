@@ -13,6 +13,7 @@ import * as migration_20260708_071341_add_footer_fields from './20260708_071341_
 import * as migration_20260708_075644_popups_and_maintenance_templates from './20260708_075644_popups_and_maintenance_templates';
 import * as migration_20260710_101934_newsletter_collections from './20260710_101934_newsletter_collections';
 import * as migration_20260710_112256_newsletter_rich_content from './20260710_112256_newsletter_rich_content';
+import * as migration_20260710_145932_nav_settings from './20260710_145932_nav_settings';
 
 export const migrations = [
   {
@@ -88,6 +89,11 @@ export const migrations = [
   {
     up: migration_20260710_112256_newsletter_rich_content.up,
     down: migration_20260710_112256_newsletter_rich_content.down,
-    name: '20260710_112256_newsletter_rich_content'
+    name: '20260710_112256_newsletter_rich_content',
+  },
+  {
+    up: migration_20260710_145932_nav_settings.up,
+    down: migration_20260710_145932_nav_settings.down,
+    name: '20260710_145932_nav_settings'
   },
 ];
