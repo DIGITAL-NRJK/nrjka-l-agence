@@ -53,6 +53,11 @@ export async function Footer({ locale = 'fr' }: { locale?: string }) {
     description?: string | null
     copyright?: string | null
     legalLinks?: FooterType['navItems']
+    newsletter?: {
+      enabled?: boolean | null
+      title?: string | null
+      text?: string | null
+    } | null
   }
   const extra = footerData as unknown as FooterExtra
   const tagline =
@@ -68,6 +73,17 @@ export async function Footer({ locale = 'fr' }: { locale?: string }) {
   const copyrightText =
     extra.copyright || (en ? 'NRJKA. All rights reserved.' : 'NRJKA. Tous droits réservés.')
   const legalLinks = extra.legalLinks || []
+
+  // Bande newsletter : pilotée depuis Globals › Footer › Bande newsletter.
+  // `enabled !== false` → visible par défaut tant que la case n'a pas été décochée.
+  const newsletterEnabled = extra.newsletter?.enabled !== false
+  const newsletterTitle =
+    extra.newsletter?.title || (en ? 'The NRJKA newsletter' : 'La newsletter NRJKA')
+  const newsletterText =
+    extra.newsletter?.text ||
+    (en
+      ? 'Digital tips and news, once a month. Unsubscribe in one click.'
+      : 'Conseils et actualités digitales, une fois par mois. Désinscription en un clic.')
 
   const social = settings?.social
   const socialLinks = social
@@ -170,19 +186,15 @@ export async function Footer({ locale = 'fr' }: { locale?: string }) {
         </div>
 
         {/* Newsletter : inscription double opt-in (voir src/components/NewsletterForm). */}
-        <div className="mt-12 flex flex-col gap-6 border-t border-white/10 pt-10 md:flex-row md:items-center md:justify-between">
-          <div className="max-w-sm">
-            <h2 className="text-base font-semibold text-white">
-              {en ? 'The NRJKA newsletter' : 'La newsletter NRJKA'}
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-white/60">
-              {en
-                ? 'Digital tips and news, once a month. Unsubscribe in one click.'
-                : 'Conseils et actualités digitales, une fois par mois. Désinscription en un clic.'}
-            </p>
+        {newsletterEnabled && (
+          <div className="mt-12 flex flex-col gap-6 border-t border-white/10 pt-10 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-sm">
+              <h2 className="text-base font-semibold text-white">{newsletterTitle}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-white/60">{newsletterText}</p>
+            </div>
+            <NewsletterForm locale={locale} source="footer" className="text-white md:justify-end" />
           </div>
-          <NewsletterForm locale={locale} source="footer" className="text-white md:justify-end" />
-        </div>
+        )}
 
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between">
           <span>

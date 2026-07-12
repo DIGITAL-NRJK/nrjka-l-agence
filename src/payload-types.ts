@@ -5126,6 +5126,20 @@ export interface Footer {
    * Affiché après « © {année} ». Défaut : « NRJKA. Tous droits réservés. »
    */
   copyright?: string | null;
+  /**
+   * La bande d’inscription à la newsletter (double opt-in), affichée au-dessus de la barre légale.
+   */
+  newsletter?: {
+    enabled?: boolean | null;
+    /**
+     * Défaut : « La newsletter NRJKA » / « The NRJKA newsletter ».
+     */
+    title?: string | null;
+    /**
+     * Défaut : « Conseils et actualités digitales, une fois par mois. Désinscription en un clic. »
+     */
+    text?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -5492,6 +5506,13 @@ export interface FooterSelect<T extends boolean = true> {
         id?: T;
       };
   copyright?: T;
+  newsletter?:
+    | T
+    | {
+        enabled?: T;
+        title?: T;
+        text?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
