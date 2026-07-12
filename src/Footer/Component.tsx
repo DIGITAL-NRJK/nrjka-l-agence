@@ -9,6 +9,7 @@ import type { Footer as FooterType } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { ManageConsentButton } from '@/components/Consent/ManageConsentButton'
+import { NewsletterForm } from '@/components/NewsletterForm'
 
 // Glyphes de marque en SVG inline : lucide-react a retiré ses icônes social
 // (LinkedIn, Instagram, etc.) depuis la v0.475, on ne peut donc plus les importer.
@@ -166,6 +167,21 @@ export async function Footer({ locale = 'fr' }: { locale?: string }) {
               </address>
             )}
           </div>
+        </div>
+
+        {/* Newsletter : inscription double opt-in (voir src/components/NewsletterForm). */}
+        <div className="mt-12 flex flex-col gap-6 border-t border-white/10 pt-10 md:flex-row md:items-center md:justify-between">
+          <div className="max-w-sm">
+            <h2 className="text-base font-semibold text-white">
+              {en ? 'The NRJKA newsletter' : 'La newsletter NRJKA'}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-white/60">
+              {en
+                ? 'Digital tips and news, once a month. Unsubscribe in one click.'
+                : 'Conseils et actualités digitales, une fois par mois. Désinscription en un clic.'}
+            </p>
+          </div>
+          <NewsletterForm locale={locale} source="footer" className="text-white md:justify-end" />
         </div>
 
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between">

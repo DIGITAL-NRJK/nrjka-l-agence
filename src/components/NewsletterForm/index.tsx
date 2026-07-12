@@ -35,8 +35,9 @@ export const NewsletterForm: React.FC<{
   }
 
   if (status === 'done') {
+    // Couleur héritée du parent : lisible sur fond clair comme sur le footer sombre.
     return (
-      <p className={`text-sm font-medium text-ink ${className || ''}`}>
+      <p role="status" className={`text-sm font-medium ${className || ''}`}>
         {en
           ? 'Almost there! Check your inbox to confirm your subscription.'
           : 'Presque terminé ! Vérifiez votre boîte mail pour confirmer votre inscription.'}
@@ -45,7 +46,10 @@ export const NewsletterForm: React.FC<{
   }
 
   return (
-    <form onSubmit={submit} className={`flex w-full max-w-md flex-col gap-3 sm:flex-row ${className || ''}`}>
+    <form
+      onSubmit={submit}
+      className={`flex w-full max-w-md flex-col gap-3 sm:flex-row sm:flex-wrap ${className || ''}`}
+    >
       <label htmlFor="nl-email" className="sr-only">
         {en ? 'Your email' : 'Votre email'}
       </label>
@@ -83,9 +87,11 @@ export const NewsletterForm: React.FC<{
             : "S'inscrire"}
       </button>
       {status === 'error' && (
-        <span role="alert" className="sr-only">
-          {en ? 'An error occurred.' : 'Une erreur est survenue.'}
-        </span>
+        <p role="alert" className="w-full text-sm font-medium text-red-400">
+          {en
+            ? 'An error occurred. Please try again.'
+            : 'Une erreur est survenue. Merci de réessayer.'}
+        </p>
       )}
     </form>
   )
