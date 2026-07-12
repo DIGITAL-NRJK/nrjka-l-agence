@@ -77,6 +77,40 @@ export const Footer: GlobalConfig = {
         description: 'Affiché après « © {année} ». Défaut : « NRJKA. Tous droits réservés. »',
       },
     },
+    {
+      name: 'newsletter',
+      type: 'group',
+      label: 'Bande newsletter',
+      admin: {
+        description:
+          'La bande d’inscription à la newsletter (double opt-in), affichée au-dessus de la barre légale.',
+      },
+      fields: [
+        {
+          name: 'enabled',
+          type: 'checkbox',
+          defaultValue: true,
+          label: 'Afficher la bande newsletter',
+        },
+        {
+          name: 'title',
+          type: 'text',
+          localized: true,
+          label: 'Titre',
+          admin: { description: 'Défaut : « La newsletter NRJKA » / « The NRJKA newsletter ».' },
+        },
+        {
+          name: 'text',
+          type: 'textarea',
+          localized: true,
+          label: 'Texte d’accroche',
+          admin: {
+            description:
+              'Défaut : « Conseils et actualités digitales, une fois par mois. Désinscription en un clic. »',
+          },
+        },
+      ],
+    },
   ],
   hooks: {
     afterChange: [revalidateFooter],
