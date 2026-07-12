@@ -4,7 +4,8 @@
 // leur « vrai » slug anglais :
 //   - Pages structurelles → table de correspondance explicite (a-propos→about, …) ;
 //   - Pages restantes / Articles → slug généré depuis le TITRE EN (s'il est traduit) ;
-//   - Pôles (Expertises) → titre non localisé → traduction du titre FR via LibreTranslate ;
+//   - Pôles (Expertises) → titre non localisé → table de correspondance statique
+//     (traduction manuelle assumée — plus aucune dépendance à LibreTranslate) ;
 //   - Réalisations (CaseStudies) → slug = nom du client (nom propre, neutre) → conservé.
 // GARDE-FOUS (non destructif) :
 //   - on ne touche un doc QUE si son slug EN est encore le miroir du FR (backfill) ou vide ;
@@ -13,8 +14,6 @@
 //   - unicité garantie par suffixe -2, -3… au sein de la locale EN ;
 //   - mode dry-run par défaut (rapport sans écriture).
 import type { Payload } from 'payload'
-
-import { translateText } from '@/app/api/translate/core'
 
 // Pages structurelles : slug FR → slug EN voulu.
 const PAGE_SLUG_OVERRIDES: Record<string, string> = {
@@ -28,6 +27,15 @@ const PAGE_SLUG_OVERRIDES: Record<string, string> = {
 // Slugs à ne JAMAIS changer : 'home' est spécial-casé par le routing ([locale]/page.tsx
 // interroge slug 'home'), 'contact' est identique dans les deux langues.
 const PAGE_SLUG_KEEP = new Set(['home', 'contact'])
+
+// Pôles (Expertises) : titre NON localisé → traduction manuelle des slugs, figée ici.
+// « web-experience » est identique en anglais → absent de la table (EN=FR conservé).
+// Tout pôle futur absent de cette table est simplement signalé dans le rapport.
+const EXPERTISE_SLUG_OVERRIDES: Record<string, string> = {
+  'marque-contenu': 'brand-content',
+  'performance-visibilite': 'performance-visibility',
+  'digitalisation-process': 'digitalization-process',
+}
 
 export type SlugChange = {
   id: string | number
@@ -220,20 +228,19 @@ export async function seedEnSlugs(payload: Payload, { dryRun = true }: { dryRun?
     },
   })
 
-  // ── Pôles (Expertises) : titre NON localisé → traduction FR→EN via LibreTranslate ──
+  // ── Pôles (Expertises) : table de correspondance statique (traduction manuelle) ──
   collections.expertises = await processCollection({
     payload,
     collection: 'expertises',
     dryRun,
     labelOf: (doc) => (typeof doc.title === 'string' ? doc.title : String(doc.id)),
-    computeCandidate: async (doc, slugFr) => {
-      const titleFr = typeof doc.title === 'string' ? doc.title : undefined
-      if (!titleFr?.trim()) return undefined
-      const titleEn = await translateText(titleFr)
-      const candidate = slugify(titleEn)
-      return candidate && candidate !== slugFr ? candidate : undefined
-    },
+    computeCandidate: async (_doc, slugFr) => EXPERTISE_SLUG_OVERRIDES[slugFr],
   })
+  collections.expertises = collections.expertises.map((c) =>
+    c.action === 'skipped' && c.reason.startsWith('pas de titre EN') && !EXPERTISE_SLUG_OVERRIDES[c.slugFr]
+      ? { ...c, reason: 'absent de EXPERTISE_SLUG_OVERRIDES — EN=FR conservé (ajouter la correspondance si besoin)' }
+      : c,
+  )
 
   // ── Réalisations (CaseStudies) : slug = nom du client (nom propre) → conservé ──
   // On ne traduit pas un nom propre ; EN=FR est le bon comportement. Rien à faire,
