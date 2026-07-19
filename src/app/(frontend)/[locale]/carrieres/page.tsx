@@ -6,6 +6,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
 import type { JobOffer } from '@/payload-types'
+import { localizedLanguages } from '@/utilities/languages'
 
 // Page recrutement (liste des offres publiées). Non ajoutée au menu pour l'instant.
 // Textes pilotables depuis l'admin (global « Carrières (textes) »), avec repli bilingue.
@@ -146,7 +147,7 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
       ? 'Join NRJKA — a demanding, human-first digital agency. See our open roles.'
       : 'Rejoignez NRJKA — agence digitale exigeante et humaine. Découvrez nos offres.',
     alternates: {
-      languages: { fr: '/fr/carrieres', en: '/en/carrieres' },
+      languages: await localizedLanguages({ fr: '/fr/carrieres', en: '/en/carrieres' }),
     },
   }
 }

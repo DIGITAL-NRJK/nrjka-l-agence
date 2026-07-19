@@ -14,6 +14,7 @@ import { Accordion } from '@/blocks/Faq/Accordion'
 import { LOCALES } from '@/utilities/i18n'
 import { getServerSideURL } from '@/utilities/getURL'
 import { dynamicOgImageUrl } from '@/utilities/generateMeta'
+import { localizedLanguages } from '@/utilities/languages'
 
 type Args = { params: Promise<{ locale: string; slug: string }> }
 
@@ -384,10 +385,10 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
       ],
     },
     alternates: {
-      languages: {
+      languages: await localizedLanguages({
         fr: `/fr/services/${slug}`,
         en: `/en/services/${slug}`,
-      },
+      }),
     },
   }
 }

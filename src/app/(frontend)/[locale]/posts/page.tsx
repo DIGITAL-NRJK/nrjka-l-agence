@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 
 import type { Post, Category } from '@/payload-types'
 import { PostsGrid, type PostItem, type BlogCategory, type PostSub, type CategoryNode } from '../../posts/PostsGrid'
+import { localizedLanguages } from '@/utilities/languages'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
@@ -142,7 +143,7 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
         ? 'Analyses and insights on the web, SEO, automation and branding.'
         : "Analyses et conseils sur le web, le SEO, l’automatisation et la marque.",
     alternates: {
-      languages: { fr: '/fr/posts', en: '/en/posts' },
+      languages: await localizedLanguages({ fr: '/fr/posts', en: '/en/posts' }),
     },
   }
 }

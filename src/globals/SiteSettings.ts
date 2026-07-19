@@ -20,6 +20,16 @@ export const SiteSettings: GlobalConfig = {
         revalidateTag('global_site-settings', 'max')
         revalidateTag('global_site-settings_fr', 'max')
         revalidateTag('global_site-settings_en', 'max')
+        // Le toggle « version anglaise » filtre les URLs EN des sitemaps (mis en cache par tag).
+        for (const tag of [
+          'pages-sitemap',
+          'posts-sitemap',
+          'services-sitemap',
+          'expertises-sitemap',
+          'realisations-sitemap',
+        ]) {
+          revalidateTag(tag, 'max')
+        }
       },
     ],
   },
@@ -206,6 +216,28 @@ export const SiteSettings: GlobalConfig = {
           name: 'linkedinPartnerId',
           type: 'text',
           label: 'LinkedIn Insight — Partner ID',
+        },
+      ],
+    },
+
+    // ─── Langues du site ─────────────────────────────────────────────────────────
+    {
+      name: 'languages',
+      type: 'group',
+      label: '🌐 Langues',
+      admin: {
+        description: 'Contrôle l’accessibilité de la version anglaise du site public.',
+      },
+      fields: [
+        {
+          name: 'englishEnabled',
+          type: 'checkbox',
+          label: 'Version anglaise accessible',
+          defaultValue: true,
+          admin: {
+            description:
+              'Décochée : le sélecteur de langue disparaît, toutes les URLs /en redirigent vers le français (redirection temporaire, réversible sans impact SEO durable), et les hreflang/sitemaps/RSS anglais sont retirés. L’admin reste bilingue — vous pouvez continuer à traduire le contenu.',
+          },
         },
       ],
     },

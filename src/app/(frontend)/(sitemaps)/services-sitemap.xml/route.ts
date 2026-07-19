@@ -3,7 +3,11 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 
-import { buildLocalizedSitemap, type LocalizedSitemapEntry } from '@/utilities/sitemap'
+import {
+  activeSitemapLocales,
+  buildLocalizedSitemap,
+  type LocalizedSitemapEntry,
+} from '@/utilities/sitemap'
 
 const getServicesSitemap = unstable_cache(
   async () => {
@@ -36,7 +40,7 @@ const getServicesSitemap = unstable_cache(
           }))
       : []
 
-    return buildLocalizedSitemap(SITE_URL, entries)
+    return buildLocalizedSitemap(SITE_URL, entries, await activeSitemapLocales(payload))
   },
   ['services-sitemap'],
   {

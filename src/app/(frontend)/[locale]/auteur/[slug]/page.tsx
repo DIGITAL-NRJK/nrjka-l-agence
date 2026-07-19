@@ -7,6 +7,7 @@ import { getPayload } from 'payload'
 import type { Post, Category } from '@/payload-types'
 import { authorSlug } from '@/utilities/authorSlug'
 import { LOCALES } from '@/utilities/i18n'
+import { localizedLanguages } from '@/utilities/languages'
 import {
   PostsGrid,
   type PostItem,
@@ -165,10 +166,10 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
       ? `Articles and insights written by ${author.name} for NRJKA.`
       : `Articles et analyses rédigés par ${author.name} pour NRJKA.`,
     alternates: {
-      languages: {
+      languages: await localizedLanguages({
         fr: `/fr/auteur/${slug}`,
         en: `/en/auteur/${slug}`,
-      },
+      }),
     },
   }
 }

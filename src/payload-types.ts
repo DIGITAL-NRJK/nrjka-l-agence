@@ -5252,6 +5252,15 @@ export interface SiteSetting {
     metaPixelId?: string | null;
     linkedinPartnerId?: string | null;
   };
+  /**
+   * Contrôle l’accessibilité de la version anglaise du site public.
+   */
+  languages?: {
+    /**
+     * Décochée : le sélecteur de langue disparaît, toutes les URLs /en redirigent vers le français (redirection temporaire, réversible sans impact SEO durable), et les hreflang/sitemaps/RSS anglais sont retirés. L’admin reste bilingue — vous pouvez continuer à traduire le contenu.
+     */
+    englishEnabled?: boolean | null;
+  };
   maintenanceMode?: {
     /**
      * Quand activé, toutes les pages publiques affichent la page de maintenance (admin et prévisualisation restent accessibles).
@@ -5565,6 +5574,11 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         gtmContainerId?: T;
         metaPixelId?: T;
         linkedinPartnerId?: T;
+      };
+  languages?:
+    | T
+    | {
+        englishEnabled?: T;
       };
   maintenanceMode?:
     | T

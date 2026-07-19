@@ -16,9 +16,17 @@ interface HeaderClientProps {
   menu?: MegaMenuPole[]
   chrome?: MegaMenuChrome
   locale?: string
+  /** false = version anglaise désactivée dans l'admin → pas de sélecteur de langue. */
+  showLanguageSwitcher?: boolean
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome, locale = 'fr' }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({
+  data,
+  menu,
+  chrome,
+  locale = 'fr',
+  showLanguageSwitcher = true,
+}) => {
   /* Storing the value in a useState to avoid hydration errors */
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
@@ -47,9 +55,11 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, menu, chrome, 
           </Link>
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <HeaderNav data={data} menu={menu} chrome={chrome} locale={locale} />
-            <div className="shrink-0">
-              <LanguageSwitcher />
-            </div>
+            {showLanguageSwitcher && (
+              <div className="shrink-0">
+                <LanguageSwitcher />
+              </div>
+            )}
           </div>
         </div>
       </div>
