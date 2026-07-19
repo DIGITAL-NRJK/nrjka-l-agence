@@ -4,6 +4,7 @@ import { CheckCircle } from 'lucide-react'
 
 import { AuditForm } from '@/components/AuditForm/AuditForm'
 import { getServerSideURL } from '@/utilities/getURL'
+import { localizedLanguages } from '@/utilities/languages'
 
 type Args = { params: Promise<{ locale: string }> }
 
@@ -20,11 +21,11 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
       : 'Quelques questions sur votre projet — nous revenons sous 48 h avec un premier diagnostic et les prochaines étapes.',
     alternates: {
       canonical: `${base}/${locale}${PATH}`,
-      languages: {
+      languages: await localizedLanguages({
         fr: `${base}/fr${PATH}`,
         en: `${base}/en${PATH}`,
         'x-default': `${base}/fr${PATH}`,
-      },
+      }),
     },
   }
 }

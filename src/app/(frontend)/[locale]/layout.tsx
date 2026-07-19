@@ -20,7 +20,9 @@ import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { isValidLocale, DEFAULT_LOCALE } from '@/utilities/i18n'
+import { englishEnabledFrom } from '@/utilities/languages'
 import { getSiteSettings } from '@/utilities/getSiteSettings'
 import { resolvePalette } from '@/utilities/palettes'
 
@@ -122,6 +124,13 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   // Paramètres du site (SEO, social, coordonnées, maintenance). Repli null géré par getSiteSettings.
   const settings = await getSiteSettings(locale)
+
+  // Version anglaise désactivable (Paramètres › Langues) : tout /en/* redirige vers
+  // l'accueil FR. Volontairement TEMPORAIRE (307 via redirect()) — état réversible,
+  // on ne grave aucun signal permanent. La prévisualisation admin reste accessible.
+  if (locale === 'en' && !isEnabled && !englishEnabledFrom(settings)) {
+    redirect(`/${DEFAULT_LOCALE}`)
+  }
 
   // Palette de couleurs (Paramètres › Apparence) — posée en SSR sur <html>, zéro flash.
   // Le mode clair/sombre reste au visiteur (data-theme via InitTheme).

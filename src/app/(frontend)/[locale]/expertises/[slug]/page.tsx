@@ -14,6 +14,7 @@ import { LOCALES } from '@/utilities/i18n'
 import { getServerSideURL } from '@/utilities/getURL'
 import { dynamicOgImageUrl } from '@/utilities/generateMeta'
 import { getLocalizedPaths, buildLanguageAlternates } from '@/utilities/localizedSlugs'
+import { getActiveLocales } from '@/utilities/languages'
 
 import { Faq } from './Faq'
 
@@ -340,6 +341,11 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
         { url: dynamicOgImageUrl(e.title, e.seo?.metaDescription || e.description || undefined), width: 1200, height: 630 },
       ],
     },
-    alternates: buildLanguageAlternates({ locale, localizedPaths, fallbackPath: `/expertises/${slug}` }),
+    alternates: buildLanguageAlternates({
+      locale,
+      localizedPaths,
+      fallbackPath: `/expertises/${slug}`,
+      activeLocales: await getActiveLocales(),
+    }),
   }
 }

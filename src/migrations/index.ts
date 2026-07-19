@@ -15,6 +15,7 @@ import * as migration_20260710_101934_newsletter_collections from './20260710_10
 import * as migration_20260710_112256_newsletter_rich_content from './20260710_112256_newsletter_rich_content';
 import * as migration_20260710_145932_nav_settings from './20260710_145932_nav_settings';
 import * as migration_20260712_184412_newsletter_footer_toggle from './20260712_184412_newsletter_footer_toggle';
+import * as migration_20260719_120134_toggle_version_anglaise from './20260719_120134_toggle_version_anglaise';
 
 export const migrations = [
   {
@@ -100,6 +101,11 @@ export const migrations = [
   {
     up: migration_20260712_184412_newsletter_footer_toggle.up,
     down: migration_20260712_184412_newsletter_footer_toggle.down,
-    name: '20260712_184412_newsletter_footer_toggle'
+    name: '20260712_184412_newsletter_footer_toggle',
+  },
+  {
+    up: migration_20260719_120134_toggle_version_anglaise.up,
+    down: migration_20260719_120134_toggle_version_anglaise.down,
+    name: '20260719_120134_toggle_version_anglaise'
   },
 ];

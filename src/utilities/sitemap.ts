@@ -1,3 +1,5 @@
+import type { Payload } from 'payload'
+
 import { LOCALES, DEFAULT_LOCALE } from './i18n'
 
 export type LocalizedSitemapEntry = {
@@ -21,7 +23,12 @@ export type LocalizedSitemapEntry = {
  * bon slug par langue), annotée des alternates hreflang (toutes les langues + x-default).
  * Indispensable pour que Google indexe les deux langues sans contenu dupliqué, slug localisé compris.
  */
-export function buildLocalizedSitemap(siteUrl: string, entries: LocalizedSitemapEntry[]) {
+export function buildLocalizedSitemap(
+  siteUrl: string,
+  entries: LocalizedSitemapEntry[],
+  /** Locales publiquement servies (défaut : toutes) — voir `activeSitemapLocales`. */
+  activeLocales: string[] = [...LOCALES],
+) {
   const fallback = new Date().toISOString()
 
   return entries.flatMap(({ path, paths, lastmod }) => {
@@ -30,7 +37,7 @@ export function buildLocalizedSitemap(siteUrl: string, entries: LocalizedSitemap
       return p === '/' ? '' : p
     }
 
-    const availableLocales = LOCALES.filter((l) => pathFor(l) !== undefined)
+    const availableLocales = activeLocales.filter((l) => pathFor(l) !== undefined)
     if (availableLocales.length === 0) return []
 
     const xDefaultPath = pathFor(DEFAULT_LOCALE) ?? pathFor(availableLocales[0])
@@ -54,6 +61,24 @@ export function buildLocalizedSitemap(siteUrl: string, entries: LocalizedSitemap
       alternateRefs,
     }))
   })
+}
+
+/**
+ * Locales à inclure dans les sitemaps, en respectant le toggle « version anglaise »
+ * (Paramètres du site › Langues). Lecture directe (pas de cache imbriqué : les routes
+ * sitemap sont déjà sous unstable_cache, invalidé par le hook afterChange du global).
+ */
+export async function activeSitemapLocales(payload: Payload): Promise<string[]> {
+  try {
+    const settings = (await payload.findGlobal({ slug: 'site-settings', depth: 0 })) as {
+      languages?: { englishEnabled?: boolean | null } | null
+    }
+    return settings?.languages?.englishEnabled === false
+      ? LOCALES.filter((l) => l !== 'en')
+      : [...LOCALES]
+  } catch {
+    return [...LOCALES]
+  }
 }
 
 /** Construit la map { fr: buildPath(slugFr), en: buildPath(slugEn) } depuis un doc récupéré en locale:'all'. */

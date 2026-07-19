@@ -30,6 +30,22 @@ export async function GET(_req: Request, { params }: { params: Promise<{ locale:
     process.env.NEXT_PUBLIC_SERVER_URL || process.env.URL || 'https://nrjka.com'
 
   const payload = await getPayload({ config })
+
+  // Version anglaise désactivable (Paramètres › Langues) : pas de flux EN.
+  // Route handler → hors layout, d'où le contrôle local (revalidate 3600 : effet sous 1 h).
+  if (loc === 'en') {
+    try {
+      const settings = (await payload.findGlobal({ slug: 'site-settings', depth: 0 })) as {
+        languages?: { englishEnabled?: boolean | null } | null
+      }
+      if (settings?.languages?.englishEnabled === false) {
+        return new Response('Not found', { status: 404 })
+      }
+    } catch {
+      /* global absent → EN accessible par défaut */
+    }
+  }
+
   const { docs } = await payload.find({
     collection: 'posts',
     where: { _status: { equals: 'published' } },

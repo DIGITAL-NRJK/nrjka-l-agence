@@ -1,5 +1,6 @@
 import { HeaderClient } from './Component.client'
 import { getCachedGlobal } from '@/utilities/getGlobals'
+import { isEnglishEnabled } from '@/utilities/languages'
 import React from 'react'
 
 import type { Header } from '@/payload-types'
@@ -60,5 +61,16 @@ export async function Header({ locale = 'fr' }: { locale?: string }) {
 
   const chrome = (headerData as { megamenu?: Record<string, unknown> }).megamenu
 
-  return <HeaderClient data={headerData} menu={menu} chrome={chrome} locale={locale} />
+  // Sélecteur de langue masqué quand la version anglaise est désactivée (Paramètres › Langues).
+  const showLanguageSwitcher = await isEnglishEnabled()
+
+  return (
+    <HeaderClient
+      data={headerData}
+      menu={menu}
+      chrome={chrome}
+      locale={locale}
+      showLanguageSwitcher={showLanguageSwitcher}
+    />
+  )
 }

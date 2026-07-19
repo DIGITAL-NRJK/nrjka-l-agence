@@ -4,6 +4,7 @@ import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 
 import {
+  activeSitemapLocales,
   buildLocalizedSitemap,
   localizedPathsFromDoc,
   type LocalizedSitemapEntry,
@@ -36,7 +37,7 @@ const getRealisationsSitemap = unstable_cache(
           .filter((e) => Object.keys(e.paths).length > 0)
       : []
 
-    return buildLocalizedSitemap(SITE_URL, entries)
+    return buildLocalizedSitemap(SITE_URL, entries, await activeSitemapLocales(payload))
   },
   ['realisations-sitemap'],
   {

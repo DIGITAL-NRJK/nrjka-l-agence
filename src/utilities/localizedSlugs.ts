@@ -50,8 +50,12 @@ export function buildLanguageAlternates(opts: {
   locale: string
   localizedPaths?: Partial<Record<string, string>>
   fallbackPath?: string
+  /** Locales publiquement servies (défaut : toutes). Passer `await getActiveLocales()`
+   *  pour respecter le toggle « version anglaise » (Paramètres › Langues). */
+  activeLocales?: string[]
 }): { canonical: string; languages: Record<string, string> } | undefined {
-  const { locale, localizedPaths, fallbackPath } = opts
+  const { locale, localizedPaths, fallbackPath, activeLocales } = opts
+  const locales = activeLocales ?? [...LOCALES]
   const serverUrl = getServerSideURL()
   const pathFor = (l: string) => localizedPaths?.[l] ?? fallbackPath
   const current = pathFor(locale)
@@ -60,7 +64,7 @@ export function buildLanguageAlternates(opts: {
   return {
     canonical: `${serverUrl}/${locale}${current}`,
     languages: {
-      ...Object.fromEntries(LOCALES.map((l) => [l, `${serverUrl}/${l}${pathFor(l) ?? current}`])),
+      ...Object.fromEntries(locales.map((l) => [l, `${serverUrl}/${l}${pathFor(l) ?? current}`])),
       // x-default : version servie quand la langue du visiteur ne correspond à aucune locale.
       'x-default': `${serverUrl}/${DEFAULT_LOCALE}${pathFor(DEFAULT_LOCALE) ?? current}`,
     } as Record<string, string>,

@@ -10,6 +10,7 @@ import type { JobOffer } from '@/payload-types'
 import RichText from '@/components/RichText'
 import { LOCALES } from '@/utilities/i18n'
 import { JobApplicationForm } from '@/components/JobApplicationForm'
+import { localizedLanguages } from '@/utilities/languages'
 
 export const revalidate = 300
 
@@ -174,10 +175,10 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     title: o.seo?.metaTitle || `${title} — NRJKA`,
     description: o.seo?.metaDescription || undefined,
     alternates: {
-      languages: {
+      languages: await localizedLanguages({
         fr: `/fr/carrieres/${o.slug}`,
         en: `/en/carrieres/${o.slug}`,
-      },
+      }),
     },
   }
 }

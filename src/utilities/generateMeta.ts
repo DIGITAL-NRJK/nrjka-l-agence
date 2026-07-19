@@ -6,6 +6,7 @@ import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
 import { getSiteSettings } from './getSiteSettings'
 import { buildLanguageAlternates } from './localizedSlugs'
+import { getActiveLocales } from './languages'
 
 export const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
@@ -66,8 +67,14 @@ export const generateMeta = async (args: {
       : doc.meta.title
     : seo?.defaultMetaTitle?.trim() || `${siteName} — Agence web & transformation digitale`
 
-  // Canonical + hreflang par langue. Gère le slug localisé (URL EN ≠ FR) via localizedPaths.
-  const alternates = buildLanguageAlternates({ locale, localizedPaths, fallbackPath: canonicalPath })
+  // Canonical + hreflang par langue. Gère le slug localisé (URL EN ≠ FR) via localizedPaths
+  // et le toggle « version anglaise » (pas de hreflang en quand EN est désactivé).
+  const alternates = buildLanguageAlternates({
+    locale,
+    localizedPaths,
+    fallbackPath: canonicalPath,
+    activeLocales: await getActiveLocales(),
+  })
 
   return {
     description,

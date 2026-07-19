@@ -6,6 +6,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
 import { JobApplicationForm, type JobFormLabels } from '@/components/JobApplicationForm'
+import { localizedLanguages } from '@/utilities/languages'
 
 export const revalidate = 300
 
@@ -116,10 +117,10 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
       ? 'Send NRJKA a spontaneous application.'
       : 'Envoyez à NRJKA une candidature spontanée.',
     alternates: {
-      languages: {
+      languages: await localizedLanguages({
         fr: '/fr/carrieres/candidature-spontanee',
         en: '/en/carrieres/candidature-spontanee',
-      },
+      }),
     },
   }
 }
